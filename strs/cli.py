@@ -1,89 +1,12 @@
 #!/usr/bin/env bash
-from typing import List, Iterable, \
-  NamedTuple, Callable
-from functools import wraps
 # from itertools import chain
 # import logging
-import sys
-import os
+
+from base import Args, _get_strings_sep, _wrap_str_check, \
+  _wrap_str_parser, EMPTY_STR, NO_RESULT, SAME_LINE, SPACE, \
+  NEW_LINE
 
 import fire
-
-
-NEW_LINE: str = '\n'
-SAME_LINE = EMPTY_STR = ''
-SPACE: str = '\t'
-SH_SEP: str | None = os.environ.get('IFS')
-
-NO_RESULT: int = -1
-
-
-Strings = Iterable[str]
-Args = List[str]
-Input = Strings | Args
-ParseStrFunc = Callable[[str, ...], str]
-
-
-class StringsSep(NamedTuple):
-  strings: Strings
-  sep: str
-
-
-def _is_pipeline() -> bool:
-  return not sys.stdin.isatty()
-
-
-def _get_sep() -> str:
-  if SH_SEP is not None:
-    return SH_SEP
-
-  return NEW_LINE if _is_pipeline() else SPACE
-
-
-def _decode_strip(line: bytes) -> str:
-  string = line.decode()
-  return string.strip()
-
-
-def _get_strings() -> Strings | None:
-  if _is_pipeline():
-    return map(_decode_strip, sys.stdin.buffer)
-
-  return None
-
-
-def _get_input(strings: Args) -> Input:
-  if stdin := _get_strings():
-    strings = stdin
-
-  return strings
-
-
-def _get_strings_sep(strings: Args) -> StringsSep:
-  strings = _get_input(strings)
-  sep = _get_sep()
-
-  return StringsSep(strings, sep)
-
-
-def _wrap_str_parser(func: ParseStrFunc) -> Callable:
-  def new_func(*args: Args):
-    strings, sep = _get_strings_sep(args)
-    _apply(func, strings, sep)
-
-  return new_func
-
-
-def _apply(
-  func: ParseStrFunc,
-  strings: Strings,
-  sep: str,
-  *args,
-  **kwargs
-):
-  for string in strings:
-    parsed = func(string, *args, **kwargs)
-    print(parsed, end=sep)
 
 
 def length(*args: Args) -> int:
@@ -138,6 +61,34 @@ def index(
     index += len(line)
 
 
+def rindex(
+  sub: str | None = None,
+  *args: Args,
+  start: int | None = None,
+  end: int | None = None,
+) -> int:
+  if sub is None or sub == EMPTY_STR:
+    return NO_RESULT
+
+  strings, sep = _get_strings_sep(args)
+  match_index: int | None
+  index: int = 0
+
+  for string in strings:
+    line = f'{string}{sep}'
+
+    try:
+      match_index = line.rindex(sub)
+
+    except ValueError:
+      match_index = None
+
+    if match_index is not None:
+      return index + match_index
+
+    index += len(line)
+
+
 def split(on: str | None = None, *args: Args):
   strings, sep = _get_strings_sep(args)
 
@@ -148,7 +99,20 @@ def split(on: str | None = None, *args: Args):
       if not split_str:
         continue
 
-      print(f'"{split_str}"', end=sep)
+      print(split_str, end=sep)
+
+
+def rplit(on: str | None = None, *args: Args):
+  strings, sep = _get_strings_sep(args)
+
+  for string in strings:
+    split_strs = string.rsplit(sep=on)
+
+    for split_str in split_strs:
+      if not split_str:
+        continue
+
+      print({split_str}, end=sep)
 
 
 def join(on: str | None = None, *args: Args):
@@ -165,10 +129,196 @@ def join(on: str | None = None, *args: Args):
     print(f'{sep}{string}', end=SAME_LINE)
 
 
+def strip(chars: str | None = None, *args: Args):
+  strings, sep = _get_strings_sep(args)
+
+  for string in strings:
+    string = string.strip(chars)
+    print(string, end=sep)
+
+
+def lstrip(chars: str | None = None, *args: Args):
+  strings, sep = _get_strings_sep(args)
+
+  for string in strings:
+    string = string.lstrip(chars)
+    print(string, end=sep)
+
+
+def rstrip(chars: str | None = None, *args: Args):
+  strings, sep = _get_strings_sep(args)
+
+  for string in strings:
+    string = string.rstrip(chars)
+    print(string, end=sep)
+
+
+def expandtabs(*args: Args, tabsize: int = 8):
+  strings, sep = _get_strings_sep(args)
+
+  for string in strings:
+    string = string.expandtabs(tabsize)
+    print(string, end=sep)
+
+
+def ljust(width: int, *args: Args, fillchar: str = SPACE):
+  strings, sep = _get_strings_sep(args)
+
+  for string in strings:
+    string = string.ljust(width, fillchar)
+    print(string, end=sep)
+
+
+def rjust(width: int, *args: Args, fillchar: str = SPACE):
+  strings, sep = _get_strings_sep(args)
+
+  for string in strings:
+    string = string.rjust(width, fillchar)
+    print(string, end=sep)
+
+
+def zfill(width: int, *args: Args):
+  strings, sep = _get_strings_sep(args)
+
+  for string in strings:
+    string = string.zfill(width)
+    print(string, end=sep)
+
+
+def partition(sep: str, *args: Args):
+  strings, _ = _get_strings_sep(args)
+  parts: tuple[str, str, str]
+
+  for string in strings:
+    parts = string.partition(sep)
+    output = NEW_LINE.join(parts)
+    print(output)
+
+
+def rpartition(sep: str, *args: Args):
+  strings, _ = _get_strings_sep(args)
+  parts: tuple[str, str, str]
+
+  for string in strings:
+    parts = string.rpartition(sep)
+    output = NEW_LINE.join(parts)
+    print(output)
+
+
+def endswith(
+  suffix: str | tuple[str, ...],
+  *args: Args,
+  start: int | None = None,
+  end: int | None = None,
+):
+  strings, _ = _get_strings_sep(args)
+
+  for string in strings:
+    pass
+
+  return string.endswith(suffix, start, end)
+
+
+def startswith(
+  prefix: str | tuple[str, ...],
+  *args: Args,
+  start: int | None = None,
+  end: int | None = None,
+):
+  strings, _ = _get_strings_sep(args)
+  first = next(iter(strings))
+
+  return first.startswith(prefix, start, end)
+
+
+def find(
+  sub: str | None = None,
+  *args: Args,
+  start: int | None = None,
+  end: int | None = None,
+) -> int:
+  if sub is None or sub == EMPTY_STR:
+    return NO_RESULT
+
+  strings, sep = _get_strings_sep(args)
+  match_index: int | None
+  index: int = 0
+
+  for string in strings:
+    line = f'{string}{sep}'
+
+    match_index = line.find(sub, start, end)
+
+    if match_index is not None:
+      return index + match_index
+
+    index += len(line)
+
+
+def rfind(
+  sub: str | None = None,
+  *args: Args,
+  start: int | None = None,
+  end: int | None = None,
+) -> int:
+  if sub is None or sub == EMPTY_STR:
+    return NO_RESULT
+
+  strings, sep = _get_strings_sep(args)
+  match_index: int | None
+  index: int = 0
+
+  for string in strings:
+    line = f'{string}{sep}'
+
+    match_index = line.rfind(sub, start, end)
+
+    if match_index is not None:
+      return index + match_index
+
+    index += len(line)
+
+
+def center(
+  width: int,
+  fillchar: str = SPACE,
+  *args: Args
+):
+  strings, sep = _get_strings_sep(args)
+
+  for string in strings:
+    string = string.center(width, fillchar)
+    print(string, end=sep)
+
+
+def replace(new: str, *args: Args, count: int = -1):
+  strings, sep = _get_strings_sep(args)
+
+  for string in strings:
+    string = string.replace(new, count)
+    print(string, end=sep)
+
+
 upper = _wrap_str_parser(str.upper)
 lower = _wrap_str_parser(str.lower)
 capitalize = _wrap_str_parser(str.capitalize)
 casefold = _wrap_str_parser(str.casefold)
+title = _wrap_str_parser(str.title)
+swapcase = _wrap_str_parser(str.swapcase)
+
+
+isalnum = _wrap_str_check(str.isalnum)
+isalpha = _wrap_str_check(str.isalpha)
+isascii = _wrap_str_check(str.isascii)
+isdecimal = _wrap_str_check(str.isdecimal)
+isdigit = _wrap_str_check(str.isdigit)
+isidentifier = _wrap_str_check(str.isidentifier)
+islower = _wrap_str_check(str.islower)
+isnumeric = _wrap_str_check(str.isnumeric)
+isprintable = _wrap_str_check(str.isprintable)
+isspace = _wrap_str_check(str.isspace)
+istitle = _wrap_str_check(str.istitle)
+isupper = _wrap_str_check(str.isupper)
 
 
 if __name__ == "__main__":
