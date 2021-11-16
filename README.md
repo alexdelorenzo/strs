@@ -15,11 +15,11 @@ export string='This is an example.'
 # Bash
 echo ${#string}
 
-# strs
-strs length $string
+# str
+str length $string
 
 # or, using pipes
-echo $string | strs length
+echo $string | str length
 
 ## Strip from rear
 export remove='example.'
@@ -27,11 +27,11 @@ export remove='example.'
 # Bash
 echo ${string%remove}
 
-# strs
-strs rstrip $remove $string
+# str
+str rstrip $remove $string
 
 # or, using pipes
-echo $string | strs rstrip $remove
+echo $string | str rstrip $remove
 
 ## Strip from front
 export remove='This'
@@ -39,10 +39,10 @@ export remove='This'
 echo ${string#remove}
 
 # vs
-strs lstrip $remove $string
+str lstrip $remove $string
 
 # or, using pipes
-echo $string | strs lstrip $remove
+echo $string | str lstrip $remove
 
 ## Replace all
 export replace='an'
@@ -51,19 +51,19 @@ export with='a'
 echo ${string//replace/with}
 
 # vs
-strs replace $replace $with $string
+str replace $replace $with $string
 
 # or, using pipes
-echo $string | strs replace $replace $with
+echo $string | str replace $replace $with
 
 ## Replace first character
 echo ${string/replace/with}
 
 # vs
-strs replace $replace $with --count 1 $string
+str replace $replace $with --count 1 $string
 
 # or, using pipes
-echo $string | strs replace $replace $with --count 1
+echo $string | str replace $replace $with --count 1
 
 ## Capitalization
 echo ${string^}  # capitalize first char
@@ -71,14 +71,14 @@ echo ${string^^} # capitalize all
 echo ${string,,} # lower all
 
 # vs
-strs capitalize $string  # capitalize first char
-strs upper $string  # capitalize all
-strs lower $string  # lower all
+str capitalize $string  # capitalize first char
+str upper $string  # capitalize all
+str lower $string  # lower all
 
 # or
-echo $string | strs capitalize $string
-echo $string | strs upper
-echo $string | strs lower
+echo $string | str capitalize $string
+echo $string | str upper
+echo $string | str lower
 ```
 
 Here are some string manipulation commands that come with `strs` but not with Bash:
@@ -87,166 +87,166 @@ Here are some string manipulation commands that come with `strs` but not with Ba
 export string='This is an example.'
 
 # casefold
-strs casefold $string
+str casefold $string
 
 # or
-echo $string | strs casefold
+echo $string | str casefold
 
 # center
-strs center $string
+str center $string
 
 # or
-echo $string | strs center
+echo $string | str center
 
 # count
 export countChar='e'
 
-strs count $countChar $string
+str count $countChar $string
 
 # or
-echo $string | strs count $countChar
+echo $string | str count $countChar
 
 # ends with
 export dot='.'
 
-strs endswith $dot $string
+str endswith $dot $string
 
 # or
-echo $string | strs endswith $dot
+echo $string | str endswith $dot
 
 # find
 export find='e'
 
-strs find $find $string
+str find $find $string
 
 # or
-echo $string | strs find $find
+echo $string | str find $find
 
 # index
-strs index $find $string
+str index $find $string
 
 # or
-echo $string | strs index $find
+echo $string | str index $find
 
 # join
 export on='\n'
 
-strs join $on $string
+str join $on $string
 
 # or
-echo $string | strs join $on
+echo $string | str join $on
 
 # ljust
 export width=20
 
-strs ljust $width $string
+str ljust $width $string
 
 # or
-echo $string | strs ljust $width
+echo $string | str ljust $width
 
 # lstrip
 export remove='.'
 
-strs lstrip $remove $string
+str lstrip $remove $string
 
 # or
-echo $string | strs lstrip $remove
+echo $string | str lstrip $remove
 
 # partition
 export part=' '
 
-strs partition $part $string
+str partition $part $string
 # or
-echo $string | strs partition $part
+echo $string | str partition $part
 
 # rfind
 export find='e'
 
-strs rfind $find $string
+str rfind $find $string
 
 # or
-echo $string | strs rfind $find
+echo $string | str rfind $find
 
 # rindex
-strs rindex $find $string
+str rindex $find $string
 
 # or
-echo $string | strs rindex $find
+echo $string | str rindex $find
 
 # rjust
 export width=20
 
-strs rjust $width $string
+str rjust $width $string
 
 # or
-echo $string | strs rjust $width
+echo $string | str rjust $width
 
 # rstrip
 export remove='.'
 
-strs rstrip $remove $string
+str rstrip $remove $string
 # or
-echo $string | strs rstrip $remove
+echo $string | str rstrip $remove
 
 # rpartition
 export part=' '
 
-strs rpartition $part $string
+str rpartition $part $string
 
 # or
-echo $string | strs rpartition $part
+echo $string | str rpartition $part
 
 # rsplit
 export split=' '
 
-strs rsplit $split $string
+str rsplit $split $string
 
 # or
-echo $string | strs rsplit $split
+echo $string | str rsplit $split
 
 # split
 export split=' '
 
-strs split $split $string
+str split $split $string
 
 # or
-echo $string | strs split $split
+echo $string | str split $split
 
 # strip
 export strip='.'
 
-strs strip $strip $string
+str strip $strip $string
 
 # or
-echo $string | strs split $strip
+echo $string | str split $strip
 
 # swap case
-strs swapcase $string
+str swapcase $string
 
 # or
-echo $string | strs swapcase
+echo $string | str swapcase
 
 # starts with
 export t='T'
 
-strs startswith $t $string
+str startswith $t $string
 
 # or
-echo $string | strs startswith $t
+echo $string | str startswith $t
 
 # to title case
-strs title $string
+str title $string
 
 # or
-echo $string | strs title
+echo $string | str title
 
 # zero fill
 export width=20
 
-strs zfill $width $string
+str zfill $width $string
 
 # or
-echo $string | strs zfill $width
+echo $string | str zfill $width
 ```
 
 `strs` also brings Python's string validation methods to the shell:
@@ -255,50 +255,50 @@ echo $string | strs zfill $width
 export string='This is an example.'
 
 # is alphanumeric
-strs isalnum $string
-echo $string | strs isalnum
+str isalnum $string
+echo $string | str isalnum
 
 # is alphabetic
-strs isalpha $string
-echo $string | strs isalpha
+str isalpha $string
+echo $string | str isalpha
 
 # is ASCII
-strs isascii $string
-echo $string | strs isascii
+str isascii $string
+echo $string | str isascii
 
 # is decimal
-strs isdecimal $string
-echo $string | strs isdecimal
+str isdecimal $string
+echo $string | str isdecimal
 
 # is digit
-strs isdigit $string
-echo $string | strs isdigit
+str isdigit $string
+echo $string | str isdigit
 
 # is valid Python identifier
-strs isidentifier $string
-echo $string | strs isidentifier
+str isidentifier $string
+echo $string | str isidentifier
 
 # is lower case
-strs islower $string
-echo $string | strs islower
+str islower $string
+echo $string | str islower
 
 # is numeric
-strs isnumeric $string
-echo $string | strs isnumeric
+str isnumeric $string
+echo $string | str isnumeric
 
 # is printable
-strs isprintable $string
-echo $string | strs isprintable
+str isprintable $string
+echo $string | str isprintable
 
 # is space character
-strs isspace $string
-echo $string | strs isspace
+str isspace $string
+echo $string | str isspace
 
 # is title case
-strs istitle $string
-echo $string | strs istitle
+str istitle $string
+echo $string | str istitle
 
 # is upper case
-strs isupper $string
-echo $string | strs isupper
+str isupper $string
+echo $string | str isupper
 ```
