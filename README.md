@@ -88,17 +88,21 @@ export string='This is an example.'
 
 # casefold
 strs casefold $string
+
 # or
 echo $string | strs casefold
 
 # center
 strs center $string
+
 # or
 echo $string | strs center
 
 # count
 export countChar='e'
+
 strs count $countChar $string
+
 # or
 echo $string | strs count $countChar
 
@@ -106,6 +110,7 @@ echo $string | strs count $countChar
 export dot='.'
 
 strs endswith $dot $string
+
 # or
 echo $string | strs endswith $dot
 
@@ -113,11 +118,13 @@ echo $string | strs endswith $dot
 export find='e'
 
 strs find $find $string
+
 # or
 echo $string | strs find $find
 
 # index
 strs index $find $string
+
 # or
 echo $string | strs index $find
 
@@ -125,6 +132,7 @@ echo $string | strs index $find
 export on='\n'
 
 strs join $on $string
+
 # or
 echo $string | strs join $on
 
@@ -132,6 +140,7 @@ echo $string | strs join $on
 export width=20
 
 strs ljust $width $string
+
 # or
 echo $string | strs ljust $width
 
@@ -139,6 +148,7 @@ echo $string | strs ljust $width
 export remove='.'
 
 strs lstrip $remove $string
+
 # or
 echo $string | strs lstrip $remove
 
@@ -153,11 +163,13 @@ echo $string | strs partition $part
 export find='e'
 
 strs rfind $find $string
+
 # or
 echo $string | strs rfind $find
 
 # rindex
 strs rindex $find $string
+
 # or
 echo $string | strs rindex $find
 
@@ -165,6 +177,7 @@ echo $string | strs rindex $find
 export width=20
 
 strs rjust $width $string
+
 # or
 echo $string | strs rjust $width
 
@@ -179,6 +192,7 @@ echo $string | strs rstrip $remove
 export part=' '
 
 strs rpartition $part $string
+
 # or
 echo $string | strs rpartition $part
 
@@ -186,6 +200,7 @@ echo $string | strs rpartition $part
 export split=' '
 
 strs rsplit $split $string
+
 # or
 echo $string | strs rsplit $split
 
@@ -193,6 +208,7 @@ echo $string | strs rsplit $split
 export split=' '
 
 strs split $split $string
+
 # or
 echo $string | strs split $split
 
@@ -200,11 +216,13 @@ echo $string | strs split $split
 export strip='.'
 
 strs strip $strip $string
+
 # or
 echo $string | strs split $strip
 
 # swap case
 strs swapcase $string
+
 # or
 echo $string | strs swapcase
 
@@ -212,11 +230,13 @@ echo $string | strs swapcase
 export t='T'
 
 strs startswith $t $string
+
 # or
 echo $string | strs startswith $t
 
 # to title case
 strs title $string
+
 # or
 echo $string | strs title
 
@@ -224,6 +244,7 @@ echo $string | strs title
 export width=20
 
 strs zfill $width $string
+
 # or
 echo $string | strs zfill $width
 ```
