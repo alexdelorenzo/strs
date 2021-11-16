@@ -93,10 +93,11 @@ str casefold $string
 echo $string | str casefold
 
 # center
-str center $string
+export width=20
+str center $width $string
 
 # or
-echo $string | str center
+echo $string | str center $width
 
 # count
 export countChar='e'
@@ -155,9 +156,9 @@ echo $string | str lstrip $remove
 # partition
 export part=' '
 
-str partition $part $string
+str partition "$part" $string
 # or
-echo $string | str partition $part
+echo $string | str partition "$part"
 
 # rfind
 export find='e'
@@ -191,10 +192,10 @@ echo $string | str rstrip $remove
 # rpartition
 export part=' '
 
-str rpartition $part $string
+str rpartition "$part" $string
 
 # or
-echo $string | str rpartition $part
+echo $string | str rpartition "$part"
 
 # rsplit
 export split=' '
