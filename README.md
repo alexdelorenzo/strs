@@ -1,4 +1,4 @@
-# Easy string tools for the shell
+# 🧵 Easy string tools for the shell
  `strs` makes working with strings in the shell easier.
 
 [String manipulation in POSIX-compliant shells](https://shellmagic.xyz/#string-manipulation) can be both confusing and cumbersome. `strs` brings string convenience methods from Python to shells like Bash.
