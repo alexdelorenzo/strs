@@ -45,25 +45,25 @@ str lstrip $remove "$string"
 echo $string | str lstrip $remove
 
 ## Replace all
-export replace='an'
-export with='a'
+export old='an'
+export new='a'
 
-echo "${string//$replace/$with}"
+echo "${string//$old/$new}"
 
 # vs
-str replace $replace $with "$string"
+str replace $old $new "$string"
 
 # or, using pipes
-echo $string | str replace $replace $with
+echo $string | str replace $old $new
 
 ## Replace first character
-echo "${string/$replace/$with}"
+echo "${string/$old/$new}"
 
 # vs
-str replace $replace $with --count 1 "$string"
+str replace $old $new --count 1 "$string"
 
 # or, using pipes
-echo $string | str replace $replace $with --count 1
+echo $string | str replace $old $new --count 1
 
 ## Capitalization
 echo "${string^}"  # capitalize first char
@@ -82,13 +82,16 @@ echo $string | str lower
 ```
 
 ## Practical example
-If you use a Debian-based Linux distribution, when you want to upgrade your system to its next release, you just need to change a few names in a file.
+If you're using Debian, you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between machines and VM instances. You might run Debian `testing` on one machine, but Debian `stable` would suit the use case of another.
 
+You can take your sources from `testing` and point them to `stable` on the fly, and send them to your other your other machine.
 ```bash
-str replace focal impish < sources.list > sources.list
+$ str replace testing stable < sources.list | ssh hostname "cat > /etc/apt/sources.list"
 ```
 
-Here are some string manipulation commands that come with `strs` but not with Bash:
+You could do the same thing with `sed`, but that requires knowing `sed`'s regex syntax, whether or not the version of `sed` you have is [new enough to ship with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [the differences between GNU `sed` and BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
+
+There are some string manipulation commands that `strs` comes with that don't have syntactic sugar in Bash:
 ```bash
 #!/usr/bin/env bash
 export string='This is an example.'
@@ -164,6 +167,7 @@ echo $string | str lstrip $remove
 export part=' '
 
 str partition "$part" "$string"
+
 # or
 echo $string | str partition "$part"
 
