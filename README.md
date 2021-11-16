@@ -25,7 +25,7 @@ echo $string | str length
 export remove='example.'
 
 # Bash
-echo ${string%remove}
+echo ${string%$remove}
 
 # str
 str rstrip $remove $string
@@ -36,7 +36,7 @@ echo $string | str rstrip $remove
 ## Strip from front
 export remove='This'
 # Bash
-echo ${string#remove}
+echo ${string#$remove}
 
 # vs
 str lstrip $remove $string
@@ -48,7 +48,7 @@ echo $string | str lstrip $remove
 export replace='an'
 export with='a'
 
-echo ${string//replace/with}
+echo ${string//$replace/$with}
 
 # vs
 str replace $replace $with $string
@@ -57,7 +57,7 @@ str replace $replace $with $string
 echo $string | str replace $replace $with
 
 ## Replace first character
-echo ${string/replace/with}
+echo ${string/$replace/$with}
 
 # vs
 str replace $replace $with --count 1 $string
