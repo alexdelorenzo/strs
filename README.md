@@ -18,7 +18,7 @@ echo ${#string}
 # strs
 strs length $string
 
-# or using pipes
+# or, using pipes
 echo $string | strs length
 
 ## Strip from rear
@@ -30,7 +30,7 @@ echo ${string%remove}
 # strs
 strs rstrip $remove $string
 
-# or using pipes
+# or, using pipes
 echo $string | strs rstrip $remove
 
 ## Strip from front
@@ -41,7 +41,7 @@ echo ${string#remove}
 # vs
 strs lstrip $remove $string
 
-# or using pipes
+# or, using pipes
 echo $string | strs lstrip $remove
 
 ## Replace all
@@ -53,7 +53,7 @@ echo ${string//replace/with}
 # vs
 strs replace $replace $with $string
 
-# or using pipes
+# or, using pipes
 echo $string | strs replace $replace $with
 
 ## Replace first character
@@ -62,7 +62,7 @@ echo ${string/replace/with}
 # vs
 strs replace $replace $with --count 1 $string
 
-# or using pipes
+# or, using pipes
 echo $string | strs replace $replace $with --count 1
 
 ## Capitalization
@@ -88,143 +88,143 @@ export string='This is an example.'
 
 # casefold
 strs casefold $string
-#or
+# or
 echo $string | strs casefold
 
 # center
 strs center $string
-#or
+# or
 echo $string | strs center
 
 # count
 export countChar='e'
 strs count $countChar $string
-#or
+# or
 echo $string | strs count $countChar
 
 # ends with
 export dot='.'
 
 strs endswith $dot $string
-#or
+# or
 echo $string | strs endswith $dot
 
 # find
 export find='e'
 
 strs find $find $string
-#or
+# or
 echo $string | strs find $find
 
 # index
 strs index $find $string
-#or
+# or
 echo $string | strs index $find
 
 # join
 export on='\n'
 
 strs join $on $string
-#or
+# or
 echo $string | strs join $on
 
 # ljust
 export width=20
 
 strs ljust $width $string
-#or
+# or
 echo $string | strs ljust $width
 
 # lstrip
 export remove='.'
 
 strs lstrip $remove $string
-#or
+# or
 echo $string | strs lstrip $remove
 
 # partition
 export part=' '
 
 strs partition $part $string
-#or
+# or
 echo $string | strs partition $part
 
 # rfind
 export find='e'
 
 strs rfind $find $string
-#or
+# or
 echo $string | strs rfind $find
 
 # rindex
 strs rindex $find $string
-#or
+# or
 echo $string | strs rindex $find
 
 # rjust
 export width=20
 
 strs rjust $width $string
-#or
+# or
 echo $string | strs rjust $width
 
 # rstrip
 export remove='.'
 
 strs rstrip $remove $string
-#or
+# or
 echo $string | strs rstrip $remove
 
 # rpartition
 export part=' '
 
 strs rpartition $part $string
-#or
+# or
 echo $string | strs rpartition $part
 
 # rsplit
 export split=' '
 
 strs rsplit $split $string
-#or
+# or
 echo $string | strs rsplit $split
 
 # split
 export split=' '
 
 strs split $split $string
-#or
+# or
 echo $string | strs split $split
 
 # strip
 export strip='.'
 
 strs strip $strip $string
-#or
+# or
 echo $string | strs split $strip
 
 # swap case
 strs swapcase $string
-#or
+# or
 echo $string | strs swapcase
 
 # starts with
 export t='T'
 
 strs startswith $t $string
-#or
+# or
 echo $string | strs startswith $t
 
 # to title case
 strs title $string
-#or
+# or
 echo $string | strs title
 
 # zero fill
 export width=20
 
 strs zfill $width $string
-#or
+# or
 echo $string | strs zfill $width
 ```
 
