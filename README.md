@@ -81,6 +81,13 @@ echo $string | str upper
 echo $string | str lower
 ```
 
+## Practical example
+If you use a Debian-based Linux distribution, when you want to upgrade your system to its next release, you just need to change a few names in a file.
+
+```bash
+str replace focal impish < sources.list > sources.list
+```
+
 Here are some string manipulation commands that come with `strs` but not with Bash:
 ```bash
 #!/usr/bin/env bash
