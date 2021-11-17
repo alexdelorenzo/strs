@@ -33,7 +33,6 @@ str length "$string"
 # or, using pipes
 echo $string | str length
 
-
 ## Strip
 export removeEnd='example.'
 export removeFront='This'
@@ -50,7 +49,6 @@ str lstrip $removeFront "$string"  # front
 echo $string | str rstrip $removeEnd
 echo $string | str lstrip $removeFront
 
-
 ## Replace
 export old='an'
 export new='a'
@@ -61,11 +59,12 @@ echo "${string/$old/$new}"  # replace first
 # vs
 str replace $old $new "$string"  # all
 str replace $old $new --count 1 "$string"  # first
+str replace_first $old $new "$string"  # first
 
 # or, using pipes
 echo $string | str replace $old $new
 echo $string | str replace $old $new --count 1
-
+echo $string | str replace_first $old $new
 
 ## Capitalization
 echo "${string^}"  # capitalize first char
@@ -82,7 +81,6 @@ echo $string | str capitalize
 echo $string | str upper
 echo $string | str lower
 ```
-
 
 # More string tools
 There are some string manipulation commands that `strs` comes with that don't have syntactic sugar in Bash:
