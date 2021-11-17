@@ -4,6 +4,18 @@
 [String manipulation in POSIX-compliant shells](https://shellmagic.xyz/#string-manipulation) can be both confusing and cumbersome. `strs` brings string convenience methods from Python to shells like Bash.
 
 # Examples
+## Practical example
+If you're using Debian, you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between machines and VM instances. You might run Debian `testing` on one machine, but Debian `stable` would suit the use case of another.
+
+You can take your sources from `testing` and point them to `stable` on the fly, and send them to your other your other machine.
+```bash
+$ str replace testing stable < sources.list | ssh hostname "cat > /etc/apt/sources.list"
+```
+
+You could do the same thing with `sed`, but that requires knowing `sed`'s regex syntax, whether or not the version of `sed` you have is [new enough to ship with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [the differences between GNU `sed` and BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
+
+
+## Shell string manipulation
 `strs` provides commands for string manipulation actions that are built into Bash, and it provides commands for things that Bash doesn't do, as well.
 
 Here are some ways you can manipulate strings with both Bash and `strs`:
@@ -71,16 +83,8 @@ echo $string | str upper
 echo $string | str lower
 ```
 
-## Practical example
-If you're using Debian, you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between machines and VM instances. You might run Debian `testing` on one machine, but Debian `stable` would suit the use case of another.
 
-You can take your sources from `testing` and point them to `stable` on the fly, and send them to your other your other machine.
-```bash
-$ str replace testing stable < sources.list | ssh hostname "cat > /etc/apt/sources.list"
-```
-
-You could do the same thing with `sed`, but that requires knowing `sed`'s regex syntax, whether or not the version of `sed` you have is [new enough to ship with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [the differences between GNU `sed` and BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
-
+# More string tools
 There are some string manipulation commands that `strs` comes with that don't have syntactic sugar in Bash:
 ```bash
 #!/usr/bin/env bash
@@ -187,6 +191,7 @@ str zfill $width "$string"
 echo $string | str zfill $width
 ```
 
+## String validation tools
 `strs` also brings Python's string validation methods to the shell:
 ```bash
 #!/usr/bin/env bash
