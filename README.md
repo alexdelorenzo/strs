@@ -5,7 +5,7 @@
 
 # Examples
 ## Practical example
-If you're using Debian, you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between machines and VM instances. You might run Debian `testing` on one machine, but Debian `stable` would suit the use case of another.
+If you're using Debian, you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between your machines. You might run Debian `testing` on one machine, but Debian `stable` would suit the use case of another.
 
 You can take your sources from `testing` and point them to `stable` on the fly, and send them to your other your other machine.
 ```bash
