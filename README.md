@@ -1,7 +1,16 @@
 # 🧵 Easy string tools for the shell
- `strs` makes working with strings in the shell easier.
+ `strs` makes working with strings in the [shell](https://linuxcommand.org/lc3_lts0010.php) easier.
 
 [String manipulation in POSIX-compliant shells](https://shellmagic.xyz/#string-manipulation) can be both confusing and cumbersome. `strs` brings string convenience methods from Python to shells like Bash.
+
+# Installation
+## Prerequisites
+ - Python 3.8+
+
+## PyPI
+```bash
+python3 -m pip install strs
+```
 
 # Examples
 ## Practical example
