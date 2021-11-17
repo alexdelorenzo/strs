@@ -81,7 +81,7 @@ echo $string | str upper
 echo $string | str lower
 ```
 
-# More string tools
+## More string tools
 There are some string manipulation commands that `strs` comes with that don't have syntactic sugar in Bash:
 ```bash
 #!/usr/bin/env bash
