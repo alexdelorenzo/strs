@@ -14,7 +14,6 @@ $ str replace testing stable < sources.list | ssh hostname "cat > /etc/apt/sourc
 
 You could do the same thing with `sed`, but that requires knowing `sed`'s regex syntax, whether or not the version of `sed` you have is [new enough to ship with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [the differences between GNU `sed` and BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
 
-
 ## Shell string manipulation
 `strs` provides commands for string manipulation actions that are built into Bash, and it provides commands for things that Bash doesn't do, as well.
 
@@ -96,7 +95,6 @@ export remove='.'
 export part=' '
 export split=' '
 export t='T'
-
 
 # casefold
 str casefold "$string"
