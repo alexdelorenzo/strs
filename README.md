@@ -21,49 +21,39 @@ str length "$string"
 # or, using pipes
 echo $string | str length
 
-## Strip from rear
-export remove='example.'
+
+## Strip
+export removeEnd='example.'
+export removeFront='This'
 
 # Bash
-echo "${string%$remove}"
+echo "${string%$removeEnd}"  # from end
+echo "${string#$removeFront}"  # from front
 
 # str
-str rstrip $remove "$string"
+str rstrip $removeEnd "$string"  # end
+str lstrip $removeFront "$string"  # front
 
 # or, using pipes
-echo $string | str rstrip $remove
+echo $string | str rstrip $removeEnd
+echo $string | str lstrip $removeFront
 
-## Strip from front
-export remove='This'
-# Bash
-echo "${string#$remove}"
 
-# vs
-str lstrip $remove "$string"
-
-# or, using pipes
-echo $string | str lstrip $remove
-
-## Replace all
+## Replace
 export old='an'
 export new='a'
 
-echo "${string//$old/$new}"
+echo "${string//$old/$new}"  # replace all
+echo "${string/$old/$new}"  # replace first
 
 # vs
-str replace $old $new "$string"
+str replace $old $new "$string"  # all
+str replace $old $new --count 1 "$string"  # first
 
 # or, using pipes
 echo $string | str replace $old $new
-
-## Replace first character
-echo "${string/$old/$new}"
-
-# vs
-str replace $old $new --count 1 "$string"
-
-# or, using pipes
 echo $string | str replace $old $new --count 1
+
 
 ## Capitalization
 echo "${string^}"  # capitalize first char
@@ -113,107 +103,80 @@ echo $string | str center $width
 export countChar='e'
 
 str count $countChar "$string"
-
-# or
 echo $string | str count $countChar
 
 # ends with
 export dot='.'
 
 str endswith $dot "$string"
-
-# or
 echo $string | str endswith $dot
 
 # find
 export find='e'
 
 str find $find "$string"
-
-# or
 echo $string | str find $find
 
 # index
 str index $find "$string"
-
-# or
 echo $string | str index $find
 
 # join
 export on='\n'
 
 str join $on "$string"
-
-# or
 echo $string | str join $on
 
 # ljust
 export width=20
 
 str ljust $width "$string"
-
-# or
 echo $string | str ljust $width
 
 # lstrip
 export remove='.'
 
 str lstrip $remove "$string"
-
-# or
 echo $string | str lstrip $remove
 
 # partition
 export part=' '
 
 str partition "$part" "$string"
-
-# or
 echo $string | str partition "$part"
 
 # rfind
 export find='e'
 
 str rfind $find "$string"
-
-# or
 echo $string | str rfind $find
 
 # rindex
 str rindex $find "$string"
-
-# or
 echo $string | str rindex $find
 
 # rjust
 export width=20
 
 str rjust $width "$string"
-
-# or
 echo $string | str rjust $width
 
 # rstrip
 export remove='.'
 
 str rstrip $remove "$string"
-# or
 echo $string | str rstrip $remove
 
 # rpartition
 export part=' '
 
 str rpartition "$part" "$string"
-
-# or
 echo $string | str rpartition "$part"
 
 # rsplit
 export split=' '
 
 str rsplit $split "$string"
-
-# or
 echo $string | str rsplit $split
 
 # split
@@ -228,36 +191,26 @@ echo $string | str split $split
 export strip='.'
 
 str strip $strip "$string"
-
-# or
 echo $string | str split $strip
 
 # swap case
 str swapcase "$string"
-
-# or
 echo $string | str swapcase
 
 # starts with
 export t='T'
 
 str startswith $t "$string"
-
-# or
 echo $string | str startswith $t
 
 # to title case
 str title "$string"
-
-# or
 echo $string | str title
 
 # zero fill
 export width=20
 
 str zfill $width "$string"
-
-# or
 echo $string | str zfill $width
 ```
 
