@@ -14,7 +14,6 @@ $ str replace testing stable < sources.list | ssh hostname "cat > /etc/apt/sourc
 
 You could do the same thing with `sed`, but that requires knowing `sed`'s regex syntax, whether or not the version of `sed` you have is [new enough to ship with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [the differences between GNU `sed` and BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
 
-
 ## Shell string manipulation
 `strs` provides commands for string manipulation actions that are built into Bash, and it provides commands for things that Bash doesn't do, as well.
 
@@ -33,7 +32,6 @@ str length "$string"
 # or, using pipes
 echo $string | str length
 
-
 ## Strip
 export removeEnd='example.'
 export removeFront='This'
@@ -50,7 +48,6 @@ str lstrip $removeFront "$string"  # front
 echo $string | str rstrip $removeEnd
 echo $string | str lstrip $removeFront
 
-
 ## Replace
 export old='an'
 export new='a'
@@ -65,7 +62,6 @@ str replace $old $new --count 1 "$string"  # first
 # or, using pipes
 echo $string | str replace $old $new
 echo $string | str replace $old $new --count 1
-
 
 ## Capitalization
 echo "${string^}"  # capitalize first char
@@ -83,7 +79,6 @@ echo $string | str upper
 echo $string | str lower
 ```
 
-
 # More string tools
 There are some string manipulation commands that `strs` comes with that don't have syntactic sugar in Bash:
 ```bash
@@ -98,7 +93,6 @@ export remove='.'
 export part=' '
 export split=' '
 export t='T'
-
 
 # casefold
 str casefold "$string"
