@@ -29,7 +29,7 @@ You could do the same thing with `sed`, but that requires knowing `sed`'s regex 
 Here are some ways you can manipulate strings with both Bash and `strs`:
 ```bash
 #!/usr/bin/env bash
-export string='This is an example.'
+string='This is an example.'
 
 ## String length
 # Bash
@@ -42,8 +42,8 @@ str length "$string"
 echo $string | str length
 
 ## Strip
-export removeEnd='example.'
-export removeFront='This'
+removeEnd='example.'
+removeFront='This'
 
 # Bash
 echo "${string%$removeEnd}"  # from end
@@ -58,8 +58,8 @@ echo $string | str rstrip $removeEnd
 echo $string | str lstrip $removeFront
 
 ## Replace
-export old='an'
-export new='a'
+old='an'
+new='a'
 
 echo "${string//$old/$new}"  # replace all
 echo "${string/$old/$new}"  # replace first
@@ -94,16 +94,16 @@ echo $string | str lower
 There are some string manipulation commands that `strs` comes with that don't have syntactic sugar in Bash:
 ```bash
 #!/usr/bin/env bash
-export string='This is an example.'
-export width=20
-export countChar='e'
-export dot='.'
-export find='e'
-export on='\n'
-export remove='.'
-export part=' '
-export split=' '
-export t='T'
+string='This is an example.'
+width=20
+countChar='e'
+dot='.'
+find='e'
+on='\n'
+remove='.'
+part=' '
+split=' '
+t='T'
 
 # casefold
 str casefold "$string"
@@ -200,7 +200,7 @@ echo $string | str zfill $width
 `strs` also brings Python's string validation methods to the shell:
 ```bash
 #!/usr/bin/env bash
-export string='This is an example.'
+string='This is an example.'
 
 # is alphanumeric
 str isalnum "$string"
