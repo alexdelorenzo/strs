@@ -94,9 +94,8 @@ echo $string | str casefold
 
 # center
 export width=20
-str center $width "$string"
 
-# or
+str center $width "$string"
 echo $string | str center $width
 
 # count
