@@ -85,6 +85,16 @@ There are some string manipulation commands that `strs` comes with that don't ha
 ```bash
 #!/usr/bin/env bash
 export string='This is an example.'
+export width=20
+export countChar='e'
+export dot='.'
+export find='e'
+export on='\n'
+export remove='.'
+export part=' '
+export split=' '
+export t='T'
+
 
 # casefold
 str casefold "$string"
@@ -93,26 +103,18 @@ str casefold "$string"
 echo $string | str casefold
 
 # center
-export width=20
-
 str center $width "$string"
 echo $string | str center $width
 
 # count
-export countChar='e'
-
 str count $countChar "$string"
 echo $string | str count $countChar
 
 # ends with
-export dot='.'
-
 str endswith $dot "$string"
 echo $string | str endswith $dot
 
 # find
-export find='e'
-
 str find $find "$string"
 echo $string | str find $find
 
@@ -121,32 +123,22 @@ str index $find "$string"
 echo $string | str index $find
 
 # join
-export on='\n'
-
 str join $on "$string"
 echo $string | str join $on
 
 # ljust
-export width=20
-
 str ljust $width "$string"
 echo $string | str ljust $width
 
 # lstrip
-export remove='.'
-
 str lstrip $remove "$string"
 echo $string | str lstrip $remove
 
 # partition
-export part=' '
-
 str partition "$part" "$string"
 echo $string | str partition "$part"
 
 # rfind
-export find='e'
-
 str rfind $find "$string"
 echo $string | str rfind $find
 
@@ -155,40 +147,26 @@ str rindex $find "$string"
 echo $string | str rindex $find
 
 # rjust
-export width=20
-
 str rjust $width "$string"
 echo $string | str rjust $width
 
 # rstrip
-export remove='.'
-
 str rstrip $remove "$string"
 echo $string | str rstrip $remove
 
 # rpartition
-export part=' '
-
 str rpartition "$part" "$string"
 echo $string | str rpartition "$part"
 
 # rsplit
-export split=' '
-
 str rsplit $split "$string"
 echo $string | str rsplit $split
 
 # split
-export split=' '
-
 str split $split "$string"
-
-# or
 echo $string | str split $split
 
 # strip
-export strip='.'
-
 str strip $strip "$string"
 echo $string | str split $strip
 
@@ -197,8 +175,6 @@ str swapcase "$string"
 echo $string | str swapcase
 
 # starts with
-export t='T'
-
 str startswith $t "$string"
 echo $string | str startswith $t
 
@@ -207,8 +183,6 @@ str title "$string"
 echo $string | str title
 
 # zero fill
-export width=20
-
 str zfill $width "$string"
 echo $string | str zfill $width
 ```
