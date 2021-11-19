@@ -1,25 +1,24 @@
 from typing import List, Iterable, \
   NamedTuple, Callable
-from functools import wraps
-# import enum
-# import logging
 import sys
 import os
 
 
-NEW_LINE: str = '\n'
-SAME_LINE = EMPTY_STR = ''
-SPACE: str = ' '
 SH_SEP: str | None = os.environ.get('IFS')
+
+NEW_LINE: str = '\n'
+EMPTY_STR: str = ''
+SAME_LINE: str = EMPTY_STR
+SPACE: str = ' '
 
 NO_RESULT: int = -1
 
 
+ParseStrFunc = Callable[[str, ...], str]
+StrCheckFunc = Callable[str, bool]
 Strings = Iterable[str]
 Args = List[str]
 Input = Strings | Args
-ParseStrFunc = Callable[[str, ...], str]
-StrCheckFunc = Callable[[str], bool]
 
 
 class StringsSep(NamedTuple):
@@ -35,7 +34,8 @@ def _get_sep() -> str:
   if SH_SEP is not None:
     return SH_SEP
 
-  return NEW_LINE if _is_pipeline() else SPACE
+  # return NEW_LINE if _is_pipeline() else SPACE
+  return NEW_LINE
 
 
 def _decode_strip(line: bytes) -> str:
@@ -52,8 +52,9 @@ def _get_strings() -> Strings | None:
 
 def _get_input(strings: Args) -> Input:
   if stdin := _get_strings():
-    strings = stdin
+    return stdin
 
+  strings = map(str, strings)
   return strings
 
 
@@ -64,18 +65,28 @@ def _get_strings_sep(strings: Args) -> StringsSep:
   return StringsSep(strings, sep)
 
 
-def _wrap_str_check(func: StrCheckFunc) -> Callable:
-  @wraps(func)
+def _use_docstring(from_func: Callable) -> Callable[Callable, Callable]:
+  def decorator(to_func: Callable) -> Callable:
+    to_func.__doc__ = from_func.__doc__
+
+    return to_func
+
+  return decorator
+
+
+def _wrap_str_check(func: StrCheckFunc) -> Callable[..., bool]:
+  @_use_docstring(func)
   def new_func(*args: Args) -> bool:
     strings, _ = _get_strings_sep(args)
+    checks = map(func, strings)
 
-    return all(map(func, strings))
+    return all(checks)
 
   return new_func
 
 
-def _wrap_str_parser(func: ParseStrFunc) -> Callable:
-  @wraps(func)
+def _wrap_str_parser(func: ParseStrFunc) -> Callable[..., None]:
+  @_use_docstring(func)
   def new_func(*args: Args):
     strings, sep = _get_strings_sep(args)
     _apply(func, strings, sep)
@@ -93,4 +104,3 @@ def _apply(
   for string in strings:
     parsed = func(string, *args, **kwargs)
     print(parsed, end=sep)
-

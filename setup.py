@@ -11,7 +11,7 @@ requirements = \
 setup(
   name="strs",
   version="0.0.1",
-  description="String manipulation methods for the shell",
+  description="🧵 String manipulation tools for the shell",
   url="https://github.com/alexdelorenzo/strs",
   author="Alex DeLorenzo",
   license="AGPL 3.0",
