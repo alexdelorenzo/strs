@@ -178,7 +178,7 @@ echo $string | str split $split
 
 # strip
 str strip $strip "$string"
-echo $string | str split $strip
+echo $string | str strip $strip
 
 # swap case
 str swapcase "$string"
