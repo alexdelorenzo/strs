@@ -59,6 +59,7 @@ def slice(
   start: int | None = None,
   step: int | None = None,
 ):
+  """Return substrings using given indices."""
   strings, sep = _get_strings_sep(args)
   window = py_slice(start, stop, step)
 
@@ -70,6 +71,7 @@ def contains(
   find: str,
   *args: Args,
 ) -> bool:
+  """Confirm whether the input contains a given string."""
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
@@ -384,7 +386,9 @@ def replace(
     print(string, end=sep)
 
 
-replace_first = replacefirst = replace1 = partial(replace, count=1)
+replace_first = replacefirst = replace1 = _use_docstring(replace)(
+  partial(replace, count=1)
+)
 
 
 @_use_docstring(str.format)
