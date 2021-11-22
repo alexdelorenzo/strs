@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 from functools import partial
 
+from unidecode import unidecode
+from emoji import emoji_count, demojize
+
 from .base import Args, _get_strings_sep, _wrap_str_check, \
   _wrap_str_parser, _use_docstring, NO_RESULT, SAME_LINE, SPACE, \
   NEW_LINE, EMPTY_STR
@@ -35,6 +38,11 @@ low = lower
 isup = isupper
 islow = islower
 isnum = isnumeric
+
+
+toascii = to_ascii = _wrap_str_parser(unidecode)
+hasemoji = has_emoji = _wrap_str_check(emoji_count)
+emoji_to_text = emoji_to_ascii = _wrap_str_parser(demojize)
 
 
 def length(*args: Args) -> int:
