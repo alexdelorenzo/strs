@@ -5,7 +5,8 @@
 
 # Installation
 ## Prerequisites
- - Python 3.8+
+ - A Unix shell like Bash, or PowerShell or Command Prompt on Windows
+ - Python 3.10+
  - `requirements.txt`
 
 ## PyPI
@@ -17,7 +18,7 @@ python3 -m pip install strs
 ## Practical example
 If you're using Debian, you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between your machines. You might run Debian `testing` on one machine, but Debian `stable` would suit the use case of another.
 
-You can take your sources from `testing` and point them to `stable` on the fly, and send them to your other your other machine.
+Using `strs`, you can take your apt sources from `testing` and point them to `stable` on the fly, and send them to your other your other machine:
 ```bash
 $ str replace testing stable < sources.list | ssh hostname "cat > /etc/apt/sources.list"
 ```
@@ -25,7 +26,7 @@ $ str replace testing stable < sources.list | ssh hostname "cat > /etc/apt/sourc
 You could do the same thing with `sed`, but that requires knowing `sed`'s regex syntax, whether or not the version of `sed` you have is [new enough to ship with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [the differences between GNU `sed` and BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
 
 ## Shell string manipulation
-`strs` provides string tools that are similar to those that are built into Bash, and it provides commands for things that Bash doesn't do, as well.
+`strs` provides string tools that are similar to those that are built into Bash, and it provides commands for things that Bash doesn't have syntactic sugar for, as well.
 
 Here are some ways you can manipulate strings with both Bash and `strs`:
 ```bash
