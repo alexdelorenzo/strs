@@ -44,20 +44,20 @@ str length "$string"
 echo $string | str length
 
 ## Strip
-removeEnd='example.'
 removeFront='This'
+removeEnd='example.'
 
 # Bash
-echo "${string%$removeEnd}"  # from end
 echo "${string#$removeFront}"  # from front
+echo "${string%$removeEnd}"  # from end
 
 # str
-str rstrip $removeEnd "$string"  # end
 str lstrip $removeFront "$string"  # front
+str rstrip $removeEnd "$string"  # end
 
 # or, using pipes
-echo $string | str rstrip $removeEnd
 echo $string | str lstrip $removeFront
+echo $string | str rstrip $removeEnd
 
 ## Replace
 old='an'
