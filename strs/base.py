@@ -14,7 +14,7 @@ SPACE: str = ' '
 NO_RESULT: int = -1
 
 
-ParseStrFunc = Callable[[str, ...], str]
+StrParseFunc = Callable[[str, ...], str]
 StrCheckFunc = Callable[str, bool]
 Strings = Iterable[str]
 Args = List[str]
@@ -49,7 +49,7 @@ def _decode_parse(line: bytes, strip: bool = False) -> str:
 
 def _get_strings() -> Strings | None:
   if _is_pipeline():
-    return map(_decode_strip, sys.stdin.buffer)
+    return map(_decode_parse, sys.stdin.buffer)
 
   return None
 
@@ -72,7 +72,6 @@ def _get_strings_sep(strings: Args) -> StringsSep:
 def _use_docstring(from_func: Callable) -> Callable[Callable, Callable]:
   def decorator(to_func: Callable) -> Callable:
     to_func.__doc__ = from_func.__doc__
-
     return to_func
 
   return decorator
@@ -83,13 +82,12 @@ def _wrap_str_check(func: StrCheckFunc) -> Callable[..., bool]:
   def new_func(*args: Args) -> bool:
     strings, _ = _get_strings_sep(args)
     checks = map(func, strings)
-
     return all(checks)
 
   return new_func
 
 
-def _wrap_str_parser(func: ParseStrFunc) -> Callable[..., None]:
+def _wrap_str_parser(func: StrParseFunc) -> Callable[..., None]:
   @_use_docstring(func)
   def new_func(*args: Args):
     strings, sep = _get_strings_sep(args)
@@ -99,7 +97,7 @@ def _wrap_str_parser(func: ParseStrFunc) -> Callable[..., None]:
 
 
 def _apply(
-  func: ParseStrFunc,
+  func: StrParseFunc,
   strings: Strings,
   sep: str,
   *args,
@@ -108,3 +106,20 @@ def _apply(
   for string in strings:
     parsed = func(string, *args, **kwargs)
     print(parsed, end=sep)
+
+
+# see: https://docs.python.org/3/library/itertools.html#itertools.cycle
+def cycle_times(iterable: Iterable, times: int = 1) -> Iterable:
+  saved = []
+
+  for element in iterable:
+    yield element
+    saved.append(element)
+
+  cycles: int = 1
+
+  while saved and cycles < times:
+    for element in saved:
+      yield element
+
+    cycles += 1
