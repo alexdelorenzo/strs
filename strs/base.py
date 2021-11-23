@@ -40,6 +40,7 @@ def _get_sep() -> str:
 
 def _decode_parse(line: bytes, strip: bool = False) -> str:
   string = line.decode()
+  string = string.rstrip(NEW_LINE)
 
   if strip:
     return string.strip()
@@ -110,6 +111,7 @@ def _apply(
 
 # see: https://docs.python.org/3/library/itertools.html#itertools.cycle
 def cycle_times(iterable: Iterable, times: int = 1) -> Iterable:
+  """Cycle through iterable `times` times."""
   saved = []
 
   for element in iterable:

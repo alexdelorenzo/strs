@@ -17,8 +17,8 @@ upper = _wrap_str_parser(str.upper)
 lower = _wrap_str_parser(str.lower)
 capitalize = _wrap_str_parser(str.capitalize)
 casefold = _wrap_str_parser(str.casefold)
-title = _wrap_str_parser(str.title)
 swapcase = _wrap_str_parser(str.swapcase)
+title = _wrap_str_parser(str.title)
 
 
 isalnum = _wrap_str_check(str.isalnum)
@@ -36,10 +36,10 @@ isupper = _wrap_str_check(str.isupper)
 
 
 # command aliases
-caps = cap = capitalize
-up = upper
+cap = capitalize
+up = allcaps = upper
 low = lower
-isup = isupper
+isup = isallcaps = isupper
 islow = islower
 isnum = isnumeric
 
@@ -81,14 +81,14 @@ def slice(
 
 
 def repeat(times: int = FOREVER, *args: Args):
-  """Repeat string."""
+  """Repeat string. Set `times` to -1 to repeat forever."""
   if not times:
     return
 
   strings, _ = _get_strings_sep(args)
 
   if times > FOREVER:
-    strings = cycle_times(strings, times=times)
+    strings = cycle_times(strings, times)
 
   elif times == FOREVER:
     strings = cycle(strings)
