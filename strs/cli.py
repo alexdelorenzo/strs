@@ -1,7 +1,4 @@
 #!/usr/bin/env python
-# from itertools import chain
-# import logging
-
 from base import Args, _get_strings_sep, _wrap_str_check, \
   _wrap_str_parser, EMPTY_STR, NO_RESULT, SAME_LINE, SPACE, \
   NEW_LINE
