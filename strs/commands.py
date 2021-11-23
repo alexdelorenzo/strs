@@ -93,6 +93,9 @@ def repeat(times: int = FOREVER, *args: Args):
   elif times == FOREVER:
     strings = cycle(strings)
 
+  else:
+    return
+
   for string in strings:
     print(string, end=SAME_LINE)
 
