@@ -38,9 +38,13 @@ def _get_sep() -> str:
   return NEW_LINE
 
 
-def _decode_strip(line: bytes) -> str:
+def _decode_parse(line: bytes, strip: bool = False) -> str:
   string = line.decode()
-  return string.strip()
+
+  if strip:
+    return string.strip()
+
+  return string
 
 
 def _get_strings() -> Strings | None:
