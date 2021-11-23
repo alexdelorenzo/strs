@@ -187,7 +187,7 @@ def rsplit(on: str = NEW_LINE, *args: Args):
       if not split_str:
         continue
 
-      print({split_str}, end=sep)
+      print(split_str, end=sep)
 
 
 @_use_docstring(str.join)
