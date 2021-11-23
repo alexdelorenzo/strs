@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 from functools import partial
+from itertools import cycle
 
 from unidecode import unidecode
-from emoji import emoji_count, demojize
+from emoji import emoji_count, demojize, emojize
 
 from .base import Args, _get_strings_sep, _wrap_str_check, \
   _wrap_str_parser, _use_docstring, NO_RESULT, SAME_LINE, SPACE, \
-  NEW_LINE, EMPTY_STR
+  NEW_LINE, EMPTY_STR, cycle_times
+
+
+FOREVER: int = -1
 
 
 upper = _wrap_str_parser(str.upper)
@@ -42,7 +46,8 @@ isnum = isnumeric
 
 toascii = to_ascii = _wrap_str_parser(unidecode)
 hasemoji = has_emoji = _wrap_str_check(emoji_count)
-emoji_to_text = emoji_to_ascii = _wrap_str_parser(demojize)
+to_shortcode = emoji_to_text = emoji_to_ascii = _wrap_str_parser(demojize)
+from_shortcode = ascii_to_emoji = text_to_emoji = _wrap_str_parser(emojize)
 
 
 def length(*args: Args) -> int:
@@ -73,6 +78,23 @@ def slice(
 
   for string in strings:
     print(string[window], end=sep)
+
+
+def repeat(times: int = FOREVER, *args: Args):
+  """Repeat string."""
+  if not times:
+    return
+
+  strings, _ = _get_strings_sep(args)
+
+  if times > FOREVER:
+    strings = cycle_times(strings, times=times)
+
+  elif times == FOREVER:
+    strings = cycle(strings)
+
+  for string in strings:
+    print(string, end=SAME_LINE)
 
 
 def contains(
