@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 from functools import partial
 from itertools import cycle
 
