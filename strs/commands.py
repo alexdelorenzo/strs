@@ -45,9 +45,10 @@ isnum = isnumeric
 
 
 toascii = to_ascii = _wrap_str_parser(unidecode)
+
 hasemoji = has_emoji = _wrap_str_check(emoji_count)
-to_shortcode = emoji_to_text = emoji_to_ascii = _wrap_str_parser(demojize)
-from_shortcode = ascii_to_emoji = text_to_emoji = _wrap_str_parser(emojize)
+to_shortcode = from_emoji = _wrap_str_parser(demojize)
+from_shortcode = to_emoji = _wrap_str_parser(emojize)
 
 
 def length(*args: Args) -> int:

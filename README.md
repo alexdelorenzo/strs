@@ -3,6 +3,11 @@
 
 [String manipulation in POSIX-compliant shells](https://shellmagic.xyz/#string-manipulation) can be both confusing and cumbersome. `strs` brings string convenience methods from Python to shells like Bash.
 
+```bash
+$ str capitalize "hey there! :fire:" | str to-emoji 
+Hey there! 🔥
+```
+
 # Installation
 ## Prerequisites
  - A Unix shell like Bash, or PowerShell or Command Prompt on Windows

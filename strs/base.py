@@ -12,6 +12,7 @@ SAME_LINE: str = EMPTY_STR
 SPACE: str = ' '
 
 NO_RESULT: int = -1
+MIN_TIMES: int = 1
 
 
 StrParseFunc = Callable[[str, ...], str]
@@ -110,15 +111,21 @@ def _apply(
 
 
 # see: https://docs.python.org/3/library/itertools.html#itertools.cycle
-def cycle_times(iterable: Iterable, times: int = 1) -> Iterable:
+def cycle_times(
+  iterable: Iterable,
+  times: int = MIN_TIMES,
+) -> Iterable:
   """Cycle through iterable `times` times."""
+  if times < MIN_TIMES:
+    return
+
   saved = []
 
   for element in iterable:
     yield element
     saved.append(element)
 
-  cycles: int = 1
+  cycles: int = MIN_TIMES
 
   while saved and cycles < times:
     for element in saved:
