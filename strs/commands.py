@@ -5,7 +5,7 @@ from itertools import cycle
 from unidecode import unidecode
 from emoji import emoji_count, demojize, emojize
 
-from .base import Args, Chars, _get_strings_sep, _wrap_str_check, \
+from .base import Args, Chars, _get_strings_sep, _wrap_check_exit, \
   _wrap_str_parser, _use_docstring, _cycle_times, NO_RESULT, \
   SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER, ALL
 
@@ -18,21 +18,21 @@ swapcase = _wrap_str_parser(str.swapcase)
 title = _wrap_str_parser(str.title)
 
 
-isalnum = _wrap_str_check(str.isalnum)
-isalpha = _wrap_str_check(str.isalpha)
-isascii = _wrap_str_check(str.isascii)
-isdecimal = _wrap_str_check(str.isdecimal)
-isdigit = _wrap_str_check(str.isdigit)
-isidentifier = _wrap_str_check(str.isidentifier)
-islower = _wrap_str_check(str.islower)
-isnumeric = _wrap_str_check(str.isnumeric)
-isprintable = _wrap_str_check(str.isprintable)
-isspace = _wrap_str_check(str.isspace)
-istitle = _wrap_str_check(str.istitle)
-isupper = _wrap_str_check(str.isupper)
+isalnum = _wrap_check_exit(str.isalnum)
+isalpha = _wrap_check_exit(str.isalpha)
+isascii = _wrap_check_exit(str.isascii)
+isdecimal = _wrap_check_exit(str.isdecimal)
+isdigit = _wrap_check_exit(str.isdigit)
+isidentifier = _wrap_check_exit(str.isidentifier)
+islower = _wrap_check_exit(str.islower)
+isnumeric = _wrap_check_exit(str.isnumeric)
+isprintable = _wrap_check_exit(str.isprintable)
+isspace = _wrap_check_exit(str.isspace)
+istitle = _wrap_check_exit(str.istitle)
+isupper = _wrap_check_exit(str.isupper)
 
 
-has_emoji = _wrap_str_check(emoji_count)
+has_emoji = _wrap_check_exit(emoji_count)
 from_emoji = _wrap_str_parser(demojize)
 to_emoji = _wrap_str_parser(emojize)
 to_ascii = _wrap_str_parser(unidecode)

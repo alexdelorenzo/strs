@@ -1,4 +1,6 @@
+from __future__ import annotations
 from typing import Iterable, NamedTuple, Callable
+from enum import IntEnum
 import sys
 import os
 
@@ -12,6 +14,8 @@ SH_SEP: str | None = os.environ.get('IFS')
 
 NO_RESULT: int = -1
 MIN_TIMES: int = 1
+FIRST: int = 1
+INCREMENT: int = 1
 FOREVER: int = -1
 ALL: int = -1
 
@@ -28,6 +32,18 @@ Input = Strings | Args
 class StringsSep(NamedTuple):
   strings: Strings
   sep: str
+
+
+class ReturnCode(IntEnum):
+  ok: int = 0
+  failure: int = 1
+
+  true: int = 0
+  false: int = 1
+
+  @staticmethod
+  def from_bool(other: bool) -> ReturnCode:
+    return ReturnCode.true if other else ReturnCode.false
 
 
 def _is_pipeline() -> bool:
@@ -52,15 +68,15 @@ def _parse_line(line: bytes, strip: bool = False) -> str:
   return string
 
 
-def _get_strings() -> Strings | None:
-  if _is_pipeline():
-    return map(_parse_line, sys.stdin.buffer)
+def _get_stdin() -> Strings | None:
+  if not _is_pipeline():
+    return None
 
-  return None
+  return map(_parse_line, sys.stdin.buffer)
 
 
 def _get_input(strings: Args) -> Input:
-  if stdin := _get_strings():
+  if stdin := _get_stdin():
     return stdin
 
   strings = map(str, strings)
@@ -74,7 +90,10 @@ def _get_strings_sep(strings: Args) -> StringsSep:
   return StringsSep(strings, sep)
 
 
-def _strip_doctests(string: str) -> str:
+def _strip_doctests(string: str | None) -> str | None:
+  if string is None:
+    return
+
   if DOCTEST not in string:
     return string
 
@@ -107,6 +126,18 @@ def _wrap_str_check(func: StrCheckFunc) -> Callable[..., bool]:
     strings, _ = _get_strings_sep(args)
     checks = map(func, strings)
     return all(checks)
+
+  return new_func
+
+
+def _wrap_check_exit(func: StrCheckFunc) -> Callable[..., bool]:
+  wrapped = _wrap_str_check(func)
+
+  @_use_docstring(func)
+  def new_func(*args: Args) -> bool:
+    result: bool = wrapped(*args)
+    code = ReturnCode.from_bool(result)
+    sys.exit(code)
 
   return new_func
 
@@ -147,10 +178,10 @@ def _cycle_times(
     yield element
     saved.append(element)
 
-  cycles: int = 1
+  cycles: int = FIRST
 
   while saved and cycles < times:
     for element in saved:
       yield element
 
-    cycles += 1
+    cycles += INCREMENT
