@@ -1,9 +1,13 @@
 from __future__ import annotations
-from typing import Iterable, NamedTuple, Callable
+from typing import Iterable, NamedTuple, Callable, Any, \
+  TypeVar, Generic
+from dataclasses import dataclass
 from functools import partial
 from enum import IntEnum
 import sys
 import os
+
+from unpackable import Unpackable
 
 
 NEW_LINE: str = '\n'
@@ -24,10 +28,12 @@ ALL: int = -1
 Decorator = Callable[Callable, Callable]
 StrParseFunc = Callable[[str, ...], str]
 StrCheckFunc = Callable[str, bool]
+QuitFunc = Callable[..., None]
 Chars = Iterable[str]
 Strings = Iterable[str]
 Args = list[str]
 Input = Strings | Args
+T = TypeVar('T')
 
 
 class StringsSep(NamedTuple):
@@ -35,16 +41,29 @@ class StringsSep(NamedTuple):
   sep: str
 
 
-class ReturnCode(IntEnum):
+class ErrCode(IntEnum):
   ok: int = 0
   err: int = 1
 
-  true: int = 0
-  false: int = 1
+  true: int = ok
+  false: int = err
 
   @staticmethod
-  def from_bool(other: bool) -> ReturnCode:
-    return ReturnCode.true if other else ReturnCode.false
+  def from_bool(other: bool) -> ErrCode:
+    return ErrCode.true if other else ErrCode.false
+
+  @property
+  def is_err(self) -> bool:
+    return self != ErrCode.ok
+
+
+@dataclass
+class Result(Generic[T], Unpackable):
+  result: T | None = None
+  code: ErrCode = ErrCode.ok
+
+
+ResultFunc = Callable[..., Result[Any]]
 
 
 def _is_pipeline() -> bool:
@@ -76,16 +95,16 @@ def _get_stdin() -> Strings | None:
   return map(_parse_line, sys.stdin.buffer)
 
 
-def _get_input(strings: Args) -> Input:
+def _get_input(args: Args) -> Input:
   if stdin := _get_stdin():
     return stdin
 
-  strings = map(str, strings)
+  strings = map(str, args)
   return strings
 
 
-def _get_strings_sep(strings: Args) -> StringsSep:
-  strings = _get_input(strings)
+def _get_strings_sep(args: Args) -> StringsSep:
+  strings = _get_input(args)
   sep = _get_sep()
 
   return StringsSep(strings, sep)
@@ -134,12 +153,30 @@ def _wrap_str_check(func: StrCheckFunc) -> Callable[..., bool]:
   return new_func
 
 
-def _check_exit(func: Callable) -> Callable[..., None]:
+def _check_exit(func: Callable) -> QuitFunc:
   @_use_docstring(func)
   def new_func(*args, **kwargs):
     result: bool = func(*args, **kwargs)
-    rc = ReturnCode.from_bool(result)
+    rc = ErrCode.from_bool(result)
     sys.exit(rc)
+
+  return new_func
+
+
+def _handle_result(func: ResultFunc) -> QuitFunc:
+  @_use_docstring(func)
+  def new_func(*args, **kwargs):
+    result = func(*args, **kwargs)
+
+    if not result:
+      sys.exit(ErrCode.ok)
+
+    result, code = result
+
+    if result:
+      print(result)
+
+    sys.exit(code)
 
   return new_func
 

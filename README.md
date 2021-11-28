@@ -32,7 +32,7 @@ You could do the same thing with [`sed`](https://en.wikipedia.org/wiki/Sed), but
 
 `strs`, on the other hand, has a uniform interface and set of features across platforms, shells and operating systems, including Windows.
 
-## Shell string manipulation
+## String manipulation in the shell
 `strs` provides string tools that are similar to [those that are built into Bash](https://tldp.org/LDP/abs/html/string-manipulation.html), and it provides commands for things that Bash doesn't have [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar) for, as well. The following examples of Bash code only work with Bash, whereas `strs` will work the same no matter if you're using Bash, [zsh](https://www.zsh.org/) or PowerShell.
 
 Here are some ways you can manipulate strings with both Bash and `strs`:
