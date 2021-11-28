@@ -5,15 +5,9 @@ from itertools import cycle
 from unidecode import unidecode
 from emoji import emoji_count, demojize, emojize
 
-from .base import Args, _get_strings_sep, _wrap_str_check, \
-  _wrap_str_parser, _use_docstring, NO_RESULT, SAME_LINE, SPACE, \
-  NEW_LINE, EMPTY_STR, cycle_times
-
-
-FOREVER: int = -1
-
-
-Chars = Iterable[str]
+from .base import Args, Chars, _get_strings_sep, _wrap_str_check, \
+  _wrap_str_parser, _use_docstring, _cycle_times, NO_RESULT, \
+  SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER
 
 
 upper = _wrap_str_parser(str.upper)
@@ -38,6 +32,12 @@ istitle = _wrap_str_check(str.istitle)
 isupper = _wrap_str_check(str.isupper)
 
 
+has_emoji = _wrap_str_check(emoji_count)
+from_emoji = _wrap_str_parser(demojize)
+to_emoji = _wrap_str_parser(emojize)
+to_ascii = _wrap_str_parser(unidecode)
+
+
 # command aliases
 cap = capitalize
 up = allcaps = upper
@@ -45,13 +45,6 @@ low = lower
 isup = isallcaps = isupper
 islow = islower
 isnum = isnumeric
-
-
-to_ascii = _wrap_str_parser(unidecode)
-
-has_emoji = _wrap_str_check(emoji_count)
-from_emoji = _wrap_str_parser(demojize)
-to_emoji = _wrap_str_parser(emojize)
 
 
 def length(*args: Args) -> int:
@@ -92,7 +85,7 @@ def repeat(times: int = FOREVER, *args: Args):
   strings, _ = _get_strings_sep(args)
 
   if times > FOREVER:
-    strings = cycle_times(strings, times)
+    strings = _cycle_times(strings, times)
 
   elif times == FOREVER:
     strings = cycle(strings)
