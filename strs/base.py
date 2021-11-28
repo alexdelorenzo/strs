@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import Iterable, NamedTuple, Callable
+from functools import partial
 from enum import IntEnum
 import sys
 import os
@@ -36,7 +37,7 @@ class StringsSep(NamedTuple):
 
 class ReturnCode(IntEnum):
   ok: int = 0
-  failure: int = 1
+  err: int = 1
 
   true: int = 0
   false: int = 1
@@ -122,27 +123,33 @@ def _use_docstring(source: Callable | str) -> Decorator:
 
 def _wrap_str_check(func: StrCheckFunc) -> Callable[..., bool]:
   @_use_docstring(func)
-  def new_func(*args: Args) -> bool:
+  def new_func(*args: Args, **kwargs) -> bool:
     strings, _ = _get_strings_sep(args)
-    checks = map(func, strings)
+
+    func_kwargs = partial(func, **kwargs)
+    checks = map(func_kwargs, strings)
+
     return all(checks)
+
+  return new_func
+
+
+def _check_exit(func: Callable) -> Callable[..., None]:
+  @_use_docstring(func)
+  def new_func(*args, **kwargs):
+    result: bool = func(*args, **kwargs)
+    rc = ReturnCode.from_bool(result)
+    sys.exit(rc)
 
   return new_func
 
 
 def _wrap_check_exit(func: StrCheckFunc) -> Callable[..., bool]:
   wrapped = _wrap_str_check(func)
-
-  @_use_docstring(func)
-  def new_func(*args: Args) -> bool:
-    result: bool = wrapped(*args)
-    code = ReturnCode.from_bool(result)
-    sys.exit(code)
-
-  return new_func
+  return _check_exit(wrapped)
 
 
-def _wrap_str_parser(func: StrParseFunc) -> Callable[..., None]:
+def _wrap_parse_print(func: StrParseFunc) -> Callable[..., None]:
   @_use_docstring(func)
   def new_func(*args: Args):
     strings, sep = _get_strings_sep(args)
