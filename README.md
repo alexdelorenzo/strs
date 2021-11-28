@@ -1,7 +1,7 @@
 # 🧵 Easy string tools for the shell
  `strs` makes working with [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in [shells](https://linuxcommand.org/lc3_lts0010.php) easier.
 
-[String manipulation in POSIX-compliant shells](https://shellmagic.xyz/#string-manipulation) can be both confusing and cumbersome. `strs` brings string [convenience methods](https://wiki.c2.com/?ConvenienceMethods) from Python to shells like [Bash](https://www.gnu.org/software/bash/).
+[String manipulation](https://en.wikichip.org/wiki/string_manipulation) in [POSIX](https://en.wikipedia.org/wiki/POSIX)-compliant shells can be both [confusing and cumbersome](https://shellmagic.xyz/#string-manipulation). `strs` brings string [convenience methods](https://wiki.c2.com/?ConvenienceMethods) from Python to shells like [Bash](https://www.gnu.org/software/bash/).
 
 ```bash
 $ str capitalize "hey there! :fire:" | str to-emoji 
