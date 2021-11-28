@@ -1,7 +1,7 @@
 # 🧵 Easy string tools for the shell
  `strs` makes working with strings in the [shell](https://linuxcommand.org/lc3_lts0010.php) easier.
 
-[String manipulation in POSIX-compliant shells](https://shellmagic.xyz/#string-manipulation) can be both confusing and cumbersome. `strs` brings string convenience methods from Python to shells like Bash.
+[String manipulation in POSIX-compliant shells](https://shellmagic.xyz/#string-manipulation) can be both confusing and cumbersome. `strs` brings string [convenience methods](https://wiki.c2.com/?ConvenienceMethods) from Python to shells like [Bash](https://www.gnu.org/software/bash/).
 
 ```bash
 $ str capitalize "hey there! :fire:" | str to-emoji 
@@ -10,7 +10,7 @@ Hey there! 🔥
 
 # Installation
 ## Prerequisites
- - A Unix shell like Bash, or PowerShell or Command Prompt on Windows
+ - A [Unix shell](https://en.wikipedia.org/wiki/Unix_shell) like Bash, or PowerShell or Command Prompt on Windows
  - Python 3.10+
  - `requirements.txt`
 
@@ -21,19 +21,19 @@ python3 -m pip install strs
 
 # Examples
 ## Practical example
-If you're using Debian, you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between your machines. You might run Debian `testing` on one machine, but Debian `stable` would suit the use case of another.
+If you're using [Debian](https://www.debian.org/), you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between your machines. You might run Debian [`testing`](https://wiki.debian.org/DebianTesting) on one machine, but Debian [`stable`](https://wiki.debian.org/DebianStable) might suit the purpose of another.
 
 Using `strs`, you can take your apt sources from `testing` and point them to `stable` on the fly, and send them to your other your other machine:
 ```bash
 $ str replace testing stable < sources.list | ssh hostname "cat > /etc/apt/sources.list"
 ```
 
-You could do the same thing with `sed`, but that requires knowing `sed`'s regex syntax, whether or not the version of `sed` you have is [new enough to ship with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [the differences between GNU `sed` and BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
+You could do the same thing with [`sed`](https://en.wikipedia.org/wiki/Sed), but that requires knowing [`sed`'s regex syntax](https://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html), whether or not the version of `sed` you have is [new enough to ship with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [the differences between GNU `sed` and BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
 
 `strs`, on the other hand, has a uniform interface and set of features across platforms, shells and operating systems, including Windows.
 
 ## Shell string manipulation
-`strs` provides string tools that are similar to those that are built into Bash, and it provides commands for things that Bash doesn't have syntactic sugar for, as well. The following examples of Bash code only work with Bash, whereas `strs` will work the same no matter if you're using Bash, zsh or PowerShell.
+`strs` provides string tools that are similar to [those that are built into Bash](https://tldp.org/LDP/abs/html/string-manipulation.html), and it provides commands for things that Bash doesn't have [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar) for, as well. The following examples of Bash code only work with Bash, whereas `strs` will work the same no matter if you're using Bash, [zsh](https://www.zsh.org/) or PowerShell.
 
 Here are some ways you can manipulate strings with both Bash and `strs`:
 ```bash
@@ -75,18 +75,18 @@ echo "${string/$old/$new}"  # replace first
 
 # vs
 str replace $old $new "$string"  # all
-str replace $old $new --count 1 "$string"  # first
+str replace $old $new "$string" --count 1  # first
 str replace-first $old $new "$string"  # first
 
 # or, using pipes
 echo $string | str replace $old $new
 echo $string | str replace $old $new --count 1
-echo $string | str replace_first $old $new
+echo $string | str replace-first $old $new
 
 ## Capitalization
 echo "${string^}"  # capitalize first char
-echo "${string^^}" # capitalize all
-echo "${string,,}" # lower all
+echo "${string^^}"  # capitalize all
+echo "${string,,}"  # lower all
 
 # vs
 str capitalize "$string"  # capitalize first char
@@ -100,7 +100,7 @@ echo $string | str lower
 ```
 
 ## String manipulation tools
-There are some string manipulation commands that `strs` comes with that don't have syntactic sugar in Bash:
+There are some string manipulation commands that `strs` comes with that don't have [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar) in Bash:
 ```bash
 #!/usr/bin/env bash
 string='This is an example.'
