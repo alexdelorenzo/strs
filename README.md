@@ -30,7 +30,7 @@ $ str replace testing stable < sources.list | ssh hostname "cat > /etc/apt/sourc
 
 You could do the same thing with `sed`, but that requires knowing `sed`'s regex syntax, whether or not the version of `sed` you have is [new enough to ship with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [the differences between GNU `sed` and BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
 
-`strs`, on the other hand, has a uniform interface and set of features across platforms, and across POSIX shells and on Windows. 
+`strs`, on the other hand, has a uniform interface and set of features across platforms, shells and operating systems, including Windows.
 
 ## Shell string manipulation
 `strs` provides string tools that are similar to those that are built into Bash, and it provides commands for things that Bash doesn't have syntactic sugar for, as well. The following examples of Bash code only work with Bash, whereas `strs` will work the same no matter if you're using Bash, zsh or PowerShell.
@@ -107,7 +107,7 @@ string='This is an example.'
 width=20
 countChar='e'
 dot='.'
-find='e'
+find='e'blob/main/strs/cli.py
 on='\n'
 remove='.'
 part=' '
