@@ -3,21 +3,22 @@ import sys
 import os
 
 
-SH_SEP: str | None = os.environ.get('IFS')
-
 NEW_LINE: str = '\n'
 EMPTY_STR: str = ''
 SAME_LINE: str = EMPTY_STR
 SPACE: str = ' '
 DOCTEST: str = '>>>'
+SH_SEP: str | None = os.environ.get('IFS')
 
 NO_RESULT: int = -1
 MIN_TIMES: int = 1
+FOREVER: int = -1
 
 
 Decorator = Callable[Callable, Callable]
 StrParseFunc = Callable[[str, ...], str]
 StrCheckFunc = Callable[str, bool]
+Chars = Iterable[str]
 Strings = Iterable[str]
 Args = list[str]
 Input = Strings | Args
@@ -131,7 +132,7 @@ def _apply(
 
 
 # see: https://docs.python.org/3/library/itertools.html#itertools.cycle
-def cycle_times(
+def _cycle_times(
   iterable: Iterable,
   times: int = MIN_TIMES,
 ) -> Iterable:
