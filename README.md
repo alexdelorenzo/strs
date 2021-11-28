@@ -99,7 +99,7 @@ echo $string | str upper
 echo $string | str lower
 ```
 
-## More string tools
+## String manipulation tools
 There are some string manipulation commands that `strs` comes with that don't have syntactic sugar in Bash:
 ```bash
 #!/usr/bin/env bash
@@ -263,3 +263,30 @@ echo $string | str istitle
 str isupper "$string"
 echo $string | str isupper
 ```
+
+## More string tools
+`strs` comes with some tools for dealing with UTF-8, ASCII and emojis, and it has some tools that aren't found in Python or common shells like Bash.
+
+```bash
+$ str sbob "squidward likes krabby patties"
+sQuIdWaRd LiKeS kRaBbY pAtTiEs
+
+$ str to-ascii "Ǎ Ě Ǐ Ǒ Ǔ Č Ď Ǧ Ȟ ǰ Ǩ Ľ Ň Ř Š Ť Ž"
+A E I O U C D G H j K L N R S T Z
+
+$ str slice 3 "Hey there! 🔥"
+Hey
+
+# you can use negative indices like you can in Python
+$ str slice -3 "Hey there! 🔥" --start 4
+there
+
+$ str from-emoji "Hey there! 🔥"
+Hey there! :fire:
+
+$ str has-emoji "Hey there! 🔥"; echo $?
+0
+
+$ str contains 🔥 "Hey there! 🔥"; echo $?
+0
+ ```
