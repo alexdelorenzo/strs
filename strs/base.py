@@ -1,5 +1,4 @@
-from typing import List, Iterable, \
-  NamedTuple, Callable
+from typing import Iterable, NamedTuple, Callable
 import sys
 import os
 
@@ -10,15 +9,17 @@ NEW_LINE: str = '\n'
 EMPTY_STR: str = ''
 SAME_LINE: str = EMPTY_STR
 SPACE: str = ' '
+DOCTEST: str = '>>>'
 
 NO_RESULT: int = -1
 MIN_TIMES: int = 1
 
 
+Decorator = Callable[Callable, Callable]
 StrParseFunc = Callable[[str, ...], str]
 StrCheckFunc = Callable[str, bool]
 Strings = Iterable[str]
-Args = List[str]
+Args = list[str]
 Input = Strings | Args
 
 
@@ -39,7 +40,7 @@ def _get_sep() -> str:
   return NEW_LINE
 
 
-def _decode_parse(line: bytes, strip: bool = False) -> str:
+def _parse_line(line: bytes, strip: bool = False) -> str:
   string = line.decode()
   string = string.rstrip(NEW_LINE)
 
@@ -51,7 +52,7 @@ def _decode_parse(line: bytes, strip: bool = False) -> str:
 
 def _get_strings() -> Strings | None:
   if _is_pipeline():
-    return map(_decode_parse, sys.stdin.buffer)
+    return map(_parse_line, sys.stdin.buffer)
 
   return None
 
@@ -71,9 +72,28 @@ def _get_strings_sep(strings: Args) -> StringsSep:
   return StringsSep(strings, sep)
 
 
-def _use_docstring(from_func: Callable) -> Callable[Callable, Callable]:
+def _strip_doctests(string: str) -> str:
+  if DOCTEST not in string:
+    return string
+
+  docs: list[str] = []
+  lines = string.split(NEW_LINE)
+
+  for line in lines:
+    if DOCTEST in line:
+      break
+
+    docs.append(line)
+
+  return NEW_LINE.join(docs)
+
+
+def _use_docstring(source: Callable | str) -> Decorator:
+  if isinstance(source, Callable):
+    source: str = _strip_doctests(source.__doc__)
+
   def decorator(to_func: Callable) -> Callable:
-    to_func.__doc__ = from_func.__doc__
+    to_func.__doc__ = source
     return to_func
 
   return decorator
@@ -125,7 +145,7 @@ def cycle_times(
     yield element
     saved.append(element)
 
-  cycles: int = MIN_TIMES
+  cycles: int = 1
 
   while saved and cycles < times:
     for element in saved:

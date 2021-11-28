@@ -1,3 +1,4 @@
+from typing import Iterable
 from functools import partial
 from itertools import cycle
 
@@ -10,6 +11,9 @@ from .base import Args, _get_strings_sep, _wrap_str_check, \
 
 
 FOREVER: int = -1
+
+
+Chars = Iterable[str]
 
 
 upper = _wrap_str_parser(str.upper)
@@ -45,9 +49,9 @@ isnum = isnumeric
 
 toascii = to_ascii = _wrap_str_parser(unidecode)
 
-hasemoji = has_emoji = _wrap_str_check(emoji_count)
-to_shortcode = from_emoji = _wrap_str_parser(demojize)
-from_shortcode = to_emoji = _wrap_str_parser(emojize)
+has_emoji = _wrap_str_check(emoji_count)
+from_emoji = _wrap_str_parser(demojize)
+to_emoji = _wrap_str_parser(emojize)
 
 
 def length(*args: Args) -> int:
@@ -424,6 +428,34 @@ replace_first = replacefirst = replace1 = _use_docstring(replace)(
 )
 
 
+def _gen_chars(chars: Chars, reverse: bool) -> Chars:
+  caps: bool = reverse
+
+  for char in chars:
+    if not char.isalpha():
+      yield char
+      continue
+
+    char: str = char.upper() if caps else char.lower()
+    yield char
+
+    caps = not caps
+
+
+def sbob(
+  *args: Args,
+  reverse: bool = False,
+):
+  """tYpE lIkE tHiS"""
+  strings, sep = _get_strings_sep(args)
+
+  for string in strings:
+    for char in _gen_chars(string, reverse):
+      print(char, end=SAME_LINE)
+
+    print(EMPTY_STR, end=sep)
+
+
 @_use_docstring(str.format)
 def format(*args: Args, **kwargs):
   strings, sep = _get_strings_sep(args)
@@ -439,4 +471,3 @@ def format(*args: Args, **kwargs):
 def format_map(**kwargs):
   print(kwargs)
   raise NotImplementedError()
-
