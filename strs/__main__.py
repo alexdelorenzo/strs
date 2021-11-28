@@ -3,7 +3,11 @@ from .commands import capitalize, casefold, length, count, \
   lstrip, rstrip, find, isascii
 
 from .commands import *
+
+
 del Args
+del emojize
+del demojize
 
 
 def main():
