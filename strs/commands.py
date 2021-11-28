@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Iterable
 from functools import partial
 from itertools import cycle
@@ -6,16 +7,16 @@ from unidecode import unidecode
 from emoji import emoji_count, demojize, emojize
 
 from .base import Args, Chars, _get_strings_sep, _wrap_check_exit, \
-  _wrap_str_parser, _use_docstring, _cycle_times, NO_RESULT, \
-  SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER, ALL
+  _wrap_parse_print, _use_docstring, _cycle_times, _check_exit, \
+  SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER, ALL, NO_RESULT
 
 
-upper = _wrap_str_parser(str.upper)
-lower = _wrap_str_parser(str.lower)
-capitalize = _wrap_str_parser(str.capitalize)
-casefold = _wrap_str_parser(str.casefold)
-swapcase = _wrap_str_parser(str.swapcase)
-title = _wrap_str_parser(str.title)
+upper = _wrap_parse_print(str.upper)
+lower = _wrap_parse_print(str.lower)
+capitalize = _wrap_parse_print(str.capitalize)
+casefold = _wrap_parse_print(str.casefold)
+swapcase = _wrap_parse_print(str.swapcase)
+title = _wrap_parse_print(str.title)
 
 
 isalnum = _wrap_check_exit(str.isalnum)
@@ -33,18 +34,9 @@ isupper = _wrap_check_exit(str.isupper)
 
 
 has_emoji = _wrap_check_exit(emoji_count)
-from_emoji = _wrap_str_parser(demojize)
-to_emoji = _wrap_str_parser(emojize)
-to_ascii = _wrap_str_parser(unidecode)
-
-
-# command aliases
-cap = capitalize
-up = allcaps = upper
-low = lower
-isup = isallcaps = isupper
-islow = islower
-isnum = isnumeric
+from_emoji = _wrap_parse_print(demojize)
+to_emoji = _wrap_parse_print(emojize)
+to_ascii = _wrap_parse_print(unidecode)
 
 
 def length(*args: Args) -> int:
@@ -60,7 +52,7 @@ def length(*args: Args) -> int:
   return total - sep_size
 
 
-py_slice = slice
+_slice = slice
 
 
 def slice(
@@ -71,7 +63,7 @@ def slice(
 ):
   """Return substrings using given indices."""
   strings, sep = _get_strings_sep(args)
-  window = py_slice(start, stop, step)
+  window = _slice(start, stop, step)
 
   for string in strings:
     print(string[window], end=sep)
@@ -97,6 +89,7 @@ def repeat(times: int = FOREVER, *args: Args):
     print(string, end=SAME_LINE)
 
 
+@_check_exit
 def contains(
   find: str,
   *args: Args,
@@ -308,13 +301,14 @@ def rpartition(sep: str, *args: Args):
     print(output)
 
 
+@_check_exit
 @_use_docstring(str.endswith)
 def endswith(
   suffix: str | tuple[str, ...],
   *args: Args,
   start: int | None = None,
   end: int | None = None,
-):
+) -> bool:
   strings, _ = _get_strings_sep(args)
   string: str | None = None
 
@@ -327,13 +321,14 @@ def endswith(
   return False
 
 
+@_check_exit
 @_use_docstring(str.startswith)
 def startswith(
   prefix: str | tuple[str, ...],
   *args: Args,
   start: int | None = None,
   end: int | None = None,
-):
+) -> bool:
   strings, _ = _get_strings_sep(args)
   first = next(iter(strings))
 
