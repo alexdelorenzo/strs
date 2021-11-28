@@ -47,7 +47,7 @@ islow = islower
 isnum = isnumeric
 
 
-toascii = to_ascii = _wrap_str_parser(unidecode)
+to_ascii = _wrap_str_parser(unidecode)
 
 has_emoji = _wrap_str_check(emoji_count)
 from_emoji = _wrap_str_parser(demojize)
