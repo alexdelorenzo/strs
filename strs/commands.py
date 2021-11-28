@@ -7,7 +7,7 @@ from emoji import emoji_count, demojize, emojize
 
 from .base import Args, Chars, _get_strings_sep, _wrap_str_check, \
   _wrap_str_parser, _use_docstring, _cycle_times, NO_RESULT, \
-  SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER
+  SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER, ALL
 
 
 upper = _wrap_str_parser(str.upper)
@@ -407,7 +407,7 @@ def replace(
   old: str,
   new: str,
   *args: Args,
-  count: int = -1
+  count: int = ALL
 ):
   strings, sep = _get_strings_sep(args)
 
@@ -416,7 +416,7 @@ def replace(
     print(string, end=sep)
 
 
-replace_first = replacefirst = replace1 = _use_docstring(replace)(
+replace_first = _use_docstring(replace)(
   partial(replace, count=1)
 )
 

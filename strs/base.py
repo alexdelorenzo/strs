@@ -13,6 +13,7 @@ SH_SEP: str | None = os.environ.get('IFS')
 NO_RESULT: int = -1
 MIN_TIMES: int = 1
 FOREVER: int = -1
+ALL: int = -1
 
 
 Decorator = Callable[Callable, Callable]
