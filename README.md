@@ -1,5 +1,5 @@
 # 🧵 Easy string tools for the shell
- `strs` makes working with strings in the [shell](https://linuxcommand.org/lc3_lts0010.php) easier.
+ `strs` makes working with [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in [shells](https://linuxcommand.org/lc3_lts0010.php) easier.
 
 [String manipulation in POSIX-compliant shells](https://shellmagic.xyz/#string-manipulation) can be both confusing and cumbersome. `strs` brings string [convenience methods](https://wiki.c2.com/?ConvenienceMethods) from Python to shells like [Bash](https://www.gnu.org/software/bash/).
 
@@ -106,13 +106,11 @@ There are some string manipulation commands that `strs` comes with that don't ha
 string='This is an example.'
 width=20
 countChar='e'
-dot='.'
 find='e'
 on='\n'
 remove='.'
 part=' '
 split=' '
-t='T'
 
 # casefold
 str casefold "$string"
@@ -128,10 +126,6 @@ echo $string | str center $width
 str count $countChar "$string"
 echo $string | str count $countChar
 
-# ends with
-str endswith $dot "$string"
-echo $string | str endswith $dot
-
 # find
 str find $find "$string"
 echo $string | str find $find
@@ -144,6 +138,34 @@ echo $string | str index $find
 str join $on "$string"
 echo $string | str join $on
 
+# partition
+str partition "$part" "$string"
+echo $string | str partition "$part"
+
+# split
+str split $split "$string"
+echo $string | str split $split
+
+# strip
+str strip $strip "$string"
+echo $string | str strip $strip
+
+# swap case
+str swapcase "$string"
+echo $string | str swapcase
+
+# to title case
+str title "$string"
+echo $string | str title
+
+# zero fill
+str zfill $width "$string"
+echo $string | str zfill $width
+
+# repeat
+str repeat 3 "$string"
+echo $string | str repeat 3
+
 # ljust
 str ljust $width "$string"
 echo $string | str ljust $width
@@ -151,10 +173,6 @@ echo $string | str ljust $width
 # lstrip
 str lstrip $remove "$string"
 echo $string | str lstrip $remove
-
-# partition
-str partition "$part" "$string"
-echo $string | str partition "$part"
 
 # rfind
 str rfind $find "$string"
@@ -179,34 +197,6 @@ echo $string | str rpartition "$part"
 # rsplit
 str rsplit $split "$string"
 echo $string | str rsplit $split
-
-# split
-str split $split "$string"
-echo $string | str split $split
-
-# strip
-str strip $strip "$string"
-echo $string | str strip $strip
-
-# swap case
-str swapcase "$string"
-echo $string | str swapcase
-
-# starts with
-str startswith $t "$string"
-echo $string | str startswith $t
-
-# to title case
-str title "$string"
-echo $string | str title
-
-# zero fill
-str zfill $width "$string"
-echo $string | str zfill $width
-
-# repeat
-str repeat 3 "$string"
-echo $string | str repeat 3
 ```
 
 ## String validation tools
@@ -214,6 +204,14 @@ echo $string | str repeat 3
 ```bash
 #!/usr/bin/env bash
 string='This is an example.'
+
+# ends with
+str endswith . "$string"
+echo $string | str endswith .
+
+# starts with
+str startswith T "$string"
+echo $string | str startswith T
 
 # is alphanumeric
 str isalnum "$string"
