@@ -107,7 +107,7 @@ string='This is an example.'
 width=20
 countChar='e'
 dot='.'
-find='e'blob/main/strs/cli.py
+find='e'
 on='\n'
 remove='.'
 part=' '
@@ -281,12 +281,12 @@ Hey
 $ str slice -3 "Hey there! 🔥" --start 4
 there
 
-$ str from-emoji "Hey there! 🔥"
-Hey there! :fire:
+$ str contains 🔥 "Hey there! 🔥"; echo $?
+0
 
 $ str has-emoji "Hey there! 🔥"; echo $?
 0
 
-$ str contains 🔥 "Hey there! 🔥"; echo $?
-0
+$ str from-emoji "Hey there! 🔥"
+Hey there! :fire:
  ```
