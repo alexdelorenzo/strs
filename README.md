@@ -210,7 +210,7 @@ echo $string | str repeat 3
 ```
 
 ## String validation tools
-`strs` also brings Python's string validation methods to the shell:
+`strs` also brings [Python's string validation methods](https://docs.python.org/3/library/stdtypes.html#str) to the shell:
 ```bash
 #!/usr/bin/env bash
 string='This is an example.'
