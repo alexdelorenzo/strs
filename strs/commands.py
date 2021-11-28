@@ -74,7 +74,7 @@ def repeat(times: int = FOREVER, *args: Args):
   if not times:
     return
 
-  strings, _ = _get_strings_sep(args)
+  strings, sep = _get_strings_sep(args)
 
   if times > FOREVER:
     strings = _cycle_times(strings, times)
@@ -86,7 +86,7 @@ def repeat(times: int = FOREVER, *args: Args):
     return
 
   for string in strings:
-    print(string, end=SAME_LINE)
+    print(string, end=sep)
 
 
 @_check_exit
