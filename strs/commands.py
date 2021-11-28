@@ -1,14 +1,19 @@
 from __future__ import annotations
-from typing import Iterable
 from functools import partial
 from itertools import cycle
 
-from unidecode import unidecode
 from emoji import emoji_count, demojize, emojize
+from nth_py.nth import gen_lines, exclude_lines
+from unidecode import unidecode
 
 from .base import Args, Chars, _get_strings_sep, _wrap_check_exit, \
   _wrap_parse_print, _use_docstring, _cycle_times, _check_exit, \
-  SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER, ALL, NO_RESULT
+  SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER, ALL, NO_RESULT, \
+  ErrCode, _get_stdin, Result, _handle_result
+
+
+ErrNoResult = Result[int](NO_RESULT, ErrCode.err)
+ErrResult = Result(code=ErrCode.err)
 
 
 upper = _wrap_parse_print(str.upper)
@@ -33,10 +38,10 @@ istitle = _wrap_check_exit(str.istitle)
 isupper = _wrap_check_exit(str.isupper)
 
 
-has_emoji = _wrap_check_exit(emoji_count)
-from_emoji = _wrap_parse_print(demojize)
-to_emoji = _wrap_parse_print(emojize)
 to_ascii = _wrap_parse_print(unidecode)
+to_emoji = _wrap_parse_print(emojize)
+from_emoji = _wrap_parse_print(demojize)
+has_emoji = _wrap_check_exit(emoji_count)
 
 
 def length(*args: Args) -> int:
@@ -69,10 +74,14 @@ def slice(
     print(string[window], end=sep)
 
 
-def repeat(times: int = FOREVER, *args: Args):
+@_handle_result
+def repeat(
+  times: int = FOREVER,
+  *args: Args,
+) -> Result:
   """Repeat string. Set `times` to -1 to repeat forever."""
   if not times:
-    return
+    return ErrResult
 
   strings, sep = _get_strings_sep(args)
 
@@ -83,7 +92,7 @@ def repeat(times: int = FOREVER, *args: Args):
     strings = cycle(strings)
 
   else:
-    return
+    return ErrResult
 
   for string in strings:
     print(string, end=sep)
@@ -106,28 +115,32 @@ def contains(
   return False
 
 
+@_handle_result
 @_use_docstring(str.count)
-def count(sub: str, *args: Args) -> int:
+def count(sub: str, *args: Args) -> Result[int]:
   if sub is None or sub == EMPTY_STR:
-    return NO_RESULT
+    return ErrResult
 
   strings, _ = _get_strings_sep(args)
 
-  return sum(
+  total = sum(
     string.count(sub)
     for string in strings
   )
 
+  return Result(total)
 
+
+@_handle_result
 @_use_docstring(str.index)
 def index(
   sub: str,
   *args: Args,
   start: int | None = None,
   end: int | None = None,
-) -> int:
+) -> Result[int]:
   if sub is None or sub == EMPTY_STR:
-    return NO_RESULT
+    return ErrResult
 
   strings, sep = _get_strings_sep(args)
   match_index: int | None
@@ -143,20 +156,22 @@ def index(
       match_index = None
 
     if match_index is not None:
-      return index + match_index
+      index += match_index
+      return Result(index)
 
     index += len(line)
 
 
+@_handle_result
 @_use_docstring(str.rindex)
 def rindex(
   sub: str,
   *args: Args,
   start: int | None = None,
   end: int | None = None,
-) -> int:
+) -> Result[int]:
   if sub is None or sub == EMPTY_STR:
-    return NO_RESULT
+    return ErrResult
 
   strings, sep = _get_strings_sep(args)
   match_index: int | None
@@ -172,7 +187,8 @@ def rindex(
       match_index = None
 
     if match_index is not None:
-      return index + match_index
+      index += match_index
+      return Result(index)
 
     index += len(line)
 
@@ -335,15 +351,16 @@ def startswith(
   return first.startswith(prefix, start, end)
 
 
+@_handle_result
 @_use_docstring(str.find)
 def find(
   sub: str | None = None,
   *args: Args,
   start: int | None = None,
   end: int | None = None,
-) -> int:
+) -> Result[int]:
   if sub is None or sub == EMPTY_STR:
-    return NO_RESULT
+    return ErrResult
 
   strings, sep = _get_strings_sep(args)
   match_index: int | None
@@ -355,20 +372,22 @@ def find(
     match_index = line.find(sub, start, end)
 
     if match_index is not None:
-      return index + match_index
+      index += match_index
+      return Result(index)
 
     index += len(line)
 
 
+@_handle_result
 @_use_docstring(str.rfind)
 def rfind(
   sub: str | None = None,
   *args: Args,
   start: int | None = None,
   end: int | None = None,
-) -> int:
+) -> Result[int]:
   if sub is None or sub == EMPTY_STR:
-    return NO_RESULT
+    return ErrResult
 
   strings, sep = _get_strings_sep(args)
   match_index: int | None
@@ -379,7 +398,8 @@ def rfind(
     match_index = line.rfind(sub, start, end)
 
     if match_index is not None:
-      return index + match_index
+      index += match_index
+      return Result(index)
 
     index += len(line)
 
@@ -442,6 +462,27 @@ def sbob(
       print(char, end=SAME_LINE)
 
     print(EMPTY_STR, end=sep)
+
+
+def nth(*line_nums: list[int], exclude: bool = False):
+  """
+  Print line numbers `line_nums` from standard input. Setting the `exclude` flag
+  will instead print all lines from standard input and lines `line_nums`
+  will be excluded.
+  """
+  stdin = _get_stdin()
+
+  if not (stdin and line_nums):
+    raise SystemExit(ErrCode.err)
+
+  if exclude:
+    lines = exclude_lines(line_nums, stdin)
+
+  else:
+    lines = gen_lines(line_nums, stdin)
+
+  for line in lines:
+    print(line)
 
 
 @_use_docstring(str.format)
