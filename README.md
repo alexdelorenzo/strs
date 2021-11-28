@@ -76,7 +76,7 @@ echo "${string/$old/$new}"  # replace first
 # vs
 str replace $old $new "$string"  # all
 str replace $old $new --count 1 "$string"  # first
-str replace_first $old $new "$string"  # first
+str replace-first $old $new "$string"  # first
 
 # or, using pipes
 echo $string | str replace $old $new
