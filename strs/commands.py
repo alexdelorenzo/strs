@@ -3,17 +3,15 @@ from functools import partial
 from itertools import cycle
 
 from emoji import emoji_count, demojize, emojize
-from nth_py.nth import gen_lines, exclude_lines
+from nth_py.nth import gen_lines as _gen_lines, \
+  exclude_lines as _exclude_lines
 from unidecode import unidecode
 
 from .base import Args, Chars, _get_strings_sep, _wrap_check_exit, \
   _wrap_parse_print, _use_docstring, _cycle_times, _check_exit, \
-  SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER, ALL, NO_RESULT, \
-  ErrCode, _get_stdin, Result, _handle_result, FIRST, StreamingResults, \
-  _handle_stream, StringSep, ErrResult
-
-
-ErrIntResult = Result[int](NO_RESULT, ErrCode.err)
+  SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER, ALL, ErrCode, \
+  _get_stdin, Result, _handle_result, FIRST, StreamingResults, \
+  _handle_stream, StrSep, ErrResult, ErrIntResult, _is_pipeline
 
 
 upper = _wrap_parse_print(str.upper)
@@ -43,6 +41,8 @@ to_emoji = _wrap_parse_print(emojize)
 from_emoji = _wrap_parse_print(demojize)
 has_emoji = _wrap_check_exit(emoji_count)
 
+del unidecode, emojize, demojize, emoji_count
+
 
 @_handle_result
 def length(*args: Args) -> Result[int]:
@@ -70,18 +70,26 @@ def slice(
   step: int | None = None,
 ) -> StreamingResults:
   """Return substrings using given indices."""
-  strings, sep = _get_strings_sep(args)
+  strings, _ = _get_strings_sep(args)
   window = _slice(start, stop, step)
 
   for string in strings:
-    yield StringSep(string[window], sep)
+    sub = string[window]
+
+    if sub.endswith(NEW_LINE):
+      sep = SAME_LINE
+
+    else:
+      sep = NEW_LINE
+
+    yield StrSep(sub, sep)
 
 
 @_handle_stream
 def repeat(
   times: int = FOREVER,
   *args: Args,
-) -> Result:
+) -> StreamingResults:
   """Repeat string. Set `times` to -1 to repeat forever."""
   if not times:
     yield ErrResult
@@ -100,7 +108,7 @@ def repeat(
     return
 
   for string in strings:
-    yield StringSep(string, sep)
+    yield StrSep(string, sep)
 
 
 @_check_exit
@@ -109,6 +117,7 @@ def contains(
   *args: Args,
 ) -> bool:
   """Confirm whether the input contains a given string."""
+  find = str(find)
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
@@ -210,7 +219,7 @@ def split(on: str = NEW_LINE, *args: Args) -> StreamingResults:
       if not split_str:
         continue
 
-      yield StringSep(split_str, sep)
+      yield StrSep(split_str, sep)
 
 
 @_handle_stream
@@ -225,7 +234,7 @@ def rsplit(on: str = NEW_LINE, *args: Args) -> StreamingResults:
       if not split_str:
         continue
 
-      yield StringSep(split_str, sep)
+      yield StrSep(split_str, sep)
 
 
 @_handle_stream
@@ -234,10 +243,10 @@ def join(on: str = EMPTY_STR, *args: Args) -> StreamingResults:
   strings, _ = _get_strings_sep(args)
 
   first = next(strings)
-  yield StringSep(first, SAME_LINE)
+  yield StrSep(first, SAME_LINE)
 
   for string in strings:
-    yield StringSep(f'{on}{string}', SAME_LINE)
+    yield StrSep(f'{on}{string}', SAME_LINE)
 
 
 @_handle_stream
@@ -247,7 +256,7 @@ def strip(chars: str | None = None, *args: Args) -> StreamingResults:
 
   for string in strings:
     string = string.strip(chars)
-    yield StringSep(string, sep)
+    yield StrSep(string, sep)
 
 
 @_handle_stream
@@ -257,7 +266,7 @@ def lstrip(chars: str | None = None, *args: Args) -> StreamingResults:
 
   for string in strings:
     string = string.lstrip(chars)
-    yield StringSep(string, sep)
+    yield StrSep(string, sep)
 
 
 @_handle_stream
@@ -267,7 +276,7 @@ def rstrip(chars: str | None = None, *args: Args) -> StreamingResults:
 
   for string in strings:
     string = string.rstrip(chars)
-    yield StringSep(string, sep)
+    yield StrSep(string, sep)
 
 
 @_handle_stream
@@ -277,7 +286,7 @@ def expandtabs(*args: Args, tabsize: int = 8) -> StreamingResults:
 
   for string in strings:
     string = string.expandtabs(tabsize)
-    yield StringSep(string, sep)
+    yield StrSep(string, sep)
 
 
 @_handle_stream
@@ -287,7 +296,7 @@ def ljust(width: int, *args: Args, fillchar: str = SPACE) -> StreamingResults:
 
   for string in strings:
     string = string.ljust(width, fillchar)
-    yield StringSep(string, sep)
+    yield StrSep(string, sep)
 
 
 @_handle_stream
@@ -297,7 +306,7 @@ def rjust(width: int, *args: Args, fillchar: str = SPACE) -> StreamingResults:
 
   for string in strings:
     string = string.rjust(width, fillchar)
-    yield StringSep(string, sep)
+    yield StrSep(string, sep)
 
 
 @_handle_stream
@@ -307,7 +316,7 @@ def zfill(width: int, *args: Args) -> StreamingResults:
 
   for string in strings:
     string = string.zfill(width)
-    yield StringSep(string, sep)
+    yield StrSep(string, sep)
 
 
 @_handle_stream
@@ -319,7 +328,7 @@ def partition(sep: str, *args: Args) -> StreamingResults:
   for string in strings:
     parts = string.partition(sep)
     output = NEW_LINE.join(parts)
-    yield StringSep(output)
+    yield StrSep(output)
 
 
 @_handle_stream
@@ -331,7 +340,7 @@ def rpartition(sep: str, *args: Args) -> StreamingResults:
   for string in strings:
     parts = string.rpartition(sep)
     output = NEW_LINE.join(parts)
-    yield StringSep(output)
+    yield StrSep(output)
 
 
 @_check_exit
@@ -432,7 +441,7 @@ def center(
 
   for string in strings:
     string = string.center(width, fillchar)
-    yield StringSep(string, sep)
+    yield StrSep(string, sep)
 
 
 @_handle_stream
@@ -447,7 +456,7 @@ def replace(
 
   for string in strings:
     string = string.replace(old, new, count)
-    yield StringSep(string, sep)
+    yield StrSep(string, sep)
 
 
 replace_first = _use_docstring(replace)(
@@ -463,7 +472,7 @@ def _gen_sbob_chars(chars: Chars, reverse: bool) -> Chars:
       yield char
       continue
 
-    char: str = char.upper() if caps else char.lower()
+    char = char.upper() if caps else char.lower()
     yield char
 
     caps = not caps
@@ -481,15 +490,15 @@ def sbob(
     chars = _gen_sbob_chars(string, reverse)
 
     for char in chars:
-      yield StringSep(char, SAME_LINE)
+      yield StrSep(char, SAME_LINE)
 
-    yield StringSep(EMPTY_STR, sep)
+    yield StrSep(EMPTY_STR, sep)
 
 
 @_handle_stream
 def nth(*line_nums: list[int], exclude: bool = False) -> StreamingResults:
   """
-  Print line numbers `line_nums` from standard input. Setting the `exclude` flag
+  Print lines on `line_nums` from standard input. Setting the `exclude` flag
   will instead print all lines from standard input and lines `line_nums`
   will be excluded.
   """
@@ -500,13 +509,13 @@ def nth(*line_nums: list[int], exclude: bool = False) -> StreamingResults:
     return
 
   if exclude:
-    lines = exclude_lines(line_nums, stdin)
+    lines = _exclude_lines(line_nums, stdin)
 
   else:
-    lines = gen_lines(line_nums, stdin)
+    lines = _gen_lines(line_nums, stdin)
 
   for line in lines:
-    yield StringSep(line)
+    yield StrSep(line)
 
 
 @_use_docstring(str.format)
