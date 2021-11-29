@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Iterable, NamedTuple, Callable, Any, \
   TypeVar, Generic
 from dataclasses import dataclass
-from functools import partial
+from functools import partial, wraps
 from enum import IntEnum
 import sys
 import os
@@ -28,6 +28,7 @@ ALL: int = -1
 Decorator = Callable[Callable, Callable]
 StrParseFunc = Callable[[str, ...], str]
 StrCheckFunc = Callable[str, bool]
+CheckFunc = Callable[..., bool]
 QuitFunc = Callable[..., None]
 Chars = Iterable[str]
 Strings = Iterable[str]
@@ -36,8 +37,13 @@ Input = Strings | Args
 T = TypeVar('T')
 
 
+class StringSep(NamedTuple):
+  result: str | None = None
+  sep: str = NEW_LINE
+
+
 class StringsSep(NamedTuple):
-  strings: Strings
+  result: Strings | None
   sep: str
 
 
@@ -64,6 +70,11 @@ class Result(Generic[T], Unpackable):
 
 
 ResultFunc = Callable[..., Result[Any]]
+StreamingResults = Iterable[StringSep | Result]
+GenFunc = Callable[..., StreamingResults]
+
+
+ErrResult = Result(code=ErrCode.err)
 
 
 def _is_pipeline() -> bool:
@@ -140,7 +151,7 @@ def _use_docstring(source: Callable | str) -> Decorator:
   return decorator
 
 
-def _wrap_str_check(func: StrCheckFunc) -> Callable[..., bool]:
+def _wrap_str_check(func: StrCheckFunc) -> CheckFunc:
   @_use_docstring(func)
   def new_func(*args: Args, **kwargs) -> bool:
     strings, _ = _get_strings_sep(args)
@@ -153,35 +164,17 @@ def _wrap_str_check(func: StrCheckFunc) -> Callable[..., bool]:
   return new_func
 
 
-def _check_exit(func: Callable) -> QuitFunc:
+def _check_exit(func: CheckFunc) -> QuitFunc:
   @_use_docstring(func)
   def new_func(*args, **kwargs):
     result: bool = func(*args, **kwargs)
-    rc = ErrCode.from_bool(result)
-    sys.exit(rc)
-
-  return new_func
-
-
-def _handle_result(func: ResultFunc) -> QuitFunc:
-  @_use_docstring(func)
-  def new_func(*args, **kwargs):
-    result = func(*args, **kwargs)
-
-    if not result:
-      sys.exit(ErrCode.ok)
-
-    result, code = result
-
-    if result:
-      print(result)
-
+    code = ErrCode.from_bool(result)
     sys.exit(code)
 
   return new_func
 
 
-def _wrap_check_exit(func: StrCheckFunc) -> Callable[..., bool]:
+def _wrap_check_exit(func: StrCheckFunc) -> CheckFunc:
   wrapped = _wrap_str_check(func)
   return _check_exit(wrapped)
 
@@ -205,6 +198,45 @@ def _apply(
   for string in strings:
     parsed = func(string, *args, **kwargs)
     print(parsed, end=sep)
+
+
+def _handle_result(func: ResultFunc) -> QuitFunc:
+  @wraps(func)
+  def new_func(*args, **kwargs):
+    result = func(*args, **kwargs)
+
+    if not result:
+      sys.exit(ErrCode.ok)
+
+    result, code = result
+
+    if result:
+      print(result)
+
+    sys.exit(code)
+
+  return new_func
+
+
+def _handle_stream(func: GenFunc) -> QuitFunc:
+  @wraps(func)
+  def new_func(*args, **kwargs):
+    gen: StreamingResults = func(*args, **kwargs)
+
+    for result in gen:
+      match result:
+        case StringSep(result, sep):
+          print(result, end=sep)
+
+        case Result(_, code) if code.is_err:
+          sys.exit(code)
+
+        case None:
+          sys.exit(ErrCode.err)
+
+    sys.exit(ErrCode.ok)
+
+  return new_func
 
 
 # see: https://docs.python.org/3/library/itertools.html#itertools.cycle
