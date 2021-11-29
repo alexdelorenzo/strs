@@ -284,16 +284,14 @@ def _cycle_times(
 
 # see https://stackoverflow.com/a/54421070
 def _slice_from_str(string: str) -> slice:
-  """
-  Parses a `slice()` from string, like `start:stop:step`.
-  """
   if not string:
     return slice()
 
   indices: list[str | None] = string.split(SLICE_SEP)
 
-  if len(indices) == 1:
-    indices = [None, *indices]
+  match indices:
+    case [one]:
+      indices = [None, one]
 
   nums = (
     int(index) if index else None

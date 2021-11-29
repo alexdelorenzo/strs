@@ -416,7 +416,6 @@ def find(
 
   for string in strings:
     line = f'{string}{sep}'
-
     match_index = line.find(sub, start, end)
 
     if match_index is not None:
