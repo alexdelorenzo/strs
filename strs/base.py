@@ -17,6 +17,7 @@ SAME_LINE: str = EMPTY_STR
 SPACE: str = ' '
 DOCTEST: str = '>>>'
 SH_SEP: str | None = os.environ.get('IFS')
+SLICE_SEP: str = ':'
 
 NO_RESULT: int = -1
 MIN_TIMES: int = 1
@@ -279,3 +280,24 @@ def _cycle_times(
       yield element
 
     cycles += INCREMENT
+
+
+# see https://stackoverflow.com/a/54421070
+def _slice_from_str(string: str) -> slice:
+  """
+  Parses a `slice()` from string, like `start:stop:step`.
+  """
+  if not string:
+    return slice()
+
+  indices: list[str | None] = string.split(SLICE_SEP)
+
+  if len(indices) == 1:
+    indices = [None, *indices]
+
+  nums = (
+    int(index) if index else None
+    for index in indices
+  )
+
+  return slice(*nums)

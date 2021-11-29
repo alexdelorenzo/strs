@@ -11,7 +11,8 @@ from .base import Args, Chars, _get_strings_sep, _wrap_check_exit, \
   _wrap_parse_print, _use_docstring, _cycle_times, _check_exit, \
   SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER, ALL, ErrCode, \
   _get_stdin, Result, _handle_result, FIRST, StreamingResults, \
-  _handle_stream, StrSep, ErrResult, ErrIntResult, _is_pipeline
+  _handle_stream, StrSep, ErrResult, ErrIntResult, _is_pipeline, \
+  _slice_from_str
 
 
 upper = _wrap_parse_print(str.upper)
@@ -63,7 +64,7 @@ _slice = slice
 
 
 @_handle_stream
-def slice(
+def substring(
   stop: int,
   *args: Args,
   start: int | None = None,
@@ -72,6 +73,27 @@ def slice(
   """Return substrings using given indices."""
   strings, _ = _get_strings_sep(args)
   window = _slice(start, stop, step)
+
+  for string in strings:
+    sub = string[window]
+
+    if sub.endswith(NEW_LINE):
+      sep = SAME_LINE
+
+    else:
+      sep = NEW_LINE
+
+    yield StrSep(sub, sep)
+
+
+@_handle_stream
+def slice(
+  indices: str,
+  *args: Args,
+) -> StreamingResults:
+  """Return substrings using given indices."""
+  strings, _ = _get_strings_sep(args)
+  window = _slice_from_str(indices)
 
   for string in strings:
     sub = string[window]
