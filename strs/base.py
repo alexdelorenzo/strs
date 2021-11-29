@@ -3,10 +3,11 @@ from typing import Iterable, NamedTuple, Callable, Any, \
   TypeVar, Generic
 from dataclasses import dataclass
 from functools import partial, wraps
-from enum import IntEnum
+from enum import IntEnum, auto
 import sys
 import os
 
+from strenum import StrEnum
 from unpackable import Unpackable
 
 
@@ -37,17 +38,18 @@ Input = Strings | Args
 T = TypeVar('T')
 
 
-class StringSep(NamedTuple):
-  result: str | None = None
+class StrSep(NamedTuple):
+  string: str | None = None
   sep: str = NEW_LINE
 
 
 class StringsSep(NamedTuple):
-  result: Strings | None
+  strings: Strings | None
   sep: str
 
 
 class ErrCode(IntEnum):
+  """Shell return codes"""
   ok: int = 0
   err: int = 1
 
@@ -63,18 +65,27 @@ class ErrCode(IntEnum):
     return self != ErrCode.ok
 
 
+class CmdState(StrEnum):
+  ok: str = auto()
+  err: str = auto()
+  quit: str = auto()
+
+
 @dataclass
 class Result(Generic[T], Unpackable):
   result: T | None = None
   code: ErrCode = ErrCode.ok
+  state: CmdState = CmdState.ok
 
 
-ResultFunc = Callable[..., Result[Any]]
-StreamingResults = Iterable[StringSep | Result]
+StreamResult = Result | StrSep | ErrCode | None
+StreamingResults = Iterable[StreamResult]
 GenFunc = Callable[..., StreamingResults]
+ResultFunc = Callable[..., Result[Any]]
 
 
 ErrResult = Result(code=ErrCode.err)
+ErrIntResult = Result[int](NO_RESULT, ErrCode.err)
 
 
 def _is_pipeline() -> bool:
@@ -85,13 +96,13 @@ def _get_sep() -> str:
   if SH_SEP is not None:
     return SH_SEP
 
-  # return NEW_LINE if _is_pipeline() else SPACE
-  return NEW_LINE
+  return EMPTY_STR if _is_pipeline() else NEW_LINE
+  # return NEW_LINE
 
 
 def _parse_line(line: bytes, strip: bool = False) -> str:
   string = line.decode()
-  string = string.rstrip(NEW_LINE)
+  # string = string.rstrip(NEW_LINE)
 
   if strip:
     return string.strip()
@@ -99,23 +110,24 @@ def _parse_line(line: bytes, strip: bool = False) -> str:
   return string
 
 
-def _get_stdin() -> Strings | None:
+def _get_stdin(strip: bool = False) -> Strings | None:
   if not _is_pipeline():
     return None
 
-  return map(_parse_line, sys.stdin.buffer)
+  parse = partial(_parse_line, strip=strip)
+  return map(parse, sys.stdin.buffer)
 
 
-def _get_input(args: Args) -> Input:
-  if stdin := _get_stdin():
+def _get_input(args: Args, strip: bool = False) -> Input:
+  if stdin := _get_stdin(strip):
     return stdin
 
   strings = map(str, args)
   return strings
 
 
-def _get_strings_sep(args: Args) -> StringsSep:
-  strings = _get_input(args)
+def _get_strings_sep(args: Args, strip: bool = False) -> StringsSep:
+  strings = _get_input(args, strip)
   sep = _get_sep()
 
   return StringsSep(strings, sep)
@@ -208,7 +220,7 @@ def _handle_result(func: ResultFunc) -> QuitFunc:
     if not result:
       sys.exit(ErrCode.ok)
 
-    result, code = result
+    result, code, *_ = result
 
     if result:
       print(result)
@@ -225,10 +237,16 @@ def _handle_stream(func: GenFunc) -> QuitFunc:
 
     for result in gen:
       match result:
-        case StringSep(result, sep):
-          print(result, end=sep)
+        case StrSep(string, sep):
+          print(string, end=sep)
 
-        case Result(_, code) if code.is_err:
+        case Result(result, code) if code.is_err:
+          if result:
+            print(result)
+
+          sys.exit(code)
+
+        case ErrCode() as code:
           sys.exit(code)
 
         case None:
