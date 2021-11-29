@@ -1,22 +1,30 @@
-from .commands import capitalize, casefold, length, count, \
-  index, join, split, upper, lower, strip, title, swapcase, \
-  lstrip, rstrip, find, isascii
-
+# from .commands import capitalize, casefold, length, count, \
+#  index, join, split, upper, lower, strip, title, swapcase, \
+#  lstrip, rstrip, find, isascii
 from .commands import *
 
 
-del Args
-del emojize
-del demojize
+def leave_only_cmd_funcs():
+  for name, val in globals().copy().items():
+    import types
+
+    match val:
+      case types.FunctionType() | types.MethodType():
+        pass
+
+      case _ if not name.startswith('__'):
+        del globals()[name]
 
 
-def main():
-  from fire import Fire
+def _main():
+  leave_only_cmd_funcs()
+
+  from fire import Fire as _Fire
 
   len = length
 
-  Fire()
+  _Fire()
 
 
 if __name__ == "__main__":
-  main()
+  _main()
