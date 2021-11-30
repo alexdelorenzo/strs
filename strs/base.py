@@ -25,6 +25,7 @@ FIRST: int = 1
 INCREMENT: int = 1
 FOREVER: int = -1
 ALL: int = -1
+SKIP: None = None
 
 
 Decorator = Callable[Callable, Callable]
@@ -39,14 +40,14 @@ Input = Strings | Args
 T = TypeVar('T')
 
 
+class InputStrsSep(NamedTuple):
+  strings: Strings | None
+  sep: str
+
+
 class StrSep(NamedTuple):
   string: str | None = None
   sep: str = NEW_LINE
-
-
-class StringsSep(NamedTuple):
-  strings: Strings | None
-  sep: str
 
 
 class ErrCode(IntEnum):
@@ -57,9 +58,9 @@ class ErrCode(IntEnum):
   true: int = ok
   false: int = err
 
-  @staticmethod
-  def from_bool(other: bool) -> ErrCode:
-    return ErrCode.true if other else ErrCode.false
+  @classmethod
+  def from_bool(cls: type, other: bool) -> ErrCode:
+    return cls.true if other else cls.false
 
   @property
   def is_err(self) -> bool:
@@ -80,8 +81,8 @@ class Result(Generic[T], Unpackable):
 
 
 StreamResult = Result | StrSep | ErrCode | None
-StreamingResults = Iterable[StreamResult]
-GenFunc = Callable[..., StreamingResults]
+StreamResults = Iterable[StreamResult]
+GenFunc = Callable[..., StreamResults]
 ResultFunc = Callable[..., Result[Any]]
 
 
@@ -98,12 +99,10 @@ def _get_sep() -> str:
     return SH_SEP
 
   return EMPTY_STR if _is_pipeline() else NEW_LINE
-  # return NEW_LINE
 
 
 def _parse_line(line: bytes, strip: bool = False) -> str:
   string = line.decode()
-  # string = string.rstrip(NEW_LINE)
 
   if strip:
     return string.strip()
@@ -127,11 +126,11 @@ def _get_input(args: Args, strip: bool = False) -> Input:
   return strings
 
 
-def _get_strings_sep(args: Args, strip: bool = False) -> StringsSep:
+def _get_strings_sep(args: Args, strip: bool = False) -> InputStrsSep:
   strings = _get_input(args, strip)
   sep = _get_sep()
 
-  return StringsSep(strings, sep)
+  return InputStrsSep(strings, sep)
 
 
 def _strip_doctests(string: str | None) -> str | None:
@@ -168,10 +167,9 @@ def _wrap_str_check(func: StrCheckFunc) -> CheckFunc:
   @_use_docstring(func)
   def new_func(*args: Args, **kwargs) -> bool:
     strings, _ = _get_strings_sep(args)
-
     func_kwargs = partial(func, **kwargs)
-    checks = map(func_kwargs, strings)
 
+    checks = map(func_kwargs, strings)
     return all(checks)
 
   return new_func
@@ -187,16 +185,18 @@ def _check_exit(func: CheckFunc) -> QuitFunc:
   return new_func
 
 
-def _wrap_check_exit(func: StrCheckFunc) -> CheckFunc:
+def _wrap_check_exit(func: StrCheckFunc) -> QuitFunc:
   wrapped = _wrap_str_check(func)
   return _check_exit(wrapped)
 
 
-def _wrap_parse_print(func: StrParseFunc) -> Callable[..., None]:
+def _wrap_parse_print(func: StrParseFunc) -> QuitFunc:
   @_use_docstring(func)
   def new_func(*args: Args):
     strings, sep = _get_strings_sep(args)
     _apply(func, strings, sep)
+
+    sys.exit(ErrCode.ok)
 
   return new_func
 
@@ -234,18 +234,19 @@ def _handle_result(func: ResultFunc) -> QuitFunc:
 def _handle_stream(func: GenFunc) -> QuitFunc:
   @wraps(func)
   def new_func(*args, **kwargs):
-    gen: StreamingResults = func(*args, **kwargs)
+    gen: StreamResults = func(*args, **kwargs)
 
     for result in gen:
       match result:
         case StrSep(string, sep):
           print(string, end=sep)
 
-        case Result(result, code) if code.is_err:
-          if result:
+        case Result(result, code):
+          if result is not None:
             print(result)
 
-          sys.exit(code)
+          if code.is_err:
+            sys.exit(code)
 
         case ErrCode() as code:
           sys.exit(code)
@@ -256,6 +257,20 @@ def _handle_stream(func: GenFunc) -> QuitFunc:
     sys.exit(ErrCode.ok)
 
   return new_func
+
+
+def _gen_sbob_chars(chars: Chars, reverse: bool = False) -> Chars:
+  caps: bool = reverse
+
+  for char in chars:
+    if not char.isalpha():
+      yield char
+      continue
+
+    char = char.upper() if caps else char.lower()
+    yield char
+
+    caps = not caps
 
 
 # see: https://docs.python.org/3/library/itertools.html#itertools.cycle
@@ -290,11 +305,11 @@ def _slice_from_str(string: str) -> slice:
   indices: list[str | None] = string.split(SLICE_SEP)
 
   match indices:
-    case [one]:
-      indices = [None, one]
+    case [end]:
+      indices = [SKIP, end]
 
   nums = (
-    int(index) if index else None
+    int(index) if index else SKIP
     for index in indices
   )
 
