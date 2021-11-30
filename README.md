@@ -1,5 +1,5 @@
 # 🧵 Easy string tools for the shell
- `strs` provides more than 30 tools that make working with [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in the [shell](https://linuxcommand.org/lc3_lts0010.php) easier.
+ `strs` provides over 30 tools that make working with [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in the [shell](https://linuxcommand.org/lc3_lts0010.php) easier.
 
 [String manipulation](https://en.wikichip.org/wiki/string_manipulation) in [POSIX](https://en.wikipedia.org/wiki/POSIX)-compliant shells can be both [confusing and cumbersome](https://shellmagic.xyz/#string-manipulation). `strs` brings string [convenience methods](https://wiki.c2.com/?ConvenienceMethods) from Python to shells like [Bash](https://www.gnu.org/software/bash/).
 
