@@ -152,12 +152,26 @@ def _strip_doctests(string: str | None) -> str | None:
   return NEW_LINE.join(docs)
 
 
-def _use_docstring(source: Callable | str) -> Decorator:
-  if isinstance(source, Callable):
-    source: str = _strip_doctests(source.__doc__)
+def _use_docstring(source: Callable | str, name: str = True) -> Decorator:
+  is_callable: bool = isinstance(source, Callable)
+
+  if is_callable:
+    docs: str = _strip_doctests(source.__doc__)
+
+  else:
+    docs = source
+
+  func_name: str | None = None
+
+  if name and is_callable:
+    func_name = source.__name__
 
   def decorator(to_func: Callable) -> Callable:
-    to_func.__doc__ = source
+    to_func.__doc__ = docs
+
+    if name and func_name:
+      to_func.__name__ = func_name
+
     return to_func
 
   return decorator
@@ -273,6 +287,10 @@ def _gen_sbob_chars(chars: Chars, reverse: bool = False) -> Chars:
     caps = not caps
 
 
+def _get_name(func: Callable) -> str:
+  return func.__name__
+
+
 # see: https://docs.python.org/3/library/itertools.html#itertools.cycle
 def _cycle_times(
   iterable: Iterable,
@@ -300,9 +318,9 @@ def _cycle_times(
 # see https://stackoverflow.com/a/54421070
 def _slice_from_str(string: str) -> slice:
   if not string:
-    return slice()
+    return slice(SKIP)
 
-  indices: list[str | None] = string.split(SLICE_SEP)
+  indices: list[str | SKIP] = string.split(SLICE_SEP)
 
   match indices:
     case [end]:
