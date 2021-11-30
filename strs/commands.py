@@ -12,7 +12,7 @@ from .base import Args, _get_strings_sep, _wrap_check_exit, \
   SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER, ALL, ErrCode, \
   _get_stdin, Result, _handle_result, FIRST, StreamResults, \
   _handle_stream, StrSep, ErrResult, ErrIntResult, _is_pipeline, \
-  _slice_from_str, _gen_sbob_chars
+  _slice_from_str, _gen_sbob_chars, _get_name
 
 
 upper = _wrap_parse_print(str.upper)
@@ -267,10 +267,11 @@ def rsplit(on: str = NEW_LINE, *args: Args) -> StreamResults:
 def join(on: str = EMPTY_STR, *args: Args) -> StreamResults:
   strings, _ = _get_strings_sep(args)
 
-  first = next(strings)
+  first = next(strings).rstrip(NEW_LINE)
   yield StrSep(first, SAME_LINE)
 
   for string in strings:
+    string = string.rstrip(NEW_LINE)
     yield StrSep(f'{on}{string}', SAME_LINE)
 
 
@@ -547,3 +548,60 @@ def format(*args: Args, **kwargs):
 def format_map(**kwargs):
   print(kwargs)
   raise NotImplementedError()
+
+
+__all__ = [
+  'capitalize',
+  'casefold',
+  'center',
+  'contains',
+  'count',
+  'endswith',
+  'expandtabs',
+  'find',
+  'format',
+  'format_map',
+  'from_emoji',
+  'has_emoji',
+  'index',
+  'isalnum',
+  'isalpha',
+  'isascii',
+  'isdecimal',
+  'isdigit',
+  'isidentifier',
+  'islower',
+  'isnumeric',
+  'isprintable',
+  'isspace',
+  'istitle',
+  'isupper',
+  'join',
+  'length',
+  'ljust',
+  'lower',
+  'lstrip',
+  'nth',
+  'partition',
+  'repeat',
+  'replace',
+  'rfind',
+  'rindex',
+  'rjust',
+  'rpartition',
+  'rsplit',
+  'rstrip',
+  'sbob',
+  'slice',
+  'split',
+  'startswith',
+  'strip',
+  'sub',
+  'substring',
+  'swapcase',
+  'title',
+  'to_ascii',
+  'to_emoji',
+  'upper',
+  'zfill',
+]
