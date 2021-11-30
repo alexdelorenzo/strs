@@ -1,3 +1,5 @@
+import types
+
 # from .commands import capitalize, casefold, length, count, \
 #  index, join, split, upper, lower, strip, title, swapcase, \
 #  lstrip, rstrip, find, isascii
@@ -6,10 +8,11 @@ from .commands import *
 
 def leave_only_cmd_funcs():
   for name, val in globals().copy().items():
-    import types
-
     match val:
       case types.FunctionType() | types.MethodType():
+        pass
+
+      case mod if mod is types:
         pass
 
       case _ if not name.startswith('__'):
