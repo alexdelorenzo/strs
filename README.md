@@ -81,7 +81,7 @@ str replace $old $new "$string"  # all
 str replace $old $new "$string" --count 1  # first
 str replace-first $old $new "$string"  # first
 
-# or, using pipes
+# or
 echo $string | str replace $old $new
 echo $string | str replace $old $new --count 1
 echo $string | str replace-first $old $new
@@ -203,18 +203,31 @@ echo $string | str rsplit $split
 ```
 
 ## String validation tools
-`strs` also brings [Python's string validation methods](https://docs.python.org/3/library/stdtypes.html#str) to the shell:
+`strs` also brings [Python's string validation methods](https://docs.python.org/3/library/stdtypes.html#str) to the shell.
+
+Here's an example of how you'd use them, followed by a list of validation tools that come with `strs`:
 ```bash
 #!/usr/bin/env bash
 string='This is an example.'
 
-# ends with
-str endswith . "$string"
-echo $string | str endswith .
+if str startswith T "$string" && str endswith . "$string"; then
+  printf "Starts with T and ends with .\n"
+
+elif str contains example "$string"; then
+  printf "Contains 'example'\n"
+
+elif !str isalnum "$string"; then
+  printf "Isn't alphanumeric\n"
+
+fi
 
 # starts with
 str startswith T "$string"
 echo $string | str startswith T
+
+# ends with
+str endswith . "$string"
+echo $string | str endswith .
 
 # is alphanumeric
 str isalnum "$string"
