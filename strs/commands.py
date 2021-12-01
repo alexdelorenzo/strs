@@ -13,12 +13,12 @@ from .base import Args, _get_strings_sep, _wrap_str_check, \
 FOREVER: int = -1
 
 
-upper = _wrap_str_parser(str.upper)
-lower = _wrap_str_parser(str.lower)
 capitalize = _wrap_str_parser(str.capitalize)
 casefold = _wrap_str_parser(str.casefold)
+lower = _wrap_str_parser(str.lower)
 swapcase = _wrap_str_parser(str.swapcase)
 title = _wrap_str_parser(str.title)
+upper = _wrap_str_parser(str.upper)
 
 
 isalnum = _wrap_str_check(str.isalnum)
