@@ -20,8 +20,8 @@ setup(
   install_requires=requirements,
   entry_points={
     "console_scripts": [
-      "strs = strs.__main__:main",
-      "str = strs.__main__:main"
+      "strs = strs.__main__:_main",
+      "str = strs.__main__:_main"
       ]
     }
 )

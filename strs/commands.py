@@ -1,58 +1,53 @@
-#!/usr/bin/env bash
+from __future__ import annotations
 from functools import partial
 from itertools import cycle
 
-from unidecode import unidecode
 from emoji import emoji_count, demojize, emojize
+from nth_py.nth import gen_lines as _gen_lines, \
+  exclude_lines as _exclude_lines
+from unidecode import unidecode
 
-from .base import Args, _get_strings_sep, _wrap_str_check, \
-  _wrap_str_parser, _use_docstring, NO_RESULT, SAME_LINE, SPACE, \
-  NEW_LINE, EMPTY_STR, cycle_times
-
-
-FOREVER: int = -1
-
-
-capitalize = _wrap_str_parser(str.capitalize)
-casefold = _wrap_str_parser(str.casefold)
-lower = _wrap_str_parser(str.lower)
-swapcase = _wrap_str_parser(str.swapcase)
-title = _wrap_str_parser(str.title)
-upper = _wrap_str_parser(str.upper)
+from .base import Args, _get_strings_sep, _wrap_check_exit, \
+  _wrap_parse_print, _use_docstring, _cycle_times, _check_exit, \
+  SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER, ALL, ErrCode, \
+  _get_stdin, Result, _handle_result, FIRST, StreamResults, \
+  _handle_stream, StrSep, ErrResult, ErrIntResult, _is_pipeline, \
+  _slice_from_str, _gen_sbob_chars, _get_name
 
 
-isalnum = _wrap_str_check(str.isalnum)
-isalpha = _wrap_str_check(str.isalpha)
-isascii = _wrap_str_check(str.isascii)
-isdecimal = _wrap_str_check(str.isdecimal)
-isdigit = _wrap_str_check(str.isdigit)
-isidentifier = _wrap_str_check(str.isidentifier)
-islower = _wrap_str_check(str.islower)
-isnumeric = _wrap_str_check(str.isnumeric)
-isprintable = _wrap_str_check(str.isprintable)
-isspace = _wrap_str_check(str.isspace)
-istitle = _wrap_str_check(str.istitle)
-isupper = _wrap_str_check(str.isupper)
+upper = _wrap_parse_print(str.upper)
+lower = _wrap_parse_print(str.lower)
+capitalize = _wrap_parse_print(str.capitalize)
+casefold = _wrap_parse_print(str.casefold)
+swapcase = _wrap_parse_print(str.swapcase)
+title = _wrap_parse_print(str.title)
 
 
-# command aliases
-cap = capitalize
-up = allcaps = upper
-low = lower
-isup = isallcaps = isupper
-islow = islower
-isnum = isnumeric
+isalnum = _wrap_check_exit(str.isalnum)
+isalpha = _wrap_check_exit(str.isalpha)
+isascii = _wrap_check_exit(str.isascii)
+isdecimal = _wrap_check_exit(str.isdecimal)
+isdigit = _wrap_check_exit(str.isdigit)
+isidentifier = _wrap_check_exit(str.isidentifier)
+islower = _wrap_check_exit(str.islower)
+isnumeric = _wrap_check_exit(str.isnumeric)
+isprintable = _wrap_check_exit(str.isprintable)
+isspace = _wrap_check_exit(str.isspace)
+istitle = _wrap_check_exit(str.istitle)
+isupper = _wrap_check_exit(str.isupper)
 
 
-toascii = to_ascii = _wrap_str_parser(unidecode)
+to_ascii = _wrap_parse_print(unidecode)
+to_emoji = _wrap_parse_print(emojize)
+from_emoji = _wrap_parse_print(demojize)
+has_emoji = _wrap_check_exit(emoji_count)
 
-hasemoji = has_emoji = _wrap_str_check(emoji_count)
-to_shortcode = from_emoji = _wrap_str_parser(demojize)
-from_shortcode = to_emoji = _wrap_str_parser(emojize)
+del unidecode, emojize, demojize, emoji_count
 
 
-def length(*args: Args) -> int:
-  """ Return the length of the string. """
+@_handle_result
+def length(*args: Args) -> Result[int]:
+  """ Return the length of the string."""
   strings, sep = _get_strings_sep(args)
   sep_size = len(sep)
 
@@ -61,51 +56,93 @@ def length(*args: Args) -> int:
     for string in strings
   )
 
-  return total - sep_size
+  total -= sep_size
+  return Result(total)
 
 
-py_slice = slice
+_slice = slice
 
 
-def slice(
+@_handle_stream
+def substring(
   stop: int,
   *args: Args,
   start: int | None = None,
   step: int | None = None,
-):
+) -> StreamResults:
   """Return substrings using given indices."""
-  strings, sep = _get_strings_sep(args)
-  window = py_slice(start, stop, step)
+  strings, _ = _get_strings_sep(args)
+  window = _slice(start, stop, step)
 
   for string in strings:
-    print(string[window], end=sep)
+    sub = string[window]
+
+    if sub.endswith(NEW_LINE):
+      sep = SAME_LINE
+
+    else:
+      sep = NEW_LINE
+
+    yield StrSep(sub, sep)
 
 
-def repeat(times: int = FOREVER, *args: Args):
+sub = substring
+
+
+@_handle_stream
+def slice(
+  indices: str,
+  *args: Args,
+) -> StreamResults:
+  """Return substrings using given indices."""
+  strings, _ = _get_strings_sep(args)
+  window = _slice_from_str(indices)
+
+  for string in strings:
+    sub = string[window]
+
+    if sub.endswith(NEW_LINE):
+      sep = SAME_LINE
+
+    else:
+      sep = NEW_LINE
+
+    yield StrSep(sub, sep)
+
+
+@_handle_stream
+def repeat(
+  times: int = FOREVER,
+  *args: Args,
+) -> StreamResults:
   """Repeat string. Set `times` to -1 to repeat forever."""
   if not times:
+    yield ErrResult
     return
 
-  strings, _ = _get_strings_sep(args)
+  strings, sep = _get_strings_sep(args)
 
   if times > FOREVER:
-    strings = cycle_times(strings, times)
+    strings = _cycle_times(strings, times)
 
   elif times == FOREVER:
     strings = cycle(strings)
 
   else:
+    yield ErrResult
     return
 
   for string in strings:
-    print(string, end=SAME_LINE)
+    yield StrSep(string, sep)
 
 
+@_check_exit
 def contains(
   find: str,
   *args: Args,
 ) -> bool:
   """Confirm whether the input contains a given string."""
+  find = str(find)
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
@@ -117,28 +154,32 @@ def contains(
   return False
 
 
+@_handle_result
 @_use_docstring(str.count)
-def count(sub: str, *args: Args) -> int:
+def count(sub: str, *args: Args) -> Result[int]:
   if sub is None or sub == EMPTY_STR:
-    return NO_RESULT
+    return ErrIntResult
 
   strings, _ = _get_strings_sep(args)
 
-  return sum(
+  total = sum(
     string.count(sub)
     for string in strings
   )
 
+  return Result(total)
 
+
+@_handle_result
 @_use_docstring(str.index)
 def index(
   sub: str,
   *args: Args,
   start: int | None = None,
   end: int | None = None,
-) -> int:
+) -> Result[int]:
   if sub is None or sub == EMPTY_STR:
-    return NO_RESULT
+    return ErrIntResult
 
   strings, sep = _get_strings_sep(args)
   match_index: int | None
@@ -154,20 +195,22 @@ def index(
       match_index = None
 
     if match_index is not None:
-      return index + match_index
+      index += match_index
+      return Result(index)
 
     index += len(line)
 
 
+@_handle_result
 @_use_docstring(str.rindex)
 def rindex(
   sub: str,
   *args: Args,
   start: int | None = None,
   end: int | None = None,
-) -> int:
+) -> Result[int]:
   if sub is None or sub == EMPTY_STR:
-    return NO_RESULT
+    return ErrIntResult
 
   strings, sep = _get_strings_sep(args)
   match_index: int | None
@@ -183,13 +226,15 @@ def rindex(
       match_index = None
 
     if match_index is not None:
-      return index + match_index
+      index += match_index
+      return Result(index)
 
     index += len(line)
 
 
+@_handle_stream
 @_use_docstring(str.split)
-def split(on: str = NEW_LINE, *args: Args):
+def split(on: str = NEW_LINE, *args: Args) -> StreamResults:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
@@ -199,11 +244,12 @@ def split(on: str = NEW_LINE, *args: Args):
       if not split_str:
         continue
 
-      print(split_str, end=sep)
+      yield StrSep(split_str, sep)
 
 
+@_handle_stream
 @_use_docstring(str.rsplit)
-def rsplit(on: str = NEW_LINE, *args: Args):
+def rsplit(on: str = NEW_LINE, *args: Args) -> StreamResults:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
@@ -213,112 +259,124 @@ def rsplit(on: str = NEW_LINE, *args: Args):
       if not split_str:
         continue
 
-      print(split_str, end=sep)
+      yield StrSep(split_str, sep)
 
 
+@_handle_stream
 @_use_docstring(str.join)
-def join(on: str = EMPTY_STR, *args: Args):
+def join(on: str = EMPTY_STR, *args: Args) -> StreamResults:
   strings, _ = _get_strings_sep(args)
 
-  first = next(strings)
-  print(first, end=SAME_LINE)
+  first = next(strings).rstrip(NEW_LINE)
+  yield StrSep(first, SAME_LINE)
 
   for string in strings:
-    print(f'{on}{string}', end=SAME_LINE)
+    string = string.rstrip(NEW_LINE)
+    yield StrSep(f'{on}{string}', SAME_LINE)
 
 
+@_handle_stream
 @_use_docstring(str.strip)
-def strip(chars: str | None = None, *args: Args):
+def strip(chars: str | None = None, *args: Args) -> StreamResults:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
     string = string.strip(chars)
-    print(string, end=sep)
+    yield StrSep(string, sep)
 
 
+@_handle_stream
 @_use_docstring(str.lstrip)
-def lstrip(chars: str | None = None, *args: Args):
+def lstrip(chars: str | None = None, *args: Args) -> StreamResults:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
     string = string.lstrip(chars)
-    print(string, end=sep)
+    yield StrSep(string, sep)
 
 
+@_handle_stream
 @_use_docstring(str.rstrip)
-def rstrip(chars: str | None = None, *args: Args):
+def rstrip(chars: str | None = None, *args: Args) -> StreamResults:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
     string = string.rstrip(chars)
-    print(string, end=sep)
+    yield StrSep(string, sep)
 
 
+@_handle_stream
 @_use_docstring(str.expandtabs)
-def expandtabs(*args: Args, tabsize: int = 8):
+def expandtabs(*args: Args, tabsize: int = 8) -> StreamResults:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
     string = string.expandtabs(tabsize)
-    print(string, end=sep)
+    yield StrSep(string, sep)
 
 
+@_handle_stream
 @_use_docstring(str.ljust)
-def ljust(width: int, *args: Args, fillchar: str = SPACE):
+def ljust(width: int, *args: Args, fillchar: str = SPACE) -> StreamResults:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
     string = string.ljust(width, fillchar)
-    print(string, end=sep)
+    yield StrSep(string, sep)
 
 
+@_handle_stream
 @_use_docstring(str.rjust)
-def rjust(width: int, *args: Args, fillchar: str = SPACE):
+def rjust(width: int, *args: Args, fillchar: str = SPACE) -> StreamResults:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
     string = string.rjust(width, fillchar)
-    print(string, end=sep)
+    yield StrSep(string, sep)
 
 
+@_handle_stream
 @_use_docstring(str.zfill)
-def zfill(width: int, *args: Args):
+def zfill(width: int, *args: Args) -> StreamResults:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
     string = string.zfill(width)
-    print(string, end=sep)
+    yield StrSep(string, sep)
 
 
+@_handle_stream
 @_use_docstring(str.partition)
-def partition(sep: str, *args: Args):
+def partition(sep: str, *args: Args) -> StreamResults:
   strings, _ = _get_strings_sep(args)
   parts: tuple[str, str, str]
 
   for string in strings:
     parts = string.partition(sep)
     output = NEW_LINE.join(parts)
-    print(output)
+    yield StrSep(output)
 
 
+@_handle_stream
 @_use_docstring(str.rpartition)
-def rpartition(sep: str, *args: Args):
+def rpartition(sep: str, *args: Args) -> StreamResults:
   strings, _ = _get_strings_sep(args)
   parts: tuple[str, str, str]
 
   for string in strings:
     parts = string.rpartition(sep)
     output = NEW_LINE.join(parts)
-    print(output)
+    yield StrSep(output)
 
 
+@_check_exit
 @_use_docstring(str.endswith)
 def endswith(
   suffix: str | tuple[str, ...],
   *args: Args,
   start: int | None = None,
   end: int | None = None,
-):
+) -> bool:
   strings, _ = _get_strings_sep(args)
   string: str | None = None
 
@@ -331,28 +389,34 @@ def endswith(
   return False
 
 
+@_check_exit
 @_use_docstring(str.startswith)
 def startswith(
   prefix: str | tuple[str, ...],
   *args: Args,
   start: int | None = None,
   end: int | None = None,
-):
+) -> bool:
   strings, _ = _get_strings_sep(args)
-  first = next(iter(strings))
+  strings = iter(strings)
+  first = next(strings, None)
+
+  if first is None:
+    return False
 
   return first.startswith(prefix, start, end)
 
 
+@_handle_result
 @_use_docstring(str.find)
 def find(
   sub: str | None = None,
   *args: Args,
   start: int | None = None,
   end: int | None = None,
-) -> int:
+) -> Result[int]:
   if sub is None or sub == EMPTY_STR:
-    return NO_RESULT
+    return ErrIntResult
 
   strings, sep = _get_strings_sep(args)
   match_index: int | None
@@ -360,24 +424,25 @@ def find(
 
   for string in strings:
     line = f'{string}{sep}'
-
     match_index = line.find(sub, start, end)
 
     if match_index is not None:
-      return index + match_index
+      index += match_index
+      return Result(index)
 
     index += len(line)
 
 
+@_handle_result
 @_use_docstring(str.rfind)
 def rfind(
   sub: str | None = None,
   *args: Args,
   start: int | None = None,
   end: int | None = None,
-) -> int:
+) -> Result[int]:
   if sub is None or sub == EMPTY_STR:
-    return NO_RESULT
+    return ErrIntResult
 
   strings, sep = _get_strings_sep(args)
   match_index: int | None
@@ -388,41 +453,84 @@ def rfind(
     match_index = line.rfind(sub, start, end)
 
     if match_index is not None:
-      return index + match_index
+      index += match_index
+      return Result(index)
 
     index += len(line)
 
 
+@_handle_stream
 @_use_docstring(str.center)
 def center(
   width: int,
   *args: Args,
   fillchar: str = SPACE,
-):
+) -> StreamResults:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
     string = string.center(width, fillchar)
-    print(string, end=sep)
+    yield StrSep(string, sep)
 
 
+@_handle_stream
 @_use_docstring(str.replace)
 def replace(
   old: str,
   new: str,
   *args: Args,
-  count: int = -1
-):
+  count: int = ALL
+) -> StreamResults:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
     string = string.replace(old, new, count)
-    print(string, end=sep)
+    yield StrSep(string, sep)
 
 
-replace_first = replacefirst = replace1 = _use_docstring(replace)(
-  partial(replace, count=1)
+replace_first = _use_docstring(replace)(
+  partial(replace, count=FIRST)
 )
+
+
+@_handle_stream
+def sbob(
+  *args: Args,
+  reverse: bool = False,
+) -> StreamResults:
+  """tYpE lIkE tHiS"""
+  strings, sep = _get_strings_sep(args)
+
+  for string in strings:
+    chars = _gen_sbob_chars(string, reverse)
+
+    for char in chars:
+      yield StrSep(char, SAME_LINE)
+
+    yield StrSep(EMPTY_STR, sep)
+
+
+@_handle_stream
+def nth(*line_nums: list[int], exclude: bool = False) -> StreamResults:
+  """
+  Print lines on `line_nums` from standard input. Setting the `exclude` flag
+  will instead print all lines from standard input and lines `line_nums`
+  will be excluded.
+  """
+  stdin = _get_stdin()
+
+  if not (stdin and line_nums):
+    yield ErrResult
+    return
+
+  if exclude:
+    lines = _exclude_lines(line_nums, stdin)
+
+  else:
+    lines = _gen_lines(line_nums, stdin)
+
+  for line in lines:
+    yield StrSep(line)
 
 
 @_use_docstring(str.format)
@@ -431,7 +539,7 @@ def format(*args: Args, **kwargs):
 
   for string in strings:
     result = string.format(**kwargs)
-    print(result, end=sep)
+    print(result, sep)
 
   raise NotImplementedError()
 
@@ -441,3 +549,59 @@ def format_map(**kwargs):
   print(kwargs)
   raise NotImplementedError()
 
+
+__all__ = [
+  'capitalize',
+  'casefold',
+  'center',
+  'contains',
+  'count',
+  'endswith',
+  'expandtabs',
+  'find',
+  'format',
+  'format_map',
+  'from_emoji',
+  'has_emoji',
+  'index',
+  'isalnum',
+  'isalpha',
+  'isascii',
+  'isdecimal',
+  'isdigit',
+  'isidentifier',
+  'islower',
+  'isnumeric',
+  'isprintable',
+  'isspace',
+  'istitle',
+  'isupper',
+  'join',
+  'length',
+  'ljust',
+  'lower',
+  'lstrip',
+  'nth',
+  'partition',
+  'repeat',
+  'replace',
+  'rfind',
+  'rindex',
+  'rjust',
+  'rpartition',
+  'rsplit',
+  'rstrip',
+  'sbob',
+  'slice',
+  'split',
+  'startswith',
+  'strip',
+  'sub',
+  'substring',
+  'swapcase',
+  'title',
+  'to_ascii',
+  'to_emoji',
+  'upper',
+  'zfill',
+]
