@@ -291,7 +291,7 @@ def _get_name(func: Callable) -> str:
   return func.__name__
 
 
-# see: https://docs.python.org/3/library/itertools.html#itertools.cycle
+# see https://docs.python.org/3/library/itertools.html#itertools.cycle
 def _cycle_times(
   iterable: Iterable,
   times: int = MIN_TIMES,
