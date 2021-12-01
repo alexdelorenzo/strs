@@ -15,6 +15,9 @@ from .base import Args, _get_strings_sep, _wrap_check_exit, \
   _slice_from_str, _gen_sbob_chars, _get_name
 
 
+NO_CMD_ERR: str = "This command doesn't exist yet."
+
+
 upper = _wrap_parse_print(str.upper)
 lower = _wrap_parse_print(str.lower)
 capitalize = _wrap_parse_print(str.capitalize)
@@ -529,25 +532,23 @@ def nth(*line_nums: list[int], exclude: bool = False) -> StreamResults:
   else:
     lines = _gen_lines(line_nums, stdin)
 
-  for line in lines:
-    yield StrSep(line)
+  yield from map(StrSep, lines)
 
 
 @_use_docstring(str.format)
-def format(*args: Args, **kwargs):
+def format(fmt: str, *args: Args, **kwargs):
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
-    result = string.format(**kwargs)
+    result = string.format(fmt, **kwargs)
     print(result, sep)
 
-  raise NotImplementedError()
+  raise NotImplementedError(NO_CMD_ERR)
 
 
 @_use_docstring(str.format_map)
 def format_map(**kwargs):
-  print(kwargs)
-  raise NotImplementedError()
+  raise NotImplementedError(NO_CMD_ERR)
 
 
 __all__ = [

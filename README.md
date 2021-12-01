@@ -284,9 +284,6 @@ echo $string | str isupper
 `strs` comes with some tools for dealing with UTF-8, ASCII and emojis, and it has some tools that aren't found in Python or common shells like Bash.
 
 ```bash
-$ str sbob "squidward likes krabby patties"
-sQuIdWaRd LiKeS kRaBbY pAtTiEs
-
 $ str to-ascii "Ǎ Ě Ǐ Ǒ Ǔ Č Ď Ǧ Ȟ ǰ Ǩ Ľ Ň Ř Š Ť Ž"
 A E I O U C D G H j K L N R S T Z
 
@@ -309,4 +306,7 @@ $ str has-emoji "Hey there! 🔥"; echo $?
 
 $ str from-emoji "Hey there! 🔥"
 Hey there! :fire:
- ```
+
+$ str sbob "squidward likes krabby patties"
+sQuIdWaRd LiKeS kRaBbY pAtTiEs
+```

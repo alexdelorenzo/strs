@@ -52,6 +52,8 @@ class StrSep(NamedTuple):
 
 class ErrCode(IntEnum):
   """Shell return codes"""
+  none: int = -1
+
   ok: int = 0
   err: int = 1
 
@@ -64,7 +66,14 @@ class ErrCode(IntEnum):
 
   @property
   def is_err(self) -> bool:
+    if self == ErrCode.none:
+      return False
+
     return self != ErrCode.ok
+
+  @property
+  def should_quit(self) -> bool:
+    return self != ErrCode.none
 
 
 class CmdState(StrEnum):
@@ -76,7 +85,7 @@ class CmdState(StrEnum):
 @dataclass
 class Result(Generic[T], Unpackable):
   result: T | None = None
-  code: ErrCode = ErrCode.ok
+  code: ErrCode = ErrCode.none
   state: CmdState = CmdState.ok
 
 
@@ -252,17 +261,24 @@ def _handle_stream(func: GenFunc) -> QuitFunc:
 
     for result in gen:
       match result:
-        case StrSep(string, sep):
-          print(string, end=sep)
+        case Result((string, sep), code):
+          if string is not None:
+            print(string, end=sep)
+
+          if code.should_quit:
+            sys.exit(code)
 
         case Result(result, code):
           if result is not None:
             print(result)
 
-          if code.is_err:
+          if code.should_quit:
             sys.exit(code)
 
-        case ErrCode() as code:
+        case StrSep(string, sep):
+          print(string, end=sep)
+
+        case ErrCode() as code if code.should_quit:
           sys.exit(code)
 
         case None:
