@@ -1,7 +1,7 @@
 # 🧵 Easy string tools for the shell
- `strs` comes with more than 30 tools that make working with [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in the [shell](https://linuxcommand.org/lc3_lts0010.php) easier.
+ `strs` comes with more than 30 tools that make working with [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in the [shell](https://linuxcommand.org/lc3_lts0010.php) easier. 
 
-[String manipulation](https://en.wikichip.org/wiki/string_manipulation) in [POSIX](https://en.wikipedia.org/wiki/POSIX)-compliant shells can be both [confusing and cumbersome](https://shellmagic.xyz/#string-manipulation). `strs` brings string [convenience methods](https://wiki.c2.com/?ConvenienceMethods) from Python to shells like [Bash](https://www.gnu.org/software/bash/).
+[String manipulation](https://en.wikichip.org/wiki/string_manipulation) in shells can be [difficult](https://shellmagic.xyz/#string-manipulation). `strs` brings string [convenience methods](https://wiki.c2.com/?ConvenienceMethods) from Python to shells like [Bash](https://www.gnu.org/software/bash/).
 
 ```bash
 $ str capitalize "hey there! :fire:" | str to-emoji
@@ -36,7 +36,9 @@ You could do the same thing with [`sed`](https://en.wikipedia.org/wiki/Sed), but
 `strs`, on the other hand, has a uniform interface and set of features across platforms, shells and operating systems, including Windows.
 
 ## String manipulation in the shell
-`strs` provides string tools that are similar to [those that are built into Bash](https://tldp.org/LDP/abs/html/string-manipulation.html), and it provides commands for things that Bash doesn't have [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar) for, as well. The following examples of Bash code only work with Bash, whereas `strs` will work the same no matter if you're using Bash, [zsh](https://www.zsh.org/) or PowerShell.
+`strs` provides string tools that are similar to [those that are built into Bash](https://tldp.org/LDP/abs/html/string-manipulation.html), and it provides commands for things that Bash doesn't have [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar) for, as well. 
+
+The following examples of Bash code only work with Bash, whereas `strs` will work the same no matter if you're using Bash, [zsh](https://www.zsh.org/) or PowerShell.
 
 Here are some ways you can manipulate strings with both Bash and `strs`:
 ```bash
