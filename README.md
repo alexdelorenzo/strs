@@ -162,7 +162,6 @@ strip='.'
 $ str casefold "$string"
 this is an example.
 
-
 # or
 $ echo $string | str casefold
 this is an example.
