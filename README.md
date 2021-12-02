@@ -45,63 +45,102 @@ Here are some ways you can manipulate strings with both Bash and `strs`:
 #!/usr/bin/env bash
 string='This is an example.'
 
+
 ## String length
 # Bash
-echo "${#string}"
+$ echo "${#string}"
+19
 
 # str
-str length "$string"
+$ str length "$string"
+19
 
 # or, using pipes
-echo $string | str length
+$ echo $string | str length
+19
+
 
 ## Strip
-removeFront='This'
-removeEnd='example.'
+$ removeFront='This'
+$ removeEnd='example.'
 
 # Bash
-echo "${string#$removeFront}"  # from front
-echo "${string%$removeEnd}"  # from end
+$ echo "${string#$removeFront}"  # from front
+ is an example.
+
+$ echo "${string%$removeEnd}"  # from end
+This is an
 
 # str
-str lstrip $removeFront "$string"  # front
-str rstrip $removeEnd "$string"  # end
+$ str lstrip $removeFront "$string"
+ is an example.
+
+$ str rstrip $removeEnd "$string" 
+This is an
 
 # or, using pipes
-echo $string | str lstrip $removeFront
-echo $string | str rstrip $removeEnd
+$ echo $string | str lstrip $removeFront
+ is an example.
 
-## Replace
-old='an'
-new='a'
+$ echo $string | str rstrip $removeEnd
+This is an
 
-echo "${string//$old/$new}"  # replace all
-echo "${string/$old/$new}"  # replace first
-
-# vs
-str replace $old $new "$string"  # all
-str replace $old $new "$string" --count 1  # first
-str replace-first $old $new "$string"  # first
-
-# or
-echo $string | str replace $old $new
-echo $string | str replace $old $new --count 1
-echo $string | str replace-first $old $new
 
 ## Capitalization
-echo "${string^}"  # capitalize first char
-echo "${string^^}"  # capitalize all
-echo "${string,,}"  # lower all
+$ echo "${string^}"  # capitalize first char
+This is an example.
+
+$ echo "${string^^}"  # capitalize all
+THIS IS AN EXAMPLE.
+
+$ echo "${string,,}"  # lower all
+this is an example.
 
 # vs
-str capitalize "$string"  # capitalize first char
-str upper "$string"  # capitalize all
-str lower "$string"  # lower all
+$ str capitalize "$string"
+This is an example.
+
+$ str upper "$string"
+THIS IS AN EXAMPLE.
+
+$ str lower "$string"
+this is an example.
 
 # or
-echo $string | str capitalize
-echo $string | str upper
-echo $string | str lower
+$ echo $string | str capitalize
+This is an example.
+
+$ echo $string | str upper
+THIS IS AN EXAMPLE.
+
+$ echo $string | str lower
+this is an example.
+
+
+## Replace
+$ old='an'
+$ new='a'
+
+$ echo "${string//$old/$new}"  # replace all
+This is a example.
+
+echo "${string/$old/$new}"  # replace first
+This is a example.
+
+# vs
+$ str replace $old $new "$string"
+This is a example.
+
+$ str replace $old $new "$string" --count 1
+This is a example.
+
+$ str replace-first $old $new "$string"
+This is a example.
+
+# or
+$ echo $string | str replace $old $new
+$ echo $string | str replace $old $new --count 1
+$ echo $string | str replace-first $old $new
 ```
 
 ## String manipulation tools
@@ -109,99 +148,208 @@ There are some string manipulation commands that `strs` comes with that don't ha
 ```bash
 #!/usr/bin/env bash
 string='This is an example.'
-width=20
+width=40
 countChar='e'
 find='e'
-on='\n'
+on='_'
 remove='.'
 part=' '
 split=' '
+strip='.'
+
 
 # casefold
-str casefold "$string"
+$ str casefold "$string"
+this is an example.
+
 
 # or
-echo $string | str casefold
+$ echo $string | str casefold
+this is an example.
+
 
 # center
-str center $width "$string"
-echo $string | str center $width
+$ str center $width "$string"
+          This is an example.           
+
+$ echo $string | str center $width
+          This is an example.           
+
 
 # count
-str count $countChar "$string"
-echo $string | str count $countChar
+$ str count $countChar "$string"
+2
+
+$echo $string | str count $countChar
+2
+
 
 # find
-str find $find "$string"
-echo $string | str find $find
+$ str find $find "$string"
+11
+
+$ echo $string | str find $find
+11
 
 # index
-str index $find "$string"
-echo $string | str index $find
+$ str index $find "$string"
+11
+
+$ echo $string | str index $find
+11
+
 
 # join
-str join $on "$string"
-echo $string | str join $on
+$ str join $on $string
+This_is_an_example.
+
+$ echo $string | str join $on
+This_is_an_example.
+
 
 # partition
-str partition "$part" "$string"
-echo $string | str partition "$part"
+$ str partition "$part" "$string"
+This
+ 
+is an example.
+
+$ echo $string | str partition "$part"
+This
+ 
+is an example.
+
 
 # split
-str split $split "$string"
-echo $string | str split $split
+$ str split "$split" "$string"
+This
+is
+an
+example.
+
+$ echo $string | str split "$split"
+This
+is
+an
+example.
+
 
 # strip
-str strip $strip "$string"
-echo $string | str strip $strip
+$ str strip $strip "$string"
+This is an example
+
+$ echo $string | str strip $strip
+This is an example
+
 
 # swap case
-str swapcase "$string"
-echo $string | str swapcase
+$ str swapcase "$string"
+tHIS IS AN EXAMPLE.
+
+$ echo $string | str swapcase
+tHIS IS AN EXAMPLE.
+
 
 # to title case
-str title "$string"
-echo $string | str title
+$ str title "$string"
+This Is An Example.
+
+$ echo $string | str title
+This Is An Example.
+
 
 # zero fill
-str zfill $width "$string"
-echo $string | str zfill $width
+$ str zfill $width "$string"
+000000000000000000000This is an example.
+
+$ echo $string | str zfill $width
+000000000000000000000This is an example.
+
 
 # repeat
-str repeat 3 "$string"
-echo $string | str repeat 3
+$ str repeat 3 "$string"
+This is an example.
+This is an example.
+This is an example.
+
+$ echo $string | str repeat 3
+This is an example.
+This is an example.
+This is an example.
+
 
 # ljust
-str ljust $width "$string"
-echo $string | str ljust $width
+$ str ljust $width "$string" --fillchar '*'
+This is an example.*********************
+
+$ echo $string | str ljust $width  --fillchar '*'
+This is an example.*********************
+
 
 # lstrip
-str lstrip $remove "$string"
-echo $string | str lstrip $remove
+$ str lstrip T "$string"
+his is an example.
+
+$ echo $string | str lstrip T
+his is an example. 
+
 
 # rfind
-str rfind $find "$string"
-echo $string | str rfind $find
+$ str rfind $find "$string"
+17
+
+$ echo $string | str rfind $find
+17
+
 
 # rindex
-str rindex $find "$string"
-echo $string | str rindex $find
+$ str rindex $find "$string"
+17
+
+$ echo $string | str rindex $find
+17
+
 
 # rjust
-str rjust $width "$string"
-echo $string | str rjust $width
+$ str rjust $width "$string"
+                     This is an example.
+
+$ echo $string | str rjust $width
+                     This is an example.
+
 
 # rstrip
-str rstrip $remove "$string"
-echo $string | str rstrip $remove
+$ str rstrip $remove "$string"
+This is an example
+
+$ echo $string | str rstrip $remove
+This is an example
+
 
 # rpartition
-str rpartition "$part" "$string"
-echo $string | str rpartition "$part"
+$ str rpartition "$part" "$string"
+This is an
+ 
+example.
+
+$ echo $string | str rpartition "$part"
+This is an
+ 
+example.
+
 
 # rsplit
-str rsplit $split "$string"
-echo $string | str rsplit $split
+$ str rsplit $split "$string"
+This
+is
+an
+example.
+
+$ echo $string | str rsplit $split
+This
+is
+an
+example.
+
 ```
 
 ## String validation tools
@@ -211,6 +359,7 @@ Here's an example of how you'd use them, followed by a list of validation tools 
 ```bash
 #!/usr/bin/env bash
 string='This is an example.'
+
 
 if str startswith T "$string" && str endswith . "$string"; then
   printf "Starts with T and ends with .\n"
@@ -223,67 +372,71 @@ elif !str isalnum "$string"; then
 
 fi
 
+
 # starts with
-str startswith T "$string"
-echo $string | str startswith T
+$ str startswith T "$string"
+$ echo $string | str startswith T
 
 # ends with
-str endswith . "$string"
-echo $string | str endswith .
+$ str endswith . "$string"
+$ echo $string | str endswith .
 
 # is alphanumeric
-str isalnum "$string"
-echo $string | str isalnum
+$ str isalnum "$string"
+$ echo $string | str isalnum
 
 # is alphabetic
-str isalpha "$string"
-echo $string | str isalpha
+$ str isalpha "$string"
+$ echo $string | str isalpha
 
 # is ASCII
-str isascii "$string"
-echo $string | str isascii
+$ str isascii "$string"
+$ echo $string | str isascii
 
 # is decimal
-str isdecimal "$string"
-echo $string | str isdecimal
+$ str isdecimal "$string"
+$ echo $string | str isdecimal
 
 # is digit
-str isdigit "$string"
-echo $string | str isdigit
+$ str isdigit "$string"
+$ echo $string | str isdigit
 
 # is valid Python identifier
-str isidentifier "$string"
-echo $string | str isidentifier
+$ str isidentifier "$string"
+$ echo $string | str isidentifier
 
 # is lower case
-str islower "$string"
-echo $string | str islower
+$ str islower "$string"
+$ echo $string | str islower
 
 # is numeric
-str isnumeric "$string"
-echo $string | str isnumeric
+$ str isnumeric "$string"
+$ echo $string | str isnumeric
 
 # is printable
-str isprintable "$string"
-echo $string | str isprintable
+$ str isprintable "$string"
+$ echo $string | str isprintable
 
 # is space character
-str isspace "$string"
-echo $string | str isspace
+$ str isspace "$string"
+$ echo $string | str isspace
 
 # is title case
-str istitle "$string"
-echo $string | str istitle
+$ str istitle "$string"
+$ echo $string | str istitle
 
 # is upper case
-str isupper "$string"
-echo $string | str isupper
+$ str isupper "$string"
+$ echo $string | str isupper
 ```
 
 ## More string tools
 `strs` comes with some tools for dealing with UTF-8, ASCII and emojis, and it has some tools that aren't found in Python or common shells like Bash.
 
 ```bash
+$ str to-ascii "It is 20° Celsius outside."
+It is 20deg Celsius outside.
+
 $ str to-ascii "Ǎ Ě Ǐ Ǒ Ǔ Č Ď Ǧ Ȟ ǰ Ǩ Ľ Ň Ř Š Ť Ž"
 A E I O U C D G H j K L N R S T Z
 
@@ -306,6 +459,9 @@ $ str has-emoji "Hey there! 🔥"; echo $?
 
 $ str from-emoji "Hey there! 🔥"
 Hey there! :fire:
+
+$ sudo dmesg | str nth 50
+[73627.811739] Filesystems sync: 0.02 seconds
 
 $ str sbob "squidward likes krabby patties"
 sQuIdWaRd LiKeS kRaBbY pAtTiEs
