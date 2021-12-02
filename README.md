@@ -105,7 +105,7 @@ echo $string | str lower
 ```
 
 ## String manipulation tools
-There are some string manipulation commands that `strs` comes with that don't have [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar) in Bash:
+There are some string manipulation commands that `strs` comes with that don't have syntactic sugar in Bash:
 ```bash
 #!/usr/bin/env bash
 string='This is an example.'
