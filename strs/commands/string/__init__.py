@@ -1,3 +1,3 @@
 from .analyze import *
-form .parse import *
-from validate import *
+from .parse import *
+from .validate import *
