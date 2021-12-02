@@ -13,7 +13,7 @@ $ str repeat 2 ⭐ | str join 🌙
 
 # Examples
 ## Practical example
-If you're using [Debian](https://www.debian.org/), you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between your machines that run Debian [`testing`](https://wiki.debian.org/DebianTesting) and [`stable`](https://wiki.debian.org/DebianStable).
+If you're using [Debian](https://www.debian.org/), you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between machines that run Debian [`testing`](https://wiki.debian.org/DebianTesting) and [`stable`](https://wiki.debian.org/DebianStable).
 
 Using `strs`, you can take your apt sources from `testing` and point them to `stable` on the fly, and send them to your `stable` machine:
 ```bash
@@ -63,10 +63,10 @@ This is an
 $ str lstrip $removeFront "$string"
  is an example.
 
-$ str rstrip $removeEnd "$string" 
+$ str rstrip $removeEnd "$string"
 This is an
 
-$ str strip $removeFront$removeEnd "$string" 
+$ str strip $removeFront$removeEnd "$string"
  is an
 
 # or, using pipes
@@ -182,6 +182,7 @@ $ str find $find "$string"
 
 $ echo $string | str find $find
 11
+
 
 # index
 $ str index $find "$string"
