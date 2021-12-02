@@ -284,7 +284,7 @@ This is an example.
 $ str ljust $width "$string" --fillchar '*'
 This is an example.*********************
 
-$ echo $string | str ljust $width  --fillchar '*'
+$ echo $string | str ljust $width --fillchar '*'
 This is an example.*********************
 
 
