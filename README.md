@@ -23,7 +23,6 @@ python3 -m pip install strs
 ```
 
 # Examples
-Skip ahead to 
 ## Practical example
 If you're using [Debian](https://www.debian.org/), you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between your machines. You might run Debian [`testing`](https://wiki.debian.org/DebianTesting) on one machine, but Debian [`stable`](https://wiki.debian.org/DebianStable) might suit the purpose of another.
 
@@ -43,7 +42,6 @@ The following examples of Bash code only work with Bash, whereas `strs` will wor
 
 Here are some ways you can manipulate strings with both Bash and `strs`:
 ```bash
-#!/usr/bin/env bash
 string='This is an example.'
 
 
@@ -68,18 +66,21 @@ $ removeEnd='example.'
 # Bash
 $ echo "${string#$removeFront}"  # from front
  is an example.
+
 $ echo "${string%$removeEnd}"  # from end
 This is an
 
 # str
 $ str lstrip $removeFront "$string"
  is an example.
+
 $ str rstrip $removeEnd "$string" 
 This is an
 
 # or, using pipes
 $ echo $string | str lstrip $removeFront
  is an example.
+
 $ echo $string | str rstrip $removeEnd
 This is an
 
@@ -87,24 +88,30 @@ This is an
 ## Capitalization
 $ echo "${string^}"  # capitalize first char
 This is an example.
+
 $ echo "${string^^}"  # capitalize all
 THIS IS AN EXAMPLE.
+
 $ echo "${string,,}"  # lower all
 this is an example.
 
 # vs
 $ str capitalize "$string"
 This is an example.
+
 $ str upper "$string"
 THIS IS AN EXAMPLE.
+
 $ str lower "$string"
 this is an example.
 
 # or
 $ echo $string | str capitalize
 This is an example.
+
 $ echo $string | str upper
 THIS IS AN EXAMPLE.
+
 $ echo $string | str lower
 this is an example.
 
@@ -115,14 +122,17 @@ $ new='a'
 
 $ echo "${string//$old/$new}"  # replace all
 This is a example.
+
 echo "${string/$old/$new}"  # replace first
 This is a example.
 
 # vs
 $ str replace $old $new "$string"
 This is a example.
+
 $ str replace $old $new "$string" --count 1
 This is a example.
+
 $ str replace-first $old $new "$string"
 This is a example.
 
@@ -135,7 +145,6 @@ $ echo $string | str replace-first $old $new
 ## String manipulation tools
 There are some string manipulation commands that `strs` comes with that don't have syntactic sugar in Bash:
 ```bash
-#!/usr/bin/env bash
 string='This is an example.'
 width=40
 countChar='e'
@@ -381,7 +390,6 @@ sQuIdWaRd LiKeS kRaBbY pAtTiEs
 
 Here's an example of how you'd use them, followed by a list of validation tools that come with `strs`:
 ```bash
-#!/usr/bin/env bash
 string='This is an example.'
 
 
@@ -398,58 +406,98 @@ fi
 
 
 # starts with
-$ str startswith T "$string"
-$ echo $string | str startswith T
+$ str startswith T "$string"; echo $?
+
+$ echo $string | str startswith T; echo $?
+0
 
 # ends with
-$ str endswith . "$string"
-$ echo $string | str endswith .
+$ str endswith . "$string"; echo $?
+
+$ echo $string | str endswith .; echo $?
+0
 
 # is alphanumeric
-$ str isalnum "$string"
-$ echo $string | str isalnum
+$ str isalnum "$string"; echo $?
+0
+
+$ echo $string | str isalnum; echo $?
+0
 
 # is alphabetic
-$ str isalpha "$string"
-$ echo $string | str isalpha
+$ str isalpha "$string"; echo $?
+1
+
+$ echo $string | str isalpha; echo $?
+1
 
 # is ASCII
-$ str isascii "$string"
-$ echo $string | str isascii
+$ str isascii "$string"; echo $?
+0
+
+$ echo $string | str isascii; echo $?
+0
 
 # is decimal
-$ str isdecimal "$string"
-$ echo $string | str isdecimal
+$ str isdecimal "$string"; echo $?
+1
+
+$ echo $string | str isdecimal; echo $?
+1
 
 # is digit
-$ str isdigit "$string"
-$ echo $string | str isdigit
+$ str isdigit "$string"; echo $?
+1
+
+$ echo $string | str isdigit; echo $?
+1
 
 # is valid Python identifier
-$ str isidentifier "$string"
-$ echo $string | str isidentifier
+$ str isidentifier "$string"; echo $?
+1
+
+$ echo $string | str isidentifier; echo $?
+1
 
 # is lower case
-$ str islower "$string"
-$ echo $string | str islower
+$ str islower "$string"; echo $?
+1
+
+$ echo $string | str islower; echo $?
+1
 
 # is numeric
-$ str isnumeric "$string"
-$ echo $string | str isnumeric
+$ str isnumeric "$string"; echo $?
+1
+
+$ echo $string | str isnumeric; echo $?
+1
 
 # is printable
-$ str isprintable "$string"
-$ echo $string | str isprintable
+$ str isprintable "$string"; echo $?
+0
+
+$ echo $string | str isprintable; echo $?
+0
 
 # is space character
-$ str isspace "$string"
-$ echo $string | str isspace
+$ str isspace "$string"; echo $?
+1
+
+$ echo $string | str isspace; echo $?
+1
 
 # is title case
-$ str istitle "$string"
-$ echo $string | str istitle
+$ str istitle "$string"; echo $?
+1
+
+$ echo $string | str istitle; echo $?
+1
 
 # is upper case
-$ str isupper "$string"
-$ echo $string | str isupper
+$ str isupper "$string"; echo $?
+1
+
+$ echo $string | str isupper; echo $?
+1
 ```
