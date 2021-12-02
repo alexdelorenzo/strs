@@ -11,7 +11,7 @@ $ str repeat 2 ⭐ | str join 🌙
 ⭐ 🌙 ⭐
 ```
 
-# Examples
+# Usage
 ## Practical example
 If you're using [Debian](https://www.debian.org/), you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between machines that run Debian [`testing`](https://wiki.debian.org/DebianTesting) and [`stable`](https://wiki.debian.org/DebianStable).
 
