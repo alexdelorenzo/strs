@@ -1,5 +1,5 @@
 # 🧵 Easy string tools for the shell
- `strs` comes with more than 30 tools that make working with [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in the [shell](https://linuxcommand.org/lc3_lts0010.php) easier. 
+ `strs` has more than 30 tools that make working with [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in the [shell](https://linuxcommand.org/lc3_lts0010.php) easier. 
 
 `strs` brings common string [convenience methods](https://wiki.c2.com/?ConvenienceMethods) to shells like [Bash](https://www.gnu.org/software/bash/), because [string manipulation](https://en.wikichip.org/wiki/string_manipulation) in shells can be [hard](https://shellmagic.xyz/#string-manipulation).
 
@@ -25,9 +25,9 @@ The same can be done with [`sed`](https://en.wikipedia.org/wiki/Sed), but you'd 
 `strs`, on the other hand, has a uniform interface and set of features across platforms, shells and operating systems, including Windows.
 
 ## String manipulation in the shell
-`strs` provides string tools that are similar to [those that are built into Bash](https://tldp.org/LDP/abs/html/string-manipulation.html), and it provides commands for things that Bash doesn't have [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar) for, as well. 
+`strs` has string tools that are similar to [those that are built into Bash](https://tldp.org/LDP/abs/html/string-manipulation.html), and it has commands for things that Bash doesn't have [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar) for, as well. 
 
-The following examples of Bash code only work with Bash, whereas `strs` will work if you're using Bash, [zsh](https://www.zsh.org/), PowerShell or something else.
+The following examples of Bash code only work with Bash, whereas `strs` commands will work if you're using Bash, [zsh](https://www.zsh.org/), PowerShell or something else.
 
 Here's how you can manipulate strings with both Bash and `strs`:
 ```bash
@@ -49,8 +49,8 @@ $ echo $string | str length
 
 
 ## Strip
-$ removeFront='This'
-$ removeEnd='example.'
+removeFront='This'
+removeEnd='example.'
 
 # Bash
 $ echo "${string#$removeFront}"  # from front
@@ -112,8 +112,8 @@ this is an example.
 
 
 ## Replace
-$ old='an'
-$ new='a'
+old='an'
+new='a'
 
 $ echo "${string//$old/$new}"  # replace all
 This is a example.
