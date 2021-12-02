@@ -24,21 +24,21 @@ python3 -m pip install strs
 
 # Examples
 ## Practical example
-If you're using [Debian](https://www.debian.org/), you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between your machines. You might run Debian [`testing`](https://wiki.debian.org/DebianTesting) on one machine, but Debian [`stable`](https://wiki.debian.org/DebianStable) might suit the purpose of another.
+If you're using [Debian](https://www.debian.org/), you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between your machines that run Debian [`testing`](https://wiki.debian.org/DebianTesting) and [`stable`](https://wiki.debian.org/DebianStable).
 
 Using `strs`, you can take your apt sources from `testing` and point them to `stable` on the fly, and send them to your other your other machine:
 ```bash
 $ str replace testing stable < sources.list | ssh hostname "cat > /etc/apt/sources.list"
 ```
 
-The same can be done with [`sed`](https://en.wikipedia.org/wiki/Sed), but that requires knowing [`sed`'s regex syntax](https://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html), if the version of `sed` you have is [ships with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [whether you have GNU `sed` and BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
+The same can be done with [`sed`](https://en.wikipedia.org/wiki/Sed), but you would need to know [`sed`'s regex syntax](https://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html), if the `sed` you have [comes with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [if you have GNU `sed` or BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
 
 `strs`, on the other hand, has a uniform interface and set of features across platforms, shells and operating systems, including Windows.
 
 ## String manipulation in the shell
 `strs` provides string tools that are similar to [those that are built into Bash](https://tldp.org/LDP/abs/html/string-manipulation.html), and it provides commands for things that Bash doesn't have [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar) for, as well. 
 
-The following examples of Bash code only work with Bash, whereas `strs` will work the same no matter if you're using Bash, [zsh](https://www.zsh.org/) or PowerShell.
+The following examples of Bash code only work with Bash, whereas `strs` will work the same no matter if you're using Bash, [zsh](https://www.zsh.org/), PowerShell or something else.
 
 Here are some ways you can manipulate strings with both Bash and `strs`:
 ```bash
@@ -177,7 +177,7 @@ $ echo $string | str center $width
 $ str count $countChar "$string"
 2
 
-$echo $string | str count $countChar
+$ echo $string | str count $countChar
 2
 
 
@@ -349,7 +349,7 @@ example.
 ```
 
 ## More string tools
-`strs` comes with some tools for dealing with UTF-8, ASCII and emojis, and it has some tools that aren't found in Python or common shells like Bash.
+`strs` comes with tools for dealing with UTF-8, ASCII and emojis, and it has tools that aren't found in Python or common shells like Bash.
 
 ```bash
 $ str to-ascii "It is 20° Celsius outside."
@@ -407,12 +407,14 @@ fi
 
 # starts with
 $ str startswith T "$string"; echo $?
+0
 
 $ echo $string | str startswith T; echo $?
 0
 
 # ends with
 $ str endswith . "$string"; echo $?
+0
 
 $ echo $string | str endswith .; echo $?
 0
@@ -466,7 +468,7 @@ $ str islower "$string"; echo $?
 $ echo $string | str islower; echo $?
 1
 
-# is numeric
+# # is numeric
 $ str isnumeric "$string"; echo $?
 1
 
