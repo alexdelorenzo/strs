@@ -23,6 +23,7 @@ python3 -m pip install strs
 ```
 
 # Examples
+Skip ahead to 
 ## Practical example
 If you're using [Debian](https://www.debian.org/), you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between your machines. You might run Debian [`testing`](https://wiki.debian.org/DebianTesting) on one machine, but Debian [`stable`](https://wiki.debian.org/DebianStable) might suit the purpose of another.
 
@@ -67,21 +68,18 @@ $ removeEnd='example.'
 # Bash
 $ echo "${string#$removeFront}"  # from front
  is an example.
-
 $ echo "${string%$removeEnd}"  # from end
 This is an
 
 # str
 $ str lstrip $removeFront "$string"
  is an example.
-
 $ str rstrip $removeEnd "$string" 
 This is an
 
 # or, using pipes
 $ echo $string | str lstrip $removeFront
  is an example.
-
 $ echo $string | str rstrip $removeEnd
 This is an
 
@@ -89,30 +87,24 @@ This is an
 ## Capitalization
 $ echo "${string^}"  # capitalize first char
 This is an example.
-
 $ echo "${string^^}"  # capitalize all
 THIS IS AN EXAMPLE.
-
 $ echo "${string,,}"  # lower all
 this is an example.
 
 # vs
 $ str capitalize "$string"
 This is an example.
-
 $ str upper "$string"
 THIS IS AN EXAMPLE.
-
 $ str lower "$string"
 this is an example.
 
 # or
 $ echo $string | str capitalize
 This is an example.
-
 $ echo $string | str upper
 THIS IS AN EXAMPLE.
-
 $ echo $string | str lower
 this is an example.
 
@@ -123,17 +115,14 @@ $ new='a'
 
 $ echo "${string//$old/$new}"  # replace all
 This is a example.
-
 echo "${string/$old/$new}"  # replace first
 This is a example.
 
 # vs
 $ str replace $old $new "$string"
 This is a example.
-
 $ str replace $old $new "$string" --count 1
 This is a example.
-
 $ str replace-first $old $new "$string"
 This is a example.
 
@@ -348,7 +337,43 @@ This
 is
 an
 example.
+```
 
+## More string tools
+`strs` comes with some tools for dealing with UTF-8, ASCII and emojis, and it has some tools that aren't found in Python or common shells like Bash.
+
+```bash
+$ str to-ascii "It is 20° Celsius outside."
+It is 20deg Celsius outside.
+
+$ str to-ascii "Ǎ Ě Ǐ Ǒ Ǔ Č Ď Ǧ Ȟ ǰ Ǩ Ľ Ň Ř Š Ť Ž"
+A E I O U C D G H j K L N R S T Z
+
+$ str substring 3 "Hey there! 🔥"
+Hey
+
+# you can use negative indices like you can in Python
+$ str substring -3 "Hey there! 🔥" --start 4
+there
+
+# or you can use Python's slice syntax directly
+$ str slice 4:-3 "Hey there! 🔥"
+there
+
+$ str contains 🔥 "Hey there! 🔥"; echo $?
+0
+
+$ str has-emoji "Hey there! 🔥"; echo $?
+0
+
+$ str from-emoji "Hey there! 🔥"
+Hey there! :fire:
+
+$ sudo dmesg | str nth 50
+[73627.811739] Filesystems sync: 0.02 seconds
+
+$ str sbob "squidward likes krabby patties"
+sQuIdWaRd LiKeS kRaBbY pAtTiEs
 ```
 
 ## String validation tools
@@ -427,41 +452,4 @@ $ echo $string | str istitle
 # is upper case
 $ str isupper "$string"
 $ echo $string | str isupper
-```
-
-## More string tools
-`strs` comes with some tools for dealing with UTF-8, ASCII and emojis, and it has some tools that aren't found in Python or common shells like Bash.
-
-```bash
-$ str to-ascii "It is 20° Celsius outside."
-It is 20deg Celsius outside.
-
-$ str to-ascii "Ǎ Ě Ǐ Ǒ Ǔ Č Ď Ǧ Ȟ ǰ Ǩ Ľ Ň Ř Š Ť Ž"
-A E I O U C D G H j K L N R S T Z
-
-$ str substring 3 "Hey there! 🔥"
-Hey
-
-# you can use negative indices like you can in Python
-$ str substring -3 "Hey there! 🔥" --start 4
-there
-
-# or you can use Python's slice syntax directly
-$ str slice 4:-3 "Hey there! 🔥"
-there
-
-$ str contains 🔥 "Hey there! 🔥"; echo $?
-0
-
-$ str has-emoji "Hey there! 🔥"; echo $?
-0
-
-$ str from-emoji "Hey there! 🔥"
-Hey there! :fire:
-
-$ sudo dmesg | str nth 50
-[73627.811739] Filesystems sync: 0.02 seconds
-
-$ str sbob "squidward likes krabby patties"
-sQuIdWaRd LiKeS kRaBbY pAtTiEs
 ```
