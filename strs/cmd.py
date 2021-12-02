@@ -12,10 +12,7 @@ from .base import Args, _get_strings_sep, _wrap_check_exit, \
   SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER, ALL, ErrCode, \
   _get_stdin, Result, _handle_result, FIRST, StreamResults, \
   _handle_stream, StrSep, ErrResult, ErrIntResult, _is_pipeline, \
-  _slice_from_str, _gen_sbob_chars, _get_name
-
-
-NO_CMD_ERR: str = "This command doesn't exist yet."
+  _slice_from_str, _gen_sbob_chars, _get_name, NO_CMD_ERR
 
 
 upper = _wrap_parse_print(str.upper)
@@ -143,13 +140,21 @@ def repeat(
 def contains(
   find: str,
   *args: Args,
+  case_sensitive: bool = True
 ) -> bool:
   """Confirm whether the input contains a given string."""
   find = str(find)
+
+  if not case_sensitive:
+    find = find.casefold()
+
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
     line = f'{string}{sep}'
+
+    if not case_sensitive:
+      line = line.casefold()
 
     if find in line:
       return True

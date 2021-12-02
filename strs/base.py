@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Iterable, NamedTuple, Callable, Any, \
-  TypeVar, Generic
+  TypeVar, Generic, Final
 from dataclasses import dataclass
 from functools import partial, wraps
 from enum import IntEnum, auto
@@ -11,21 +11,23 @@ from strenum import StrEnum
 from unpackable import Unpackable
 
 
-NEW_LINE: str = '\n'
-EMPTY_STR: str = ''
-SAME_LINE: str = EMPTY_STR
-SPACE: str = ' '
-DOCTEST: str = '>>>'
-SH_SEP: str | None = os.environ.get('IFS')
-SLICE_SEP: str = ':'
+NEW_LINE: Final[str] = '\n'
+EMPTY_STR: Final[str] = ''
+SAME_LINE: Final[str] = EMPTY_STR
+SPACE: Final[str] = ' '
+DOCTEST: Final[str] = '>>>'
+SH_SEP: Final[str | None] = os.environ.get('IFS')
+SLICE_SEP: Final[str] = ':'
 
-NO_RESULT: int = -1
-MIN_TIMES: int = 1
-FIRST: int = 1
-INCREMENT: int = 1
-FOREVER: int = -1
-ALL: int = -1
-SKIP: None = None
+NO_RESULT: Final[int] = -1
+MIN_TIMES: Final[int] = 1
+FIRST: Final[int] = 1
+INCREMENT: Final[int] = 1
+FOREVER: Final[int] = -1
+ALL: Final[int] = -1
+SKIP: Final[None] = None
+
+NO_CMD_ERR: Final[str] = "This command doesn't exist yet."
 
 
 Decorator = Callable[Callable, Callable]
@@ -85,7 +87,7 @@ class CmdState(StrEnum):
 @dataclass
 class Result(Generic[T], Unpackable):
   result: T | None = None
-  code: ErrCode = ErrCode.none
+  code: ErrCode = ErrCode.ok
   state: CmdState = CmdState.ok
 
 
@@ -95,7 +97,7 @@ GenFunc = Callable[..., StreamResults]
 ResultFunc = Callable[..., Result[Any]]
 
 
-ErrResult = Result(code=ErrCode.err)
+ErrResult = Result[None](code=ErrCode.err)
 ErrIntResult = Result[int](NO_RESULT, ErrCode.err)
 
 
