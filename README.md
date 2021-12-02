@@ -29,7 +29,7 @@ The same can be done with [`sed`](https://en.wikipedia.org/wiki/Sed), but you'd 
 
 The following examples of Bash code only work with Bash, whereas `strs` will work if you're using Bash, [zsh](https://www.zsh.org/), PowerShell or something else.
 
-Here are some ways you can manipulate strings with both Bash and `strs`:
+Here's how you can manipulate strings with both Bash and `strs`:
 ```bash
 string='This is an example.'
 
@@ -138,7 +138,7 @@ $ echo $string | str replace-first $old $new
 ```
 
 ## String manipulation tools
-There are some string manipulation commands that `strs` comes with that don't have syntactic sugar in Bash:
+`strs` has string manipulation commands that don't have syntactic sugar in Bash:
 ```bash
 string='This is an example.'
 width=40
@@ -345,8 +345,7 @@ example.
 ```
 
 ## More string tools
-`strs` comes with tools for dealing with UTF-8, ASCII and emojis, and it has tools that aren't found in Python or common shells like Bash.
-
+`strs` has tools that deal with UTF-8, ASCII and emojis, and it has tools that aren't found in Python or common shells.
 ```bash
 $ str to-ascii "It is 20° Celsius outside."
 It is 20deg Celsius outside.
@@ -384,7 +383,7 @@ sQuIdWaRd LiKeS kRaBbY pAtTiEs
 ## String validation tools
 `strs` also brings [Python's string validation methods](https://docs.python.org/3/library/stdtypes.html#str) to the shell.
 
-Here's an example of how you'd use them, followed by a list of validation tools that come with `strs`:
+Here's an example of how you'd use them in a [conditional statement](https://www.gnu.org/software/bash/manual/html_node/Conditional-Constructs.html#Conditional-Constructs), followed by examples of other validation tools:
 ```bash
 string='This is an example.'
 
