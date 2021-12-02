@@ -11,17 +11,6 @@ $ str repeat 2 ⭐ | str join 🌙
 ⭐ 🌙 ⭐
 ```
 
-# Installation
-## Prerequisites
- - A [Unix shell](https://en.wikipedia.org/wiki/Unix_shell) like Bash, or PowerShell or Command Prompt on Windows
- - Python 3.10+
- - `requirements.txt`
-
-## PyPI
-```bash
-python3 -m pip install strs
-```
-
 # Examples
 ## Practical example
 If you're using [Debian](https://www.debian.org/), you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between your machines that run Debian [`testing`](https://wiki.debian.org/DebianTesting) and [`stable`](https://wiki.debian.org/DebianStable).
@@ -508,4 +497,15 @@ $ str isupper "$string"; echo $?
 
 $ echo $string | str isupper; echo $?
 1
+```
+
+# Installation
+## Prerequisites
+ - A [Unix shell](https://en.wikipedia.org/wiki/Unix_shell) like Bash, or PowerShell or Command Prompt on Windows
+ - Python 3.10+
+ - `requirements.txt`
+
+## PyPI
+```bash
+python3 -m pip install strs
 ```
