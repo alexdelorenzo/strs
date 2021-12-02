@@ -77,6 +77,9 @@ $ str lstrip $removeFront "$string"
 $ str rstrip $removeEnd "$string" 
 This is an
 
+$ str strip $removeFront$removeEnd "$string" 
+ is an
+
 # or, using pipes
 $ echo $string | str lstrip $removeFront
  is an example.
@@ -84,7 +87,10 @@ $ echo $string | str lstrip $removeFront
 $ echo $string | str rstrip $removeEnd
 This is an
 
+$ echo $string | str strip $removeFront$removeEnd
+ is an
 
+ 
 ## Capitalization
 $ echo "${string^}"  # capitalize first char
 This is an example.
