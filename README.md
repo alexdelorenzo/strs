@@ -331,13 +331,13 @@ example.
 
 
 # rsplit
-$ str rsplit $split "$string"
+$ str rsplit "$split" "$string"
 This
 is
 an
 example.
 
-$ echo $string | str rsplit $split
+$ echo $string | str rsplit "$split"
 This
 is
 an
