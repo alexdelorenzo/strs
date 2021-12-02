@@ -31,7 +31,7 @@ Using `strs`, you can take your apt sources from `testing` and point them to `st
 $ str replace testing stable < sources.list | ssh hostname "cat > /etc/apt/sources.list"
 ```
 
-You could do the same thing with [`sed`](https://en.wikipedia.org/wiki/Sed), but that requires knowing [`sed`'s regex syntax](https://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html), whether or not the version of `sed` you have is [new enough to ship with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [the differences between GNU `sed` and BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
+The same can be done with [`sed`](https://en.wikipedia.org/wiki/Sed), but that requires knowing [`sed`'s regex syntax](https://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html), if the version of `sed` you have is [ships with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [whether you have GNU `sed` and BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
 
 `strs`, on the other hand, has a uniform interface and set of features across platforms, shells and operating systems, including Windows.
 
