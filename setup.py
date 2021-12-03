@@ -1,11 +1,17 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from pathlib import Path
 
 
-requirements = \
+requirements: list[str] = \
   Path('requirements.txt') \
     .read_text() \
     .splitlines()
+
+pkgs: list[str] = find_packages(
+  include=[
+    'strs.*',
+  ]
+)
 
 
 setup(
@@ -15,13 +21,13 @@ setup(
   url="https://github.com/alexdelorenzo/strs",
   author="Alex DeLorenzo",
   license="AGPL 3.0",
-  packages=['strs'],
+  packages=pkgs,
   zip_safe=True,
   install_requires=requirements,
   entry_points={
     "console_scripts": [
       "strs = strs.__main__:_main",
-      "str = strs.__main__:_main"
-      ]
-    }
+      "str = strs.__main__:_main",
+    ]
+  }
 )
