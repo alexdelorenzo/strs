@@ -1,5 +1,6 @@
 from .cmd import *
-from .commands import *
+from .commands.string import *
+from .plugins import *
 
 
 def _main():
