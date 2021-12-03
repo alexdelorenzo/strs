@@ -5,14 +5,16 @@ from itertools import cycle
 from emoji import emoji_count, demojize, emojize
 from nth_py.nth import gen_lines as _gen_lines, \
   exclude_lines as _exclude_lines
+from more_itertools import peekable
 from unidecode import unidecode
 
 from .base import Args, _get_strings_sep, _wrap_check_exit, \
   _wrap_parse_print, _use_docstring, _cycle_times, _check_exit, \
   SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER, ALL, ErrCode, \
-  _get_stdin, Result, _handle_result, FIRST, StreamResults, \
-  _handle_stream, StrSep, ErrResult, ErrIntResult, _is_pipeline, \
-  _slice_from_str, _gen_sbob_chars, _get_name, NO_CMD_ERR
+  _get_stdin, Result, FIRST, ResultStream, _handle_results, StrSep, \
+  ErrResult, ErrIntResult, _is_pipeline, _slice_from_str, \
+  _gen_sbob_chars, _get_name, NO_CMD_ERR, NoResult, NotFoundResult, \
+  START_INDEX, NO_ITEMS, _to_peekable, _handle_result
 
 
 upper = _wrap_parse_print(str.upper)
@@ -63,13 +65,13 @@ def length(*args: Args) -> Result[int]:
 _slice = slice
 
 
-@_handle_stream
+@_handle_results
 def substring(
   stop: int,
   *args: Args,
   start: int | None = None,
   step: int | None = None,
-) -> StreamResults:
+) -> ResultStream:
   """Return substrings using given indices."""
   strings, _ = _get_strings_sep(args)
   window = _slice(start, stop, step)
@@ -89,11 +91,11 @@ def substring(
 sub = substring
 
 
-@_handle_stream
+@_handle_results
 def slice(
   indices: str,
   *args: Args,
-) -> StreamResults:
+) -> ResultStream:
   """Return substrings using given indices."""
   strings, _ = _get_strings_sep(args)
   window = _slice_from_str(indices)
@@ -110,11 +112,11 @@ def slice(
     yield StrSep(sub, sep)
 
 
-@_handle_stream
+@_handle_results
 def repeat(
   times: int = FOREVER,
   *args: Args,
-) -> StreamResults:
+) -> ResultStream:
   """Repeat string. Set `times` to -1 to repeat forever."""
   if not times:
     yield ErrResult
@@ -136,7 +138,7 @@ def repeat(
     yield StrSep(string, sep)
 
 
-@_check_exit
+@_handle_result
 def contains(
   find: str,
   *args: Args,
@@ -175,6 +177,9 @@ def count(sub: str, *args: Args) -> Result[int]:
     for string in strings
   )
 
+  if not total:
+    return Result(total, ErrCode.not_found)
+
   return Result(total)
 
 
@@ -185,13 +190,13 @@ def index(
   *args: Args,
   start: int | None = None,
   end: int | None = None,
-) -> Result[int]:
+) -> Result[int | None]:
   if sub is None or sub == EMPTY_STR:
     return ErrIntResult
 
   strings, sep = _get_strings_sep(args)
   match_index: int | None
-  index: int = 0
+  index: int = START_INDEX
 
   for string in strings:
     line = f'{string}{sep}'
@@ -208,6 +213,8 @@ def index(
 
     index += len(line)
 
+  return NotFoundResult
+
 
 @_handle_result
 @_use_docstring(str.rindex)
@@ -216,13 +223,13 @@ def rindex(
   *args: Args,
   start: int | None = None,
   end: int | None = None,
-) -> Result[int]:
+) -> Result[int | None]:
   if sub is None or sub == EMPTY_STR:
     return ErrIntResult
 
   strings, sep = _get_strings_sep(args)
   match_index: int | None
-  index: int = 0
+  index: int = START_INDEX
 
   for string in strings:
     line = f'{string}{sep}'
@@ -239,10 +246,12 @@ def rindex(
 
     index += len(line)
 
+  return NotFoundResult
 
-@_handle_stream
+
+@_handle_results
 @_use_docstring(str.split)
-def split(on: str = NEW_LINE, *args: Args) -> StreamResults:
+def split(on: str = NEW_LINE, *args: Args) -> ResultStream:
   strings, sep = _get_strings_sep(args)
 
   if not sep:
@@ -259,9 +268,9 @@ def split(on: str = NEW_LINE, *args: Args) -> StreamResults:
       yield StrSep(split_str, sep)
 
 
-@_handle_stream
+@_handle_results
 @_use_docstring(str.rsplit)
-def rsplit(on: str = NEW_LINE, *args: Args) -> StreamResults:
+def rsplit(on: str = NEW_LINE, *args: Args) -> ResultStream:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
@@ -274,9 +283,9 @@ def rsplit(on: str = NEW_LINE, *args: Args) -> StreamResults:
       yield StrSep(split_str, sep)
 
 
-@_handle_stream
+@_handle_results
 @_use_docstring(str.join)
-def join(on: str = EMPTY_STR, *args: Args) -> StreamResults:
+def join(on: str = EMPTY_STR, *args: Args) -> ResultStream:
   strings, _ = _get_strings_sep(args)
   sep = SAME_LINE
 
@@ -295,9 +304,9 @@ def join(on: str = EMPTY_STR, *args: Args) -> StreamResults:
   yield Result(EMPTY_STR)
 
 
-@_handle_stream
+@_handle_results
 @_use_docstring(str.strip)
-def strip(chars: str | None = None, *args: Args) -> StreamResults:
+def strip(chars: str | None = None, *args: Args) -> ResultStream:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
@@ -305,9 +314,9 @@ def strip(chars: str | None = None, *args: Args) -> StreamResults:
     yield StrSep(string, sep)
 
 
-@_handle_stream
+@_handle_results
 @_use_docstring(str.lstrip)
-def lstrip(chars: str | None = None, *args: Args) -> StreamResults:
+def lstrip(chars: str | None = None, *args: Args) -> ResultStream:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
@@ -315,9 +324,9 @@ def lstrip(chars: str | None = None, *args: Args) -> StreamResults:
     yield StrSep(string, sep)
 
 
-@_handle_stream
+@_handle_results
 @_use_docstring(str.rstrip)
-def rstrip(chars: str | None = None, *args: Args) -> StreamResults:
+def rstrip(chars: str | None = None, *args: Args) -> ResultStream:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
@@ -325,9 +334,9 @@ def rstrip(chars: str | None = None, *args: Args) -> StreamResults:
     yield StrSep(string, sep)
 
 
-@_handle_stream
+@_handle_results
 @_use_docstring(str.expandtabs)
-def expandtabs(*args: Args, tabsize: int = 8) -> StreamResults:
+def expandtabs(*args: Args, tabsize: int = 8) -> ResultStream:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
@@ -335,9 +344,9 @@ def expandtabs(*args: Args, tabsize: int = 8) -> StreamResults:
     yield StrSep(string, sep)
 
 
-@_handle_stream
+@_handle_results
 @_use_docstring(str.ljust)
-def ljust(width: int, *args: Args, fillchar: str = SPACE) -> StreamResults:
+def ljust(width: int, *args: Args, fillchar: str = SPACE) -> ResultStream:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
@@ -345,9 +354,9 @@ def ljust(width: int, *args: Args, fillchar: str = SPACE) -> StreamResults:
     yield StrSep(string, sep)
 
 
-@_handle_stream
+@_handle_results
 @_use_docstring(str.rjust)
-def rjust(width: int, *args: Args, fillchar: str = SPACE) -> StreamResults:
+def rjust(width: int, *args: Args, fillchar: str = SPACE) -> ResultStream:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
@@ -355,9 +364,9 @@ def rjust(width: int, *args: Args, fillchar: str = SPACE) -> StreamResults:
     yield StrSep(string, sep)
 
 
-@_handle_stream
+@_handle_results
 @_use_docstring(str.zfill)
-def zfill(width: int, *args: Args) -> StreamResults:
+def zfill(width: int, *args: Args) -> ResultStream:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
@@ -365,9 +374,9 @@ def zfill(width: int, *args: Args) -> StreamResults:
     yield StrSep(string, sep)
 
 
-@_handle_stream
+@_handle_results
 @_use_docstring(str.partition)
-def partition(sep: str, *args: Args) -> StreamResults:
+def partition(sep: str, *args: Args) -> ResultStream:
   strings, _ = _get_strings_sep(args)
   parts: tuple[str, str, str]
 
@@ -377,9 +386,9 @@ def partition(sep: str, *args: Args) -> StreamResults:
     yield StrSep(output)
 
 
-@_handle_stream
+@_handle_results
 @_use_docstring(str.rpartition)
-def rpartition(sep: str, *args: Args) -> StreamResults:
+def rpartition(sep: str, *args: Args) -> ResultStream:
   strings, _ = _get_strings_sep(args)
   parts: tuple[str, str, str]
 
@@ -389,7 +398,7 @@ def rpartition(sep: str, *args: Args) -> StreamResults:
     yield StrSep(output)
 
 
-@_check_exit
+@_handle_result
 @_use_docstring(str.endswith)
 def endswith(
   suffix: str | tuple[str, ...],
@@ -409,7 +418,7 @@ def endswith(
   return False
 
 
-@_check_exit
+@_handle_result
 @_use_docstring(str.startswith)
 def startswith(
   prefix: str | tuple[str, ...],
@@ -434,7 +443,7 @@ def find(
   *args: Args,
   start: int | None = None,
   end: int | None = None,
-) -> Result[int]:
+) -> Result[int | None]:
   if sub is None or sub == EMPTY_STR:
     return ErrIntResult
 
@@ -452,6 +461,8 @@ def find(
 
     index += len(line)
 
+  return NotFoundResult
+
 
 @_handle_result
 @_use_docstring(str.rfind)
@@ -466,7 +477,7 @@ def rfind(
 
   strings, sep = _get_strings_sep(args)
   match_index: int | None
-  index: int = 0
+  index: int = START_INDEX
 
   for string in strings:
     line = f'{string}{sep}'
@@ -479,13 +490,13 @@ def rfind(
     index += len(line)
 
 
-@_handle_stream
+@_handle_results
 @_use_docstring(str.center)
 def center(
   width: int,
   *args: Args,
   fillchar: str = SPACE,
-) -> StreamResults:
+) -> ResultStream:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
@@ -493,14 +504,14 @@ def center(
     yield StrSep(string, sep)
 
 
-@_handle_stream
+@_handle_results
 @_use_docstring(str.replace)
 def replace(
   old: str,
   new: str,
   *args: Args,
   count: int = ALL
-) -> StreamResults:
+) -> ResultStream:
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
@@ -513,11 +524,11 @@ replace_first = _use_docstring(replace)(
 )
 
 
-@_handle_stream
+@_handle_results
 def sbob(
   *args: Args,
   reverse: bool = False,
-) -> StreamResults:
+) -> ResultStream:
   """tYpE lIkE tHiS"""
   strings, sep = _get_strings_sep(args)
 
@@ -530,8 +541,8 @@ def sbob(
     yield StrSep(EMPTY_STR, sep)
 
 
-@_handle_stream
-def nth(*line_nums: list[int], exclude: bool = False) -> StreamResults:
+@_handle_results
+def nth(*line_nums: list[int], exclude: bool = False) -> ResultStream:
   """
   Print lines on `line_nums` from standard input. Setting the `exclude` flag
   will instead print all lines from standard input and lines `line_nums`
@@ -548,6 +559,11 @@ def nth(*line_nums: list[int], exclude: bool = False) -> StreamResults:
 
   else:
     lines = _gen_lines(line_nums, stdin)
+
+  lines = peekable(lines)
+
+  if lines.peek(NO_ITEMS) is NO_ITEMS:
+    yield NoResult
 
   yield from map(StrSep, lines)
 
