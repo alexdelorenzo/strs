@@ -9,6 +9,7 @@ import os
 
 from strenum import StrEnum
 from unpackable import Unpackable
+from more_itertools import peekable
 
 
 NEW_LINE: Final[str] = '\n'
@@ -19,13 +20,16 @@ DOCTEST: Final[str] = '>>>'
 SH_SEP: Final[str | None] = os.environ.get('IFS')
 SLICE_SEP: Final[str] = ':'
 
-NO_RESULT: Final[int] = -1
+START_INDEX: Final[int] = 1
 MIN_TIMES: Final[int] = 1
 FIRST: Final[int] = 1
 INCREMENT: Final[int] = 1
+
+NO_RESULT: Final[int] = -1
 FOREVER: Final[int] = -1
 ALL: Final[int] = -1
 SKIP: Final[None] = None
+NO_ITEMS: Final[None] = None
 
 NO_CMD_ERR: Final[str] = "This command doesn't exist yet."
 
@@ -58,6 +62,10 @@ class ErrCode(IntEnum):
 
   ok: int = 0
   err: int = 1
+
+  not_found: int = 2
+  no_result: int = 3
+  no_handler: int = 4
 
   true: int = ok
   false: int = err
@@ -92,10 +100,13 @@ class Result(Generic[T], Unpackable):
 
 
 StreamResult = Result | StrSep | ErrCode | None
-StreamResults = Iterable[StreamResult]
-GenFunc = Callable[..., StreamResults]
+ResultStream = Iterable[StreamResult]
+ResultsFunc = Callable[..., ResultStream]
 ResultFunc = Callable[..., Result[Any]]
 
+
+NoResult = Result[None](code=ErrCode.no_result)
+NotFoundResult = Result[None](code=ErrCode.not_found)
 
 ErrResult = Result[None](code=ErrCode.err)
 ErrIntResult = Result[int](NO_RESULT, ErrCode.err)
@@ -129,6 +140,18 @@ def _get_stdin(strip: bool = False) -> Strings | None:
   return map(parse, sys.stdin.buffer)
 
 
+def _to_peekable(
+  func: Callable[..., Iterable]
+) -> Callable[..., Iterable]:
+  @wraps(func)
+  def new_func(*args, **kwargs) -> Iterable:
+    gen = func(*args, **kwargs)
+    return peekable(gen)
+
+  return new_func
+
+
+@_to_peekable
 def _get_input(args: Args, strip: bool = False) -> Input:
   if stdin := _get_stdin(strip):
     return stdin
@@ -204,8 +227,7 @@ def _check_exit(func: CheckFunc) -> QuitFunc:
   @_use_docstring(func)
   def new_func(*args, **kwargs):
     result: bool = func(*args, **kwargs)
-    code = ErrCode.from_bool(result)
-    sys.exit(code)
+    _parse_result(result)
 
   return new_func
 
@@ -242,49 +264,58 @@ def _handle_result(func: ResultFunc) -> QuitFunc:
   @wraps(func)
   def new_func(*args, **kwargs):
     result = func(*args, **kwargs)
-
-    if not result:
-      sys.exit(ErrCode.ok)
-
-    result, code, *_ = result
-
-    if result:
-      print(result)
-
-    sys.exit(code)
+    _parse_result(result)
 
   return new_func
 
 
-def _handle_stream(func: GenFunc) -> QuitFunc:
+_parse_result: QuitFunc
+def _parse_result(result: StreamResult):
+  match result:
+    case Result((string, sep), code):
+      if string is not None:
+        print(string, end=sep)
+
+      if code.should_quit:
+        sys.exit(code)
+
+    case Result(result=bool()) | bool() as result:
+      code = ErrCode.from_bool(result)
+      sys.exit(code)
+
+    case Result(result, code):
+      if result is not None:
+        print(result)
+
+      if code.should_quit:
+        sys.exit(code)
+
+    case StrSep(string, sep):
+      print(string, end=sep)
+
+    case ErrCode() as code if code.should_quit:
+      sys.exit(code)
+
+    case None:
+      logging.debug(f'No result from handler.')
+      sys.exit(ErrCode.no_result)
+
+    case _rest:
+      logging.error(f'No handler for {_get_name(type(_rest))}.')
+      sys.exit(ErrCode.no_handler)
+
+
+def _handle_results(func: ResultsFunc | ResultFunc) -> QuitFunc:
   @wraps(func)
   def new_func(*args, **kwargs):
-    gen: StreamResults = func(*args, **kwargs)
+    results: StreamResults | Result = func(*args, **kwargs)
 
-    for result in gen:
-      match result:
-        case Result((string, sep), code):
-          if string is not None:
-            print(string, end=sep)
+    if not isinstance(results, Iterable):
+      _parse_result(results)
+      return
 
-          if code.should_quit:
-            sys.exit(code)
-
-        case Result(result, code):
-          if result is not None:
-            print(result)
-
-          if code.should_quit:
-            sys.exit(code)
-
-        case StrSep(string, sep):
-          print(string, end=sep)
-
-        case ErrCode() as code if code.should_quit:
-          sys.exit(code)
-
-        case None:
-          sys.exit(ErrCode.err)
+    for result in results:
+      _parse_result(result)
 
     sys.exit(ErrCode.ok)
 
