@@ -245,7 +245,11 @@ def rindex(
 def split(on: str = NEW_LINE, *args: Args) -> StreamResults:
   strings, sep = _get_strings_sep(args)
 
+  if not sep:
+    sep = NEW_LINE
+
   for string in strings:
+    string = string.rstrip(NEW_LINE)
     split_strs = string.split(sep=on)
 
     for split_str in split_strs:
@@ -274,13 +278,21 @@ def rsplit(on: str = NEW_LINE, *args: Args) -> StreamResults:
 @_use_docstring(str.join)
 def join(on: str = EMPTY_STR, *args: Args) -> StreamResults:
   strings, _ = _get_strings_sep(args)
+  sep = SAME_LINE
 
-  first = next(strings).rstrip(NEW_LINE)
-  yield StrSep(first, SAME_LINE)
+  if first := next(strings, None):
+    first = first.rstrip(NEW_LINE)
+
+  elif first is None:
+    return
+
+  yield StrSep(first, sep)
 
   for string in strings:
     string = string.rstrip(NEW_LINE)
-    yield StrSep(f'{on}{string}', SAME_LINE)
+    yield StrSep(f'{on}{string}', sep)
+
+  yield Result(EMPTY_STR)
 
 
 @_handle_stream
