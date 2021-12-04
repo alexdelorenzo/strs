@@ -363,36 +363,56 @@ $ echo $string | str rsplit "$split"
 
 ## More string tools
 `strs` has tools that deal with UTF-8, ASCII and emojis, and it has tools that aren't found in Python or common shells.
+
+### To ASCII
 ```bash
 $ str to-ascii "It is 20° Celsius outside."
 It is 20deg Celsius outside.
 
 $ str to-ascii "Ǎ Ě Ǐ Ǒ Ǔ Č Ď Ǧ Ȟ ǰ Ǩ Ľ Ň Ř Š Ť Ž"
 A E I O U C D G H j K L N R S T Z
+```
 
+### Substring
+```bash
 $ str substring 3 "Hey there! 🔥"
 Hey
 
 # you can use negative indices like you can in Python
 $ str substring -3 "Hey there! 🔥" --start 4
 there
+```
 
-# or you can use Python's slice syntax directly
+### Slice
+You can use Python's slice syntax directly
+```bash
 $ str slice 4:-3 "Hey there! 🔥"
 there
+```
 
+### Contains
+```bash
 $ str contains 🔥 "Hey there! 🔥"; echo $?
 0
+```
 
+### Has emoji
+```bash
 $ str has-emoji "Hey there! 🔥"; echo $?
 0
 
 $ str from-emoji "Hey there! 🔥"
 Hey there! :fire:
+```
 
+### Return nth lines
+```bash
 $ sudo dmesg | str nth 50
 [73627.811739] Filesystems sync: 0.02 seconds
+```
 
+### tYpE lIkE tHiS
+```bash
 $ str sbob "squidward likes krabby patties"
 sQuIdWaRd LiKeS kRaBbY pAtTiEs
 ```
@@ -415,79 +435,130 @@ elif !str isalnum "$string"; then
   printf "Isn't alphanumeric\n"
 
 fi
+```
 
-
-# starts with
+### Starts with
+```bash
 $ str startswith T "$string"; echo $?
 0
 
 $ echo $string | str startswith T; echo $?
 0
+```
 
-# ends with
+### Ends with
+```bash
 $ str endswith . "$string"; echo $?
 0
 
 $ echo $string | str endswith .; echo $?
 0
+```
 
-# is alphanumeric
+### Is alphanumeric
+```bash
 $ str isalnum "$string"; echo $?
+0
+
 $ echo $string | str isalnum; echo $?
 0
+```
 
-# is alphabetic
+### Is alphabetic
+```bash
 $ str isalpha "$string"; echo $?
+1
+
 $ echo $string | str isalpha; echo $?
 1
+```
 
-# is ASCII
+### Is ASCII
+```bash
 $ str isascii "$string"; echo $?
+0
+
 $ echo $string | str isascii; echo $?
 0
+```
 
-# is decimal
+### Is decimal
+```bash
 $ str isdecimal "$string"; echo $?
+1
+
 $ echo $string | str isdecimal; echo $?
 1
+```
 
-# is digit
+### Is digit
+```bash
 $ str isdigit "$string"; echo $?
+1
+
 $ echo $string | str isdigit; echo $?
 1
+```
 
-# is valid Python identifier
+### Is valid Python identifier
+```bash
 $ str isidentifier "$string"; echo $?
+1
+
 $ echo $string | str isidentifier; echo $?
 1
+```
 
-# is lower case
+# Is lower case
+```bash
 $ str islower "$string"; echo $?
+1
+
 $ echo $string | str islower; echo $?
 1
+```
 
-# # is numeric
+### Is numeric
+```bash
 $ str isnumeric "$string"; echo $?
+1
+
 $ echo $string | str isnumeric; echo $?
 1
+```
 
-# is printable
+### Is printable
+```bash
 $ str isprintable "$string"; echo $?
-$ echo $string | str isprintable; echo $?
 0
 
-# is space character
+$ echo $string | str isprintable; echo $?
+0
+```
+
+### Is space character
+```bash
 $ str isspace "$string"; echo $?
+1
+
 $ echo $string | str isspace; echo $?
 1
+```
 
-# is title case
+### Is title case
+```bash
 $ str istitle "$string"; echo $?
-$ echo $string | str istitle; echo $?
 1
 
-# is upper case
+$ echo $string | str istitle; echo $?
+1
+```
+
+### Is upper case
+```bash
 $ str isupper "$string"; echo $?
+1
+
 $ echo $string | str isupper; echo $?
 1
 ```
