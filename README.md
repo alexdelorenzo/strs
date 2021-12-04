@@ -216,7 +216,7 @@ $ echo $string | str index $find
 11
 ```
 
-# ##Join
+### Join
 ```bash
 on='_'
 
@@ -403,7 +403,7 @@ there
 ```
 
 ### Slice
-You can use Python's slice syntax directly
+You can use Python's slice syntax directly, too.
 ```bash
 $ str slice 4:-3 "Hey there! 🔥"
 there
@@ -415,7 +415,7 @@ $ str contains 🔥 "Hey there! 🔥"; echo $?
 0
 ```
 
-### Has emoji
+### Emojis
 ```bash
 $ str has-emoji "Hey there! 🔥"; echo $?
 0
@@ -528,7 +528,7 @@ $ echo $string | str isidentifier; echo $?
 1
 ```
 
-# Is lower case
+### Is lower case
 ```bash
 $ str islower "$string"; echo $?
 1
