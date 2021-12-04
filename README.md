@@ -197,7 +197,7 @@ $ echo $string | str index $find
 11
 ```
 
-# ##Join
+### Join
 ```bash
 on='_'
 
@@ -384,7 +384,7 @@ there
 ```
 
 ### Slice
-You can use Python's slice syntax directly
+You can use Python's slice syntax directly, too.
 ```bash
 $ str slice 4:-3 "Hey there! 🔥"
 there
