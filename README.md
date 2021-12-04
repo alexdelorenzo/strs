@@ -178,7 +178,9 @@ width=40
 
 $ str center $width "$string"
           This is an example.           
+```
 
+```bash
 $ echo $string | str center $width
           This is an example.           
 ```
@@ -189,7 +191,9 @@ countChar='e'
 
 $ str count $countChar "$string"
 2
+```
 
+```bash
 $ echo $string | str count $countChar
 2
 ```
@@ -200,7 +204,9 @@ find='e'
 
 $ str find $find "$string"
 11
+```
 
+```bash
 $ echo $string | str find $find
 11
 ```
@@ -209,7 +215,9 @@ $ echo $string | str find $find
 ```bash
 $ str index $find "$string"
 11
+```
 
+```bash
 $ echo $string | str index $find
 11
 ```
@@ -220,7 +228,9 @@ on='_'
 
 $ str join $on $string
 This_is_an_example.
+```
 
+```bash
 $ echo $string | str join $on
 This_is_an_example.
 ```
@@ -233,7 +243,9 @@ $ str partition "$part" "$string"
 This
 
 is an example.
+```
 
+```bash
 $ echo $string | str partition "$part"
 [...]
 ```
@@ -247,7 +259,9 @@ This
 is
 an
 example.
+```
 
+```bash
 $ echo $string | str split "$split"
 [...]
 ```
@@ -258,7 +272,9 @@ strip='.'
 
 $ str strip $strip "$string"
 This is an example
+```
 
+```bash
 $ echo $string | str strip $strip
 This is an example
 ```
@@ -276,7 +292,9 @@ tHIS IS AN EXAMPLE.
 ```bash
 $ str title "$string"
 This Is An Example.
+```
 
+```bash
 $ echo $string | str title
 This Is An Example.
 ```
@@ -285,7 +303,9 @@ This Is An Example.
 ```bash
 $ str zfill $width "$string"
 000000000000000000000This is an example.
+```
 
+```bash
 $ echo $string | str zfill $width
 000000000000000000000This is an example.
 ```
@@ -296,7 +316,9 @@ $ str repeat 3 "$string"
 This is an example.
 This is an example.
 This is an example.
+```
 
+```bash
 $ echo $string | str repeat 3
 [...]
 ```
@@ -305,7 +327,9 @@ $ echo $string | str repeat 3
 ```bash
 $ str ljust $width "$string" --fillchar '*'
 This is an example.*********************
+```
 
+```bash
 $ echo $string | str ljust $width --fillchar '*'
 This is an example.*********************
 ```
@@ -314,7 +338,9 @@ This is an example.*********************
 ```bash
 $ str lstrip T "$string"
 his is an example.
+```
 
+```bash
 $ echo $string | str lstrip T
 his is an example. 
 ```
@@ -323,7 +349,9 @@ his is an example.
 ```bash
 $ str rfind $find "$string"
 17
+```
 
+```bash
 $ echo $string | str rfind $find
 17
 ```
@@ -332,7 +360,9 @@ $ echo $string | str rfind $find
 ```bash
 $ str rindex $find "$string"
 17
+```
 
+```bash
 $ echo $string | str rindex $find
 17
 ```
@@ -341,7 +371,9 @@ $ echo $string | str rindex $find
 ```bash
 $ str rjust $width "$string"
                      This is an example.
+```
 
+```bash
 $ echo $string | str rjust $width
                      This is an example.
 ```
