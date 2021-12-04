@@ -160,7 +160,7 @@ $ echo $string | str replace-first $old $new
 ## String manipulation tools
 `strs` has string manipulation commands that don't have syntactic sugar in Bash.
 
-### Casefold
+### [Casefold](https://docs.python.org/3/library/stdtypes.html#str.casefold)
 ```bash
 string='This is an example.'
 
