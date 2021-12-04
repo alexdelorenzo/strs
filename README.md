@@ -141,19 +141,7 @@ $ echo $string | str replace-first $old $new
 ```
 
 ## String manipulation tools
-`strs` has string manipulation commands that don't have syntactic sugar in Bash:
-```bash
-string='This is an example.'
-width=40
-countChar='e'
-find='e'
-on='_'
-remove='.'
-part=' '
-split=' '
-strip='.'
-```
-
+`strs` has string manipulation commands that don't have syntactic sugar in Bash.
 
 ### Casefold
 ```bash
@@ -183,6 +171,8 @@ $ echo $string | str center $width
 countChar='e'
 
 $ str count $countChar "$string"
+2
+
 $ echo $string | str count $countChar
 2
 ```
@@ -192,6 +182,8 @@ $ echo $string | str count $countChar
 find='e'
 
 $ str find $find "$string"
+11
+
 $ echo $string | str find $find
 11
 ```
@@ -199,6 +191,8 @@ $ echo $string | str find $find
 ### Index
 ```bash
 $ str index $find "$string"
+11
+
 $ echo $string | str index $find
 11
 ```
@@ -208,6 +202,8 @@ $ echo $string | str index $find
 on='_'
 
 $ str join $on $string
+This_is_an_example.
+
 $ echo $string | str join $on
 This_is_an_example.
 ```
@@ -217,6 +213,10 @@ This_is_an_example.
 part=' '
 
 $ str partition "$part" "$string"
+This
+
+is an example.
+
 $ echo $string | str partition "$part"
 This
  
