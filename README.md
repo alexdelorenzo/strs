@@ -13,7 +13,7 @@ $ str repeat 2 ⭐ | str join 🌙
 
 # Usage
 ## Practical example
-If you're on [Debian](https://www.debian.org/), you can use `strs` to take your [apt sources](https://wiki.debian.org/SourcesList) from Debian [`testing`](https://wiki.debian.org/DebianTesting) and point them to [`stable`](https://wiki.debian.org/DebianStable) on the fly, and send them to a Debian `stable` machine:
+If you're on [Debian](https://www.debian.org/), you can use `strs` to take your [apt sources](https://wiki.debian.org/SourcesList) from Debian [`testing`](https://wiki.debian.org/DebianTesting) and point them to [`stable`](https://wiki.debian.org/DebianStable) on the fly, and then send them to a Debian `stable` machine:
 ```bash
 $ str replace testing stable < sources.list | ssh hostname "cat > /etc/apt/sources.list"
 ```
