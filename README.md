@@ -32,23 +32,28 @@ The following examples of Bash code only work with Bash, whereas `strs` commands
 Here's how you can manipulate strings with both Bash and `strs`:
 
 ### String length
+#### Bash
 ```bash
 string='This is an example.'
 
-# Bash
 $ echo "${#string}"
 19
+```
 
-# str
+#### `strs`
+```bash
 $ str length "$string"
 19
+```
 
-# or, using pipes
+Or, using pipes
+```bash
 $ echo $string | str length
 19
 ```
 
 ### Strip
+#### Bash
 ```bash
 removeFront='This'
 removeEnd='example.'
@@ -59,8 +64,10 @@ $ echo "${string#$removeFront}"  # from front
 
 $ echo "${string%$removeEnd}"  # from end
 This is an
+```
 
-# str
+##### `strs`
+```bash
 $ str lstrip $removeFront "$string"
  is an example.
 
@@ -69,8 +76,10 @@ This is an
 
 $ str strip $removeFront$removeEnd "$string"
  is an
+```
 
-# or, using pipes
+Or, using pipes
+```bash
 $ echo $string | str lstrip $removeFront
  is an example.
 
@@ -82,6 +91,7 @@ $ echo $string | str strip $removeFront$removeEnd
 ```
 
 ### Capitalization
+#### Bash
 ```bash
 $ echo "${string^}"  # capitalize first char
 This is an example.
@@ -91,8 +101,10 @@ THIS IS AN EXAMPLE.
 
 $ echo "${string,,}"  # lower all
 this is an example.
+```
 
-# vs
+#### `strs`
+```bash
 $ str capitalize "$string"
 This is an example.
 
@@ -101,8 +113,10 @@ THIS IS AN EXAMPLE.
 
 $ str lower "$string"
 this is an example.
+```
 
-# or
+Or:
+```bash
 $ echo $string | str capitalize
 This is an example.
 
@@ -114,6 +128,7 @@ this is an example.
 ```
 
 ### Replace
+#### Bash
 ```bash
 old='an'
 new='a'
@@ -123,8 +138,10 @@ This is a example.
 
 echo "${string/$old/$new}"  # replace first
 This is a example.
+```
 
-# vs
+#### `strs`
+```bash
 $ str replace $old $new "$string"
 This is a example.
 
@@ -133,8 +150,10 @@ This is a example.
 
 $ str replace-first $old $new "$string"
 This is a example.
+```
 
-# or
+Or:
+```bash
 $ echo $string | str replace $old $new
 $ echo $string | str replace $old $new --count 1
 $ echo $string | str replace-first $old $new
