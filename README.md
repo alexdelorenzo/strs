@@ -30,11 +30,11 @@ The same can be done with [`sed`](https://en.wikipedia.org/wiki/Sed), but you'd 
 The following examples of Bash code only work with Bash, whereas `strs` commands will work if you're using Bash, [zsh](https://www.zsh.org/), PowerShell or something else.
 
 Here's how you can manipulate strings with both Bash and `strs`:
+
+#### String length
 ```bash
 string='This is an example.'
 
-
-## String length
 # Bash
 $ echo "${#string}"
 19
@@ -46,8 +46,10 @@ $ str length "$string"
 # or, using pipes
 $ echo $string | str length
 19
+```
 
-## Strip
+#### Strip
+```bash
 removeFront='This'
 removeEnd='example.'
 
@@ -77,8 +79,10 @@ This is an
 
 $ echo $string | str strip $removeFront$removeEnd
  is an
+```
 
-## Capitalization
+#### Capitalization
+```bash
 $ echo "${string^}"  # capitalize first char
 This is an example.
 
@@ -108,7 +112,8 @@ THIS IS AN EXAMPLE.
 $ echo $string | str lower
 this is an example.
 
-## Replace
+#### Replace
+```bash
 old='an'
 new='a'
 
