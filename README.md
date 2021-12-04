@@ -47,7 +47,6 @@ $ str length "$string"
 $ echo $string | str length
 19
 
-
 ## Strip
 removeFront='This'
 removeEnd='example.'
@@ -79,7 +78,6 @@ This is an
 $ echo $string | str strip $removeFront$removeEnd
  is an
 
- 
 ## Capitalization
 $ echo "${string^}"  # capitalize first char
 This is an example.
@@ -109,7 +107,6 @@ THIS IS AN EXAMPLE.
 
 $ echo $string | str lower
 this is an example.
-
 
 ## Replace
 old='an'
@@ -159,7 +156,6 @@ this is an example.
 $ echo $string | str casefold
 this is an example.
 
-
 # center
 $ str center $width "$string"
           This is an example.           
@@ -167,176 +163,108 @@ $ str center $width "$string"
 $ echo $string | str center $width
           This is an example.           
 
-
 # count
 $ str count $countChar "$string"
-2
-
 $ echo $string | str count $countChar
 2
 
-
 # find
 $ str find $find "$string"
-11
-
 $ echo $string | str find $find
 11
 
-
 # index
 $ str index $find "$string"
-11
-
 $ echo $string | str index $find
 11
 
-
 # join
 $ str join $on $string
-This_is_an_example.
-
 $ echo $string | str join $on
 This_is_an_example.
 
-
 # partition
 $ str partition "$part" "$string"
-This
- 
-is an example.
-
 $ echo $string | str partition "$part"
 This
  
 is an example.
 
-
 # split
 $ str split "$split" "$string"
-This
-is
-an
-example.
-
 $ echo $string | str split "$split"
 This
 is
 an
 example.
 
-
 # strip
 $ str strip $strip "$string"
-This is an example
-
 $ echo $string | str strip $strip
 This is an example
 
-
 # swap case
 $ str swapcase "$string"
-tHIS IS AN EXAMPLE.
-
 $ echo $string | str swapcase
 tHIS IS AN EXAMPLE.
 
-
 # to title case
 $ str title "$string"
-This Is An Example.
-
 $ echo $string | str title
 This Is An Example.
 
-
 # zero fill
 $ str zfill $width "$string"
-000000000000000000000This is an example.
-
 $ echo $string | str zfill $width
 000000000000000000000This is an example.
 
-
 # repeat
 $ str repeat 3 "$string"
-This is an example.
-This is an example.
-This is an example.
-
 $ echo $string | str repeat 3
 This is an example.
 This is an example.
 This is an example.
 
-
 # ljust
 $ str ljust $width "$string" --fillchar '*'
-This is an example.*********************
-
 $ echo $string | str ljust $width --fillchar '*'
 This is an example.*********************
 
-
 # lstrip
 $ str lstrip T "$string"
-his is an example.
-
 $ echo $string | str lstrip T
 his is an example. 
 
-
 # rfind
 $ str rfind $find "$string"
-17
-
 $ echo $string | str rfind $find
 17
 
-
 # rindex
 $ str rindex $find "$string"
-17
-
 $ echo $string | str rindex $find
 17
 
 
 # rjust
 $ str rjust $width "$string"
-                     This is an example.
-
 $ echo $string | str rjust $width
                      This is an example.
 
-
 # rstrip
 $ str rstrip $remove "$string"
-This is an example
-
 $ echo $string | str rstrip $remove
 This is an example
 
-
 # rpartition
 $ str rpartition "$part" "$string"
-This is an
- 
-example.
-
 $ echo $string | str rpartition "$part"
 This is an
  
 example.
 
-
 # rsplit
 $ str rsplit "$split" "$string"
-This
-is
-an
-example.
-
 $ echo $string | str rsplit "$split"
 This
 is
@@ -416,85 +344,61 @@ $ echo $string | str endswith .; echo $?
 
 # is alphanumeric
 $ str isalnum "$string"; echo $?
-0
-
 $ echo $string | str isalnum; echo $?
 0
 
 # is alphabetic
 $ str isalpha "$string"; echo $?
-1
-
 $ echo $string | str isalpha; echo $?
 1
 
 # is ASCII
 $ str isascii "$string"; echo $?
-0
-
 $ echo $string | str isascii; echo $?
 0
 
 # is decimal
 $ str isdecimal "$string"; echo $?
-1
-
 $ echo $string | str isdecimal; echo $?
 1
 
 # is digit
 $ str isdigit "$string"; echo $?
-1
-
 $ echo $string | str isdigit; echo $?
 1
 
 # is valid Python identifier
 $ str isidentifier "$string"; echo $?
-1
-
 $ echo $string | str isidentifier; echo $?
 1
 
 # is lower case
 $ str islower "$string"; echo $?
-1
-
 $ echo $string | str islower; echo $?
 1
 
 # # is numeric
 $ str isnumeric "$string"; echo $?
-1
-
 $ echo $string | str isnumeric; echo $?
 1
 
 # is printable
 $ str isprintable "$string"; echo $?
-0
-
 $ echo $string | str isprintable; echo $?
 0
 
 # is space character
 $ str isspace "$string"; echo $?
-1
-
 $ echo $string | str isspace; echo $?
 1
 
 # is title case
 $ str istitle "$string"; echo $?
-1
-
 $ echo $string | str istitle; echo $?
 1
 
 # is upper case
 $ str isupper "$string"; echo $?
-1
-
 $ echo $string | str isupper; echo $?
 1
 ```
