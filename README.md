@@ -284,7 +284,9 @@ This is an example
 ```bash
 $ str swapcase "$string"
 tHIS IS AN EXAMPLE.
+```
 
+```bash
 $ echo $string | str swapcase
 tHIS IS AN EXAMPLE.
 ```
