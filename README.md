@@ -27,7 +27,7 @@ To do the same with [`sed`](https://en.wikipedia.org/wiki/Sed), you'd need to kn
 
 The following examples of Bash code only work with Bash, whereas `strs` commands will work if you're using Bash, [zsh](https://www.zsh.org/), PowerShell or something else.
 
-Here's how you can manipulate strings with both Bash and `strs`:
+Below are examples of how you can manipulate strings with both Bash and `strs`.
 
 ### String length
 #### Bash
@@ -44,7 +44,7 @@ $ str length "$string"
 19
 ```
 
-Or, using pipes
+Or, using pipes:
 ```bash
 $ echo $string | str length
 19
@@ -76,7 +76,7 @@ $ str strip $removeFront$removeEnd "$string"
  is an
 ```
 
-Or, using pipes
+Or, using pipes:
 ```bash
 $ echo $string | str lstrip $removeFront
  is an example.
