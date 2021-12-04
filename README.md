@@ -383,7 +383,9 @@ $ echo $string | str rjust $width
 ```bash
 $ str rstrip $remove "$string"
 This is an example
+```
 
+```bash
 $ echo $string | str rstrip $remove
 This is an example
 ```
@@ -394,7 +396,9 @@ $ str rpartition "$part" "$string"
 This is an
 
 example.
+```
 
+```bash
 $ echo $string | str rpartition "$part"
 [...]
 ```
@@ -406,7 +410,9 @@ This
 is
 an
 example.
+```
 
+```bash
 $ echo $string | str rsplit "$split"
 [...]
 ```
