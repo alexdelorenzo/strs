@@ -166,8 +166,9 @@ string='This is an example.'
 
 $ str casefold "$string"
 this is an example.
+```
 
-# or
+```bash
 $ echo $string | str casefold
 this is an example.
 ```
