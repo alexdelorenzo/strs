@@ -213,12 +213,12 @@ This_is_an_example.
 part=' '
 
 $ str partition "$part" "$string"
-[...]
+This
+
+is an example.
 
 $ echo $string | str partition "$part"
-This
- 
-is an example.
+[...]
 ```
 
 ### Split
@@ -226,13 +226,13 @@ is an example.
 split=' '
 
 $ str split "$split" "$string"
-[...]
-
-$ echo $string | str split "$split"
 This
 is
 an
 example.
+
+$ echo $string | str split "$split"
+[...]
 ```
 
 ### Strip
@@ -276,12 +276,12 @@ $ echo $string | str zfill $width
 ### Repeat
 ```bash
 $ str repeat 3 "$string"
-[...]
+This is an example.
+This is an example.
+This is an example.
 
 $ echo $string | str repeat 3
-This is an example.
-This is an example.
-This is an example.
+[...]
 ```
 
 ### Left justify
@@ -341,24 +341,24 @@ This is an example
 ### Right partition
 ```bash
 $ str rpartition "$part" "$string"
-[...]
+This is an
+
+example.
 
 $ echo $string | str rpartition "$part"
-This is an
- 
-example.
+[...]
 ```
 
 ### Right split
 ```bash
 $ str rsplit "$split" "$string"
-[...]
-
-$ echo $string | str rsplit "$split"
 This
 is
 an
 example.
+
+$ echo $string | str rsplit "$split"
+[...]
 ```
 
 ## More string tools
