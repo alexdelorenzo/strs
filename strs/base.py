@@ -20,7 +20,7 @@ DOCTEST: Final[str] = '>>>'
 SH_SEP: Final[str | None] = os.environ.get('IFS')
 SLICE_SEP: Final[str] = ':'
 
-START_INDEX: Final[int] = 1
+START_INDEX: Final[int] = 0
 MIN_TIMES: Final[int] = 1
 FIRST: Final[int] = 1
 INCREMENT: Final[int] = 1
@@ -34,16 +34,16 @@ NO_ITEMS: Final[None] = None
 NO_CMD_ERR: Final[str] = "This command doesn't exist yet."
 
 
-Decorator = Callable[Callable, Callable]
+T = TypeVar('T')
+Decorator = Callable[Callable[..., T], Callable[..., T]]
 StrParseFunc = Callable[[str, ...], str]
 StrCheckFunc = Callable[str, bool]
 CheckFunc = Callable[..., bool]
 QuitFunc = Callable[..., None]
 Chars = Iterable[str]
 Strings = Iterable[str]
-Args = list[str]
+Args = list[str | int]
 Input = Strings | Args
-T = TypeVar('T')
 
 
 class InputStrsSep(NamedTuple):
@@ -63,9 +63,11 @@ class ErrCode(IntEnum):
   ok: int = 0
   err: int = 1
 
-  not_found: int = 2
-  no_result: int = 3
-  no_handler: int = 4
+  no_result: int = 2
+  no_handler: int = 3
+
+  not_found: int = 4
+  found: int = ok
 
   true: int = ok
   false: int = err
@@ -95,21 +97,36 @@ class CmdState(StrEnum):
 @dataclass
 class Result(Generic[T], Unpackable):
   result: T | None = None
-  code: ErrCode = ErrCode.ok
+  code: ErrCode = ErrCode.none
   state: CmdState = CmdState.ok
 
 
-StreamResult = Result | StrSep | ErrCode | None
-ResultStream = Iterable[StreamResult]
-ResultsFunc = Callable[..., ResultStream]
-ResultFunc = Callable[..., Result[Any]]
+@dataclass
+class Error(Result[T]):
+  code: ErrCode = ErrCode.err
+
+
+@dataclass
+class Ok(Result[T]):
+  code: ErrCode = ErrCode.ok
+
+
+@dataclass
+class NotFound(Error[T]):
+  code: ErrCode = ErrCode.not_found
+
+
+StreamResult = T | Result[T] | StrSep | ErrCode | None
+ResultStream = Iterable[StreamResult[T]]
+ResultsFunc = Callable[..., ResultStream[T] | StreamResult[T]]
+ResultFunc = Callable[..., Result[T | Any]]
 
 
 NoResult = Result[None](code=ErrCode.no_result)
-NotFoundResult = Result[None](code=ErrCode.not_found)
+NotFoundResult = NotFound()
 
-ErrResult = Result[None](code=ErrCode.err)
-ErrIntResult = Result[int](NO_RESULT, ErrCode.err)
+ErrResult = Error()
+IntError = Error[int](NO_RESULT)
 
 
 def _is_pipeline() -> bool:
@@ -141,8 +158,8 @@ def _get_stdin(strip: bool = False) -> Strings | None:
 
 
 def _to_peekable(
-  func: Callable[..., Iterable]
-) -> Callable[..., Iterable]:
+  func: Callable[..., Iterable[T]]
+) -> Callable[..., Iterable[T]]:
   @wraps(func)
   def new_func(*args, **kwargs) -> Iterable:
     gen = func(*args, **kwargs)
@@ -186,7 +203,7 @@ def _strip_doctests(string: str | None) -> str | None:
   return NEW_LINE.join(docs)
 
 
-def _use_docstring(source: Callable | str, name: str = True) -> Decorator:
+def _use_metadata(source: Callable | str, name: str = True) -> Decorator:
   is_callable: bool = isinstance(source, Callable)
 
   if is_callable:
@@ -212,7 +229,7 @@ def _use_docstring(source: Callable | str, name: str = True) -> Decorator:
 
 
 def _wrap_str_check(func: StrCheckFunc) -> CheckFunc:
-  @_use_docstring(func)
+  @_use_metadata(func)
   def new_func(*args: Args, **kwargs) -> bool:
     strings, _ = _get_strings_sep(args)
     func_kwargs = partial(func, **kwargs)
@@ -223,22 +240,13 @@ def _wrap_str_check(func: StrCheckFunc) -> CheckFunc:
   return new_func
 
 
-def _check_exit(func: CheckFunc) -> QuitFunc:
-  @_use_docstring(func)
-  def new_func(*args, **kwargs):
-    result: bool = func(*args, **kwargs)
-    _parse_result(result)
-
-  return new_func
-
-
 def _wrap_check_exit(func: StrCheckFunc) -> QuitFunc:
   wrapped = _wrap_str_check(func)
-  return _check_exit(wrapped)
+  return _handle_result(wrapped)
 
 
 def _wrap_parse_print(func: StrParseFunc) -> QuitFunc:
-  @_use_docstring(func)
+  @_use_metadata(func)
   def new_func(*args: Args):
     strings, sep = _get_strings_sep(args)
     _apply(func, strings, sep)
@@ -264,13 +272,15 @@ def _handle_result(func: ResultFunc) -> QuitFunc:
   @wraps(func)
   def new_func(*args, **kwargs):
     result = func(*args, **kwargs)
-    _parse_result(result)
+    _process_result(result)
+
+    sys.exit(ErrCode.ok)
 
   return new_func
 
 
-_parse_result: QuitFunc
-def _parse_result(result: StreamResult):
+_process_result: QuitFunc
+def _process_result(result: StreamResult):
   match result:
     case Result((string, sep), code):
       if string is not None:
@@ -305,17 +315,24 @@ def _parse_result(result: StreamResult):
       sys.exit(ErrCode.no_handler)
 
 
-def _handle_results(func: ResultsFunc | ResultFunc) -> QuitFunc:
+def _handle_results(func: ResultsFunc[T] | ResultFunc[T]) -> QuitFunc:
   @wraps(func)
   def new_func(*args, **kwargs):
-    results: StreamResults | Result = func(*args, **kwargs)
+    results: ResultStream[T] | StreamResult[T] = \
+      func(*args, **kwargs)
 
     if not isinstance(results, Iterable):
-      _parse_result(results)
+      _process_result(results)
       return
 
+    results: ResultStream[T] = peekable(results)
+
+    if results.peek(NO_ITEMS) is NO_ITEMS:
+      logging.debug(f'No results found with {_get_name(func)}.')
+      sys.exit(ErrCode.no_result)
+
     for result in results:
-      _parse_result(result)
+      _process_result(result)
 
     sys.exit(ErrCode.ok)
 
@@ -342,14 +359,14 @@ def _get_name(func: Callable) -> str:
 
 # see https://docs.python.org/3/library/itertools.html#itertools.cycle
 def _cycle_times(
-  iterable: Iterable,
+  iterable: Iterable[T],
   times: int = MIN_TIMES,
-) -> Iterable:
+) -> Iterable[T]:
   """Cycle through iterable `times` times."""
   if times < MIN_TIMES:
     return
 
-  saved = []
+  saved: list[T] = []
 
   for element in iterable:
     yield element
