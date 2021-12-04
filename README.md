@@ -490,7 +490,9 @@ fi
 ```bash
 $ str startswith T "$string"; echo $?
 0
+```
 
+```bash
 $ echo $string | str startswith T; echo $?
 0
 ```
@@ -499,7 +501,9 @@ $ echo $string | str startswith T; echo $?
 ```bash
 $ str endswith . "$string"; echo $?
 0
+```
 
+```bash
 $ echo $string | str endswith .; echo $?
 0
 ```
@@ -508,7 +512,9 @@ $ echo $string | str endswith .; echo $?
 ```bash
 $ str isalnum "$string"; echo $?
 0
+```
 
+```bash
 $ echo $string | str isalnum; echo $?
 0
 ```
@@ -517,7 +523,9 @@ $ echo $string | str isalnum; echo $?
 ```bash
 $ str isalpha "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str isalpha; echo $?
 1
 ```
@@ -526,7 +534,9 @@ $ echo $string | str isalpha; echo $?
 ```bash
 $ str isascii "$string"; echo $?
 0
+```
 
+```bash
 $ echo $string | str isascii; echo $?
 0
 ```
@@ -535,7 +545,9 @@ $ echo $string | str isascii; echo $?
 ```bash
 $ str isdecimal "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str isdecimal; echo $?
 1
 ```
@@ -544,7 +556,9 @@ $ echo $string | str isdecimal; echo $?
 ```bash
 $ str isdigit "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str isdigit; echo $?
 1
 ```
@@ -553,7 +567,9 @@ $ echo $string | str isdigit; echo $?
 ```bash
 $ str isidentifier "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str isidentifier; echo $?
 1
 ```
@@ -562,7 +578,9 @@ $ echo $string | str isidentifier; echo $?
 ```bash
 $ str islower "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str islower; echo $?
 1
 ```
@@ -571,7 +589,9 @@ $ echo $string | str islower; echo $?
 ```bash
 $ str isnumeric "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str isnumeric; echo $?
 1
 ```
@@ -580,7 +600,9 @@ $ echo $string | str isnumeric; echo $?
 ```bash
 $ str isprintable "$string"; echo $?
 0
+```
 
+```bash
 $ echo $string | str isprintable; echo $?
 0
 ```
@@ -589,7 +611,9 @@ $ echo $string | str isprintable; echo $?
 ```bash
 $ str isspace "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str isspace; echo $?
 1
 ```
@@ -598,7 +622,9 @@ $ echo $string | str isspace; echo $?
 ```bash
 $ str istitle "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str istitle; echo $?
 1
 ```
@@ -607,7 +633,9 @@ $ echo $string | str istitle; echo $?
 ```bash
 $ str isupper "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str isupper; echo $?
 1
 ```
