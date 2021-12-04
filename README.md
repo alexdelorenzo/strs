@@ -213,9 +213,7 @@ This_is_an_example.
 part=' '
 
 $ str partition "$part" "$string"
-This
-
-is an example.
+[...]
 
 $ echo $string | str partition "$part"
 This
@@ -228,6 +226,8 @@ is an example.
 split=' '
 
 $ str split "$split" "$string"
+[...]
+
 $ echo $string | str split "$split"
 This
 is
@@ -240,6 +240,8 @@ example.
 strip='.'
 
 $ str strip $strip "$string"
+This is an example
+
 $ echo $string | str strip $strip
 This is an example
 ```
@@ -247,6 +249,8 @@ This is an example
 ### Swap case
 ```bash
 $ str swapcase "$string"
+tHIS IS AN EXAMPLE.
+
 $ echo $string | str swapcase
 tHIS IS AN EXAMPLE.
 ```
@@ -254,6 +258,8 @@ tHIS IS AN EXAMPLE.
 ### To title case
 ```bash
 $ str title "$string"
+This Is An Example.
+
 $ echo $string | str title
 This Is An Example.
 ```
@@ -261,6 +267,8 @@ This Is An Example.
 ### Zero fill
 ```bash
 $ str zfill $width "$string"
+000000000000000000000This is an example.
+
 $ echo $string | str zfill $width
 000000000000000000000This is an example.
 ```
@@ -268,6 +276,8 @@ $ echo $string | str zfill $width
 ### Repeat
 ```bash
 $ str repeat 3 "$string"
+[...]
+
 $ echo $string | str repeat 3
 This is an example.
 This is an example.
@@ -277,6 +287,8 @@ This is an example.
 ### Left justify
 ```bash
 $ str ljust $width "$string" --fillchar '*'
+This is an example.*********************
+
 $ echo $string | str ljust $width --fillchar '*'
 This is an example.*********************
 ```
@@ -284,6 +296,8 @@ This is an example.*********************
 ### Left strip
 ```bash
 $ str lstrip T "$string"
+his is an example.
+
 $ echo $string | str lstrip T
 his is an example. 
 ```
@@ -291,6 +305,8 @@ his is an example.
 ### Right find
 ```bash
 $ str rfind $find "$string"
+17
+
 $ echo $string | str rfind $find
 17
 ```
@@ -298,6 +314,8 @@ $ echo $string | str rfind $find
 ### Right index
 ```bash
 $ str rindex $find "$string"
+17
+
 $ echo $string | str rindex $find
 17
 ```
@@ -305,6 +323,8 @@ $ echo $string | str rindex $find
 ### Right justify
 ```bash
 $ str rjust $width "$string"
+                     This is an example.
+
 $ echo $string | str rjust $width
                      This is an example.
 ```
@@ -312,6 +332,8 @@ $ echo $string | str rjust $width
 ### Right strip
 ```bash
 $ str rstrip $remove "$string"
+This is an example
+
 $ echo $string | str rstrip $remove
 This is an example
 ```
@@ -319,6 +341,8 @@ This is an example
 ### Right partition
 ```bash
 $ str rpartition "$part" "$string"
+[...]
+
 $ echo $string | str rpartition "$part"
 This is an
  
@@ -328,6 +352,8 @@ example.
 ### Right split
 ```bash
 $ str rsplit "$split" "$string"
+[...]
+
 $ echo $string | str rsplit "$split"
 This
 is
