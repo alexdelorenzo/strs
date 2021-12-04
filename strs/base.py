@@ -1,9 +1,11 @@
 from __future__ import annotations
 from typing import Iterable, NamedTuple, Callable, Any, \
-  TypeVar, Generic, Final
+  TypeVar, Generic, Final, NoReturn, ParamSpec
+from collections.abc import Iterable as Iter
 from dataclasses import dataclass
 from functools import partial, wraps
 from enum import IntEnum, auto
+import logging
 import sys
 import os
 
@@ -17,32 +19,46 @@ EMPTY_STR: Final[str] = ''
 SAME_LINE: Final[str] = EMPTY_STR
 SPACE: Final[str] = ' '
 DOCTEST: Final[str] = '>>>'
-SH_SEP: Final[str | None] = os.environ.get('IFS')
 SLICE_SEP: Final[str] = ':'
+SH_SEP: Final[str | None] = os.environ.get('IFS')
 
 START_INDEX: Final[int] = 0
 MIN_TIMES: Final[int] = 1
 FIRST: Final[int] = 1
 INCREMENT: Final[int] = 1
 
+NOT_FOUND: int = -1
 NO_RESULT: Final[int] = -1
 FOREVER: Final[int] = -1
 ALL: Final[int] = -1
 SKIP: Final[None] = None
-NO_ITEMS: Final[None] = None
+NO_ITEMS: Final[Ellpsis] = ...
 
 NO_CMD_ERR: Final[str] = "This command doesn't exist yet."
 
 
 T = TypeVar('T')
-Decorator = Callable[Callable[..., T], Callable[..., T]]
-StrParseFunc = Callable[[str, ...], str]
+P = ParamSpec('P')
+
+Decorator = Callable[Callable[P, T], Callable[P, T]]
+StrParseFunc = Callable[[str, P], str]
 StrCheckFunc = Callable[str, bool]
-CheckFunc = Callable[..., bool]
-QuitFunc = Callable[..., None]
+CheckFunc = Callable[P, bool]
+QuitFunc = Callable[P, NoReturn | None]
 Chars = Iterable[str]
-Strings = Iterable[str]
 Args = list[str | int]
+
+
+class Peekable(Generic[T], peekable):
+  """Generic and typed `peekable` with convenience methods."""
+  iterable: Iterable[T]
+
+  @property
+  def is_empty(self) -> bool:
+    return _is_empty(self)
+
+
+Strings = Peekable[str] | Iterable[str]
 Input = Strings | Args
 
 
@@ -68,6 +84,8 @@ class ErrCode(IntEnum):
 
   not_found: int = 4
   found: int = ok
+
+  bad_input: int = 5
 
   true: int = ok
   false: int = err
@@ -102,13 +120,13 @@ class Result(Generic[T], Unpackable):
 
 
 @dataclass
-class Error(Result[T]):
-  code: ErrCode = ErrCode.err
+class Ok(Result[T]):
+  code: ErrCode = ErrCode.ok
 
 
 @dataclass
-class Ok(Result[T]):
-  code: ErrCode = ErrCode.ok
+class Error(Result[T]):
+  code: ErrCode = ErrCode.err
 
 
 @dataclass
@@ -116,17 +134,23 @@ class NotFound(Error[T]):
   code: ErrCode = ErrCode.not_found
 
 
-StreamResult = T | Result[T] | StrSep | ErrCode | None
-ResultStream = Iterable[StreamResult[T]]
-ResultsFunc = Callable[..., ResultStream[T] | StreamResult[T]]
-ResultFunc = Callable[..., Result[T | Any]]
+@dataclass
+class BadInput(Error[T]):
+  code: ErrCode = ErrCode.bad_input
+
+
+Item = T | Result[T] | StrSep | ErrCode | None
+Items = Iterable[Item[T]]
+
+ItemsFunc = Callable[P, Items[T] | Item[T]]
+ItemFunc = Callable[P, Result[T | Any]]
 
 
 NoResult = Result[None](code=ErrCode.no_result)
-NotFoundResult = NotFound()
+NoneFound = NotFound[None]()
 
-ErrResult = Error()
-IntError = Error[int](NO_RESULT)
+ErrResult = Error[None]()
+IntError = BadInput[int](NO_RESULT)
 
 
 def _is_pipeline() -> bool:
@@ -159,13 +183,17 @@ def _get_stdin(strip: bool = False) -> Strings | None:
 
 def _to_peekable(
   func: Callable[..., Iterable[T]]
-) -> Callable[..., Iterable[T]]:
+) -> Callable[..., Peekable[T]]:
   @wraps(func)
   def new_func(*args, **kwargs) -> Iterable:
     gen = func(*args, **kwargs)
-    return peekable(gen)
+    return Peekable[T](gen)
 
   return new_func
+
+
+def _is_empty(it: peekable) -> bool:
+  return it.peek(NO_ITEMS) is NO_ITEMS
 
 
 @_to_peekable
@@ -228,24 +256,24 @@ def _use_metadata(source: Callable | str, name: str = True) -> Decorator:
   return decorator
 
 
-def _wrap_str_check(func: StrCheckFunc) -> CheckFunc:
+def _wrap_str_check(func: StrCheckFunc) -> CheckFunc[P]:
   @_use_metadata(func)
-  def new_func(*args: Args, **kwargs) -> bool:
-    strings, _ = _get_strings_sep(args)
+  def new_func(*args: Args, **kwargs: P.kwargs) -> bool:
     func_kwargs = partial(func, **kwargs)
-
+    strings, _ = _get_strings_sep(args)
     checks = map(func_kwargs, strings)
+
     return all(checks)
 
   return new_func
 
 
-def _wrap_check_exit(func: StrCheckFunc) -> QuitFunc:
+def _wrap_check_exit(func: StrCheckFunc) -> QuitFunc[str]:
   wrapped = _wrap_str_check(func)
-  return _handle_result(wrapped)
+  return _handle_item(wrapped)
 
 
-def _wrap_parse_print(func: StrParseFunc) -> QuitFunc:
+def _wrap_parse_print(func: StrParseFunc[P]) -> QuitFunc[P]:
   @_use_metadata(func)
   def new_func(*args: Args):
     strings, sep = _get_strings_sep(args)
@@ -257,7 +285,7 @@ def _wrap_parse_print(func: StrParseFunc) -> QuitFunc:
 
 
 def _apply(
-  func: StrParseFunc,
+  func: StrParseFunc[P],
   strings: Strings,
   sep: str,
   *args,
@@ -268,19 +296,20 @@ def _apply(
     print(parsed, end=sep)
 
 
-def _handle_result(func: ResultFunc) -> QuitFunc:
+def _handle_item(func: ItemFunc[P, T]) -> QuitFunc[P]:
   @wraps(func)
-  def new_func(*args, **kwargs):
+  def new_func(*args: P.args, **kwargs: P.kwargs):
     result = func(*args, **kwargs)
-    _process_result(result)
+    _process_item(result)
 
     sys.exit(ErrCode.ok)
 
   return new_func
 
 
-_process_result: QuitFunc
-def _process_result(result: StreamResult):
+_process_item: QuitFunc
+
+def _process_item(result: Item[T]):
   match result:
     case Result((string, sep), code):
       if string is not None:
@@ -315,30 +344,33 @@ def _process_result(result: StreamResult):
       sys.exit(ErrCode.no_handler)
 
 
-def _handle_results(func: ResultsFunc[T] | ResultFunc[T]) -> QuitFunc:
+def _output_items(func: ItemsFunc[P, T] | ItemFunc[P, T]) -> QuitFunc[P]:
   @wraps(func)
-  def new_func(*args, **kwargs):
-    results: ResultStream[T] | StreamResult[T] = \
+  def new_func(*args: P.args, **kwargs: P.kwargs):
+    results: Items[T] | Item[T] = \
       func(*args, **kwargs)
 
-    if not isinstance(results, Iterable):
-      _process_result(results)
-      return
+    match results:
+      case Iter():
+        results = Peekable[Item[T]](results)
 
-    results: ResultStream[T] = peekable(results)
+      case Result() | _ as item:
+        _process_item(item)
+        return
 
-    if results.peek(NO_ITEMS) is NO_ITEMS:
-      logging.debug(f'No results found with {_get_name(func)}.')
+    if results.is_empty:
+      logging.debug(f'No results found for {_get_name(func)}.')
       sys.exit(ErrCode.no_result)
 
     for result in results:
-      _process_result(result)
+      _process_item(result)
 
     sys.exit(ErrCode.ok)
 
   return new_func
 
 
+@_to_peekable
 def _gen_sbob_chars(chars: Chars, reverse: bool = False) -> Chars:
   caps: bool = reverse
 
