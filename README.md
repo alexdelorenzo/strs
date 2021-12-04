@@ -31,7 +31,7 @@ The following examples of Bash code only work with Bash, whereas `strs` commands
 
 Here's how you can manipulate strings with both Bash and `strs`:
 
-#### String length
+### String length
 ```bash
 string='This is an example.'
 
@@ -48,7 +48,7 @@ $ echo $string | str length
 19
 ```
 
-#### Strip
+### Strip
 ```bash
 removeFront='This'
 removeEnd='example.'
@@ -81,7 +81,7 @@ $ echo $string | str strip $removeFront$removeEnd
  is an
 ```
 
-#### Capitalization
+### Capitalization
 ```bash
 $ echo "${string^}"  # capitalize first char
 This is an example.
@@ -111,8 +111,9 @@ THIS IS AN EXAMPLE.
 
 $ echo $string | str lower
 this is an example.
+```
 
-#### Replace
+### Replace
 ```bash
 old='an'
 new='a'
