@@ -152,124 +152,181 @@ remove='.'
 part=' '
 split=' '
 strip='.'
+```
 
 
-# casefold
+### Casefold
+```bash
+string='This is an example.'
+
 $ str casefold "$string"
 this is an example.
 
 # or
 $ echo $string | str casefold
 this is an example.
+```
 
-# center
+### Center
+```bash
+width=40
+
 $ str center $width "$string"
           This is an example.           
 
 $ echo $string | str center $width
           This is an example.           
+```
 
-# count
+### Count
+```bash
+countChar='e'
+
 $ str count $countChar "$string"
 $ echo $string | str count $countChar
 2
+```
 
-# find
+### Find
+```bash
+find='e'
+
 $ str find $find "$string"
 $ echo $string | str find $find
 11
+```
 
-# index
+### Index
+```bash
 $ str index $find "$string"
 $ echo $string | str index $find
 11
+```
 
-# join
+# ##Join
+```bash
+on='_'
+
 $ str join $on $string
 $ echo $string | str join $on
 This_is_an_example.
+```
 
-# partition
+### Partition
+```bash
+part=' '
+
 $ str partition "$part" "$string"
 $ echo $string | str partition "$part"
 This
  
 is an example.
+```
 
-# split
+### Split
+```bash
+split=' '
+
 $ str split "$split" "$string"
 $ echo $string | str split "$split"
 This
 is
 an
 example.
+```
 
-# strip
+### Strip
+```bash
+strip='.'
+
 $ str strip $strip "$string"
 $ echo $string | str strip $strip
 This is an example
+```
 
-# swap case
+### Swap case
+```bash
 $ str swapcase "$string"
 $ echo $string | str swapcase
 tHIS IS AN EXAMPLE.
+```
 
-# to title case
+### To title case
+```bash
 $ str title "$string"
 $ echo $string | str title
 This Is An Example.
+```
 
-# zero fill
+### Zero fill
+```bash
 $ str zfill $width "$string"
 $ echo $string | str zfill $width
 000000000000000000000This is an example.
+```
 
-# repeat
+### Repeat
+```bash
 $ str repeat 3 "$string"
 $ echo $string | str repeat 3
 This is an example.
 This is an example.
 This is an example.
+```
 
-# ljust
+### Left justify
+```bash
 $ str ljust $width "$string" --fillchar '*'
 $ echo $string | str ljust $width --fillchar '*'
 This is an example.*********************
+```
 
-# lstrip
+### Left strip
+```bash
 $ str lstrip T "$string"
 $ echo $string | str lstrip T
 his is an example. 
+```
 
-# rfind
+### Right find
+```bash
 $ str rfind $find "$string"
 $ echo $string | str rfind $find
 17
+```
 
-# rindex
+### Right index
+```bash
 $ str rindex $find "$string"
 $ echo $string | str rindex $find
 17
+```
 
-
-# rjust
+### Right justify
+```bash
 $ str rjust $width "$string"
 $ echo $string | str rjust $width
                      This is an example.
+```
 
-# rstrip
+### Right strip
+```bash
 $ str rstrip $remove "$string"
 $ echo $string | str rstrip $remove
 This is an example
+```
 
-# rpartition
+### Right partition
+```bash
 $ str rpartition "$part" "$string"
 $ echo $string | str rpartition "$part"
 This is an
  
 example.
+```
 
-# rsplit
+### Right split
+```bash
 $ str rsplit "$split" "$string"
 $ echo $string | str rsplit "$split"
 This
