@@ -1,5 +1,5 @@
 from .cmd import *
-from .commands.string import *
+from .commands import *
 from .plugins import *
 
 

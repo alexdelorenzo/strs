@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Iterable, NamedTuple, Callable, Any, \
-  TypeVar, Generic, Final, NoReturn, ParamSpec
+  TypeVar, Generic, Final, NoReturn, ParamSpec, Type
 from collections.abc import Iterable as Iter
 from dataclasses import dataclass
 from functools import partial, wraps
@@ -91,7 +91,7 @@ class ErrCode(IntEnum):
   false: int = err
 
   @classmethod
-  def from_bool(cls: type, other: bool) -> ErrCode:
+  def from_bool(cls: Type[ErrCode], other: bool) -> ErrCode:
     return cls.true if other else cls.false
 
   @property
@@ -307,10 +307,10 @@ def _handle_item(func: ItemFunc[P, T]) -> QuitFunc[P]:
   return new_func
 
 
-_process_item: QuitFunc
+_process_item: QuitFunc[Item[T]]
 
-def _process_item(result: Item[T]):
-  match result:
+def _process_item(item: Item[T]):
+  match item:
     case Result((string, sep), code):
       if string is not None:
         print(string, end=sep)
