@@ -1,23 +1,24 @@
 from __future__ import annotations
-from typing import Iterable
+
+import logging
 from functools import partial
 from itertools import cycle
-import logging
+from typing import Iterable
 
 from emoji import emoji_count, demojize, emojize
 from nth_py.nth import gen_lines as _gen_lines, \
   exclude_lines as _exclude_lines
 from unidecode import unidecode
 
-from .base import Args, _get_strings_sep, _wrap_check_exit, \
-  _wrap_parse_print, _use_metadata, _cycle_times, \
-  SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, FOREVER, ALL, ErrCode, \
-  _get_stdin, Result, FIRST, Items, _output_items, StrSep, \
-  ErrResult, IntError, _is_pipeline, _slice_from_str, \
-  _gen_sbob_chars, _get_name, NO_CMD_ERR, NoResult, \
-  START_INDEX, NO_ITEMS, _to_peekable, Error, Ok, \
-  NotFound, NOT_FOUND, Peekable, RepeatTimes, FOREVER_OPTS
-
+from .base import _cycle_times, _slice_from_str, _gen_sbob_chars, FOREVER_OPTS
+from .constants import SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, \
+  FOREVER, ALL, FIRST, NO_CMD_ERR, START_INDEX, NOT_FOUND
+from .decorators import _wrap_check_exit, _wrap_parse_print, \
+  _use_metadata, _output_items
+from .input import _get_strings_sep, _get_stdin
+from .types import Args, Result, Items, StrSep, \
+  ErrResult, IntError, NoResult, Ok, \
+  NotFound, Peekable, RepeatTimes, Arg
 
 upper = _wrap_parse_print(str.upper)
 lower = _wrap_parse_print(str.lower)
@@ -127,10 +128,6 @@ def repeat(
     case None | 0:
       yield ErrResult
       return
-
-  if not times:
-    yield ErrResult
-    return
 
   strings, sep = _get_strings_sep(args)
 
