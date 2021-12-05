@@ -16,7 +16,7 @@ from .base import Args, _get_strings_sep, _wrap_check_exit, \
   ErrResult, IntError, _is_pipeline, _slice_from_str, \
   _gen_sbob_chars, _get_name, NO_CMD_ERR, NoResult, \
   START_INDEX, NO_ITEMS, _to_peekable, Error, Ok, \
-  NotFound, NOT_FOUND, Peekable
+  NotFound, NOT_FOUND, Peekable, RepeatTimes, FOREVER_OPTS
 
 
 upper = _wrap_parse_print(str.upper)
@@ -116,10 +116,18 @@ def slice(
 
 @_output_items
 def repeat(
-  times: int = FOREVER,
+  times: int | RepeatTimes = FOREVER,
   *args: Args,
 ) -> Items[StrSep]:
   """Repeat string. Set `times` to -1 to repeat forever."""
+  match times:
+    case str() as s if s.casefold() in FOREVER_OPTS:
+      times: int = FOREVER
+
+    case None | 0:
+      yield ErrResult
+      return
+
   if not times:
     yield ErrResult
     return
@@ -562,7 +570,7 @@ def nth(*line_nums: list[int], exclude: bool = False) -> Items[StrSep]:
     yield ErrResult
     return
 
-  lines: Iterable[str]
+  lines: Iterable[str] | Peekable[str]
 
   if exclude:
     lines = _exclude_lines(line_nums, stdin)
