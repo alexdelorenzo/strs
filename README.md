@@ -27,8 +27,6 @@ To do the same with [`sed`](https://en.wikipedia.org/wiki/Sed), you'd need to kn
 
 The following examples of Bash code only work with Bash, whereas `strs` commands will work if you're using Bash, [zsh](https://www.zsh.org/), PowerShell or something else.
 
-Below are examples of how you can manipulate strings with both Bash and `strs`.
-
 ### String length
 #### Bash
 ```bash
