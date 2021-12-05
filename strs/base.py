@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Iterable, NamedTuple, Callable, Any, \
-  TypeVar, Generic, Final, NoReturn, ParamSpec, Type
+  TypeVar, Generic, Final, NoReturn, ParamSpec, Type, Literal
 from collections.abc import Iterable as Iter
 from dataclasses import dataclass
 from functools import partial, wraps
@@ -34,7 +34,7 @@ ALL: Final[int] = -1
 SKIP: Final[None] = None
 NO_ITEMS: Final[Ellpsis] = ...
 
-NO_CMD_ERR: Final[str] = "This command doesn't exist yet."
+NO_CMD_ERR: Final[str] = "This command isn't implemented."
 
 
 T = TypeVar('T')
@@ -46,7 +46,8 @@ StrCheckFunc = Callable[str, bool]
 CheckFunc = Callable[P, bool]
 QuitFunc = Callable[P, NoReturn | None]
 Chars = Iterable[str]
-Args = list[str | int]
+Arg = str | int | float
+Args = list[Arg]
 
 
 class Peekable(Generic[T], peekable):
@@ -82,8 +83,8 @@ class ErrCode(IntEnum):
   no_result: int = 2
   no_handler: int = 3
 
-  not_found: int = 4
   found: int = ok
+  not_found: int = 4
 
   bad_input: int = 5
 
@@ -139,7 +140,7 @@ class BadInput(Error[T]):
   code: ErrCode = ErrCode.bad_input
 
 
-Item = T | Result[T] | StrSep | ErrCode | None
+Item = T | Result[T] | StrSep | ErrCode | int | bool | None
 Items = Iterable[Item[T]]
 
 ItemsFunc = Callable[P, Items[T] | Item[T]]
@@ -151,6 +152,11 @@ NoneFound = NotFound[None]()
 
 ErrResult = Error[None]()
 IntError = BadInput[int](NO_RESULT)
+
+RepeatTimes = Literal['forever', 'inf', 'infinite', 'loop']
+
+
+FOREVER_OPTS: Final[set[str]] = set(RepeatTimes.__args__)
 
 
 def _is_pipeline() -> bool:
@@ -164,8 +170,16 @@ def _get_sep() -> str:
   return EMPTY_STR if _is_pipeline() else NEW_LINE
 
 
-def _parse_line(line: bytes, strip: bool = False) -> str:
-  string = line.decode()
+def _parse_line(line: Arg, strip: bool = False) -> str:
+  match line:
+    case bytes():
+      string = line.decode()
+
+    case int() | float():
+      string = str(line)
+
+    case str():
+      string = line
 
   if strip:
     return string.strip()
@@ -182,10 +196,10 @@ def _get_stdin(strip: bool = False) -> Strings | None:
 
 
 def _to_peekable(
-  func: Callable[..., Iterable[T]]
-) -> Callable[..., Peekable[T]]:
+  func: Callable[P, Iterable[T]]
+) -> Callable[P, Peekable[T]]:
   @wraps(func)
-  def new_func(*args, **kwargs) -> Iterable:
+  def new_func(*args: P.args, **kwargs: P.kwargs) -> Peekable[T]:
     gen = func(*args, **kwargs)
     return Peekable[T](gen)
 
@@ -259,7 +273,7 @@ def _use_metadata(source: Callable | str, name: str = True) -> Decorator:
 def _wrap_str_check(func: StrCheckFunc) -> CheckFunc[P]:
   @_use_metadata(func)
   def new_func(*args: Args, **kwargs: P.kwargs) -> bool:
-    func_kwargs = partial(func, **kwargs)
+    func_kwargs: CheckFunc[P.args] = partial(func, **kwargs)
     strings, _ = _get_strings_sep(args)
     checks = map(func_kwargs, strings)
 
@@ -288,8 +302,8 @@ def _apply(
   func: StrParseFunc[P],
   strings: Strings,
   sep: str,
-  *args,
-  **kwargs
+  *args: P.args,
+  **kwargs: P.kwargs,
 ):
   for string in strings:
     parsed = func(string, *args, **kwargs)
