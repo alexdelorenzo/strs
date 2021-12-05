@@ -10,15 +10,15 @@ from nth_py.nth import gen_lines as _gen_lines, \
   exclude_lines as _exclude_lines
 from unidecode import unidecode
 
-from .base import _cycle_times, _slice_from_str, _gen_sbob_chars, FOREVER_OPTS
-from .constants import SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, \
+from .core.base import _cycle_times, _slice_from_str, _gen_sbob_chars, FOREVER_OPTS
+from .core.constants import SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, \
   FOREVER, ALL, FIRST, NO_CMD_ERR, START_INDEX, NOT_FOUND
-from .decorators import _wrap_check_exit, _wrap_parse_print, \
+from .core.decorators import _wrap_check_exit, _wrap_parse_print, \
   _use_metadata, _output_items
-from .input import _get_strings_sep, _get_stdin
-from .types import Args, Result, Items, StrSep, \
+from .core.input import _get_strings_sep, _get_stdin
+from .core.types import Args, Result, Items, StrSep, \
   ErrResult, IntError, NoResult, Ok, \
-  NotFound, Peekable, RepeatTimes, Arg
+  NotFound, Peekable, RepeatTimes
 
 upper = _wrap_parse_print(str.upper)
 lower = _wrap_parse_print(str.lower)
