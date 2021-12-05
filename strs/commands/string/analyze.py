@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import logging
 
-from strs.core import Args, Result, Ok, EMPTY_STR, IntError, NotFound, START_INDEX, NOT_FOUND
-from strs.core.decorators import _use_metadata
-from strs.core.process import _output_items
-from strs.core.input import _get_strings_sep
+from ...core import Args, Result, Ok, EMPTY_STR, IntError, NotFound, START_INDEX, NOT_FOUND
+from ...core.decorators import _use_metadata
+from ...core.process import _output_items
+from ...core.input import _get_strings_sep
 
 
 @_output_items

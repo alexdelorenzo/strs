@@ -1,22 +1,8 @@
 from __future__ import annotations
-from typing import Iterable, NamedTuple, Callable, Any, \
-  TypeVar, Generic, Final, NoReturn, ParamSpec, Type, \
-  Literal
-from collections.abc import Iterable as Iter
-from dataclasses import dataclass
-from functools import partial, wraps
-from enum import IntEnum, auto
-import logging
-import sys
-import os
 
-from unpackable import Unpackable
-from more_itertools import peekable
+from typing import Iterable, Final
 
-from .constants import SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, \
-  FOREVER, ALL, FIRST, NO_CMD_ERR, START_INDEX, NO_ITEMS, \
-  NOT_FOUND, MIN_TIMES, SH_SEP
-
+from .constants import FIRST, MIN_TIMES, INCREMENT, SKIP, SLICE_SEP
 from .types import Chars, T, RepeatTimes, _to_peekable
 
 FOREVER_OPTS: Final[set[str]] = set(RepeatTimes.__args__)

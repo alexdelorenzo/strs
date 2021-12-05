@@ -5,8 +5,8 @@ import sys
 from functools import wraps
 from typing import Callable, Iterable as Iter
 
-from . import ItemsFunc, P, ItemFunc, Items, Peekable
-from .types import ErrCode, Result, StrSep, QuitFunc, Item, T
+from .types import ErrCode, Result, StrSep, QuitFunc, Item, T, \
+  ItemsFunc, P, ItemFunc, Items, Peekable
 
 
 _process_item: QuitFunc[Item[T]]

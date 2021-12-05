@@ -6,12 +6,12 @@ from emoji import emojize, demojize, emoji_count
 from nth_py.nth import exclude_lines as _exclude_lines, gen_lines as _gen_lines
 from unidecode import unidecode
 
-from strs.core import Args, Items, StrSep, SAME_LINE, EMPTY_STR, ErrResult, Peekable, NoResult
-from strs.core.base import _gen_sbob_chars
+from ..core import Args, Items, StrSep, SAME_LINE, EMPTY_STR, ErrResult, Peekable, NoResult
+from ..core.base import _gen_sbob_chars
 
-from strs.core.decorators import _wrap_parse_print, _wrap_check_exit
-from strs.core.process import _output_items
-from strs.core.input import _get_strings_sep, _get_stdin
+from ..core.decorators import _wrap_parse_print, _wrap_check_exit
+from ..core.process import _output_items
+from ..core.input import _get_strings_sep, _get_stdin
 
 
 to_ascii = _wrap_parse_print(unidecode)

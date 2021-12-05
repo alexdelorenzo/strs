@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from functools import partial
 
-from strs.core import Args, SPACE, Items, StrSep, ALL, FIRST, NEW_LINE, EMPTY_STR, Result, SAME_LINE, Ok
-from strs.core.decorators import _wrap_parse_print, _use_metadata
-from strs.core.process import _output_items
-from strs.core.input import _get_strings_sep
+from ...core import Args, SPACE, Items, StrSep, ALL, FIRST, NEW_LINE, EMPTY_STR, Result, SAME_LINE, Ok
+from ...core.decorators import _wrap_parse_print, _use_metadata
+from ...core.process import _output_items
+from ...core.input import _get_strings_sep
 
 upper = _wrap_parse_print(str.upper)
 lower = _wrap_parse_print(str.lower)
