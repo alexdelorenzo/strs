@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from functools import partial
 
-from ...core import Args, SPACE, Items, StrSep, ALL, FIRST, NEW_LINE, EMPTY_STR, Result, SAME_LINE, Ok
+from ...core import Args, SPACE, Items, StrSep, ALL, FIRST, NEW_LINE, EMPTY_STR, Result, SAME_LINE, Ok, NO_CMD_ERR
 from ...core.decorators import _wrap_parse_print, _use_metadata
 from ...core.process import _output_items
 from ...core.input import _get_strings_sep
@@ -199,3 +199,19 @@ def rpartition(sep: str, *args: Args) -> Items[StrSep]:
     parts = string.rpartition(sep)
     output = NEW_LINE.join(parts)
     yield StrSep(output)
+
+
+@_use_metadata(str.format)
+def format(fmt: str, *args: Args, **kwargs):
+  strings, sep = _get_strings_sep(args)
+
+  for string in strings:
+    result = string.format(fmt, **kwargs)
+    print(result, sep)
+
+  raise NotImplementedError(NO_CMD_ERR)
+
+
+@_use_metadata(str.format_map)
+def format_map(**kwargs):
+  raise NotImplementedError(NO_CMD_ERR)
