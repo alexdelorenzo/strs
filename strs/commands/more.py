@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from itertools import cycle
 
-from ..commands.string.cmd import _slice
 from ..core import Args, Items, StrSep, NEW_LINE, SAME_LINE, RepeatTimes, FOREVER, FOREVER_OPTS, ErrResult
 from ..core.base import _slice_from_str, _cycle_times
 from ..core.input import _get_strings_sep
