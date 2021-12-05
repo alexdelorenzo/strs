@@ -3,8 +3,7 @@ from functools import partial
 import sys
 
 from .constants import NEW_LINE, EMPTY_STR, SH_SEP
-from .decorators import _to_peekable
-from .types import Args, InputStrsSep, Input, Strings, Arg
+from .types import Args, InputStrsSep, Input, Strings, Arg, _to_peekable
 
 
 def _is_pipeline() -> bool:

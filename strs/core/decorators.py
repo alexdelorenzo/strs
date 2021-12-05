@@ -1,25 +1,15 @@
 from __future__ import annotations
-from collections.abc import Iterable as Iter
-from functools import partial, wraps
-from typing import Iterable, Callable
-import logging
+
 import sys
+from functools import partial, wraps
+from typing import Callable
 
 from .constants import NEW_LINE, DOCTEST
+from .input import _get_strings_sep
 from .process import _process_item
-from .types import Args, ErrCode, Result, Items, Item, \
-  Peekable, P, T
+from .types import Args, ErrCode, P, T, ItemFunc, QuitFunc, StrParseFunc, \
+  Strings, StrCheckFunc, CheckFunc, Decorator
 
-
-def _to_peekable(
-  func: Callable[P, Iterable[T]]
-) -> Callable[P, Peekable[T]]:
-  @wraps(func)
-  def new_func(*args: P.args, **kwargs: P.kwargs) -> Peekable[T]:
-    gen = func(*args, **kwargs)
-    return Peekable[T](gen)
-
-  return new_func
 
 def _use_metadata(source: Callable | str, name: str = True) -> Decorator:
   is_callable: bool = isinstance(source, Callable)
@@ -77,34 +67,8 @@ def _wrap_parse_print(func: StrParseFunc[P]) -> QuitFunc[P]:
 def _handle_item(func: ItemFunc[P, T]) -> QuitFunc[P]:
   @wraps(func)
   def new_func(*args: P.args, **kwargs: P.kwargs):
-    result = func(*args, **kwargs)
+    result: T = func(*args, **kwargs)
     _process_item(result)
-
-    sys.exit(ErrCode.ok)
-
-  return new_func
-
-
-def _output_items(func: ItemsFunc[P, T] | ItemFunc[P, T]) -> QuitFunc[P]:
-  @wraps(func)
-  def new_func(*args: P.args, **kwargs: P.kwargs):
-    results: Items[T] | Item[T] = \
-      func(*args, **kwargs)
-
-    match results:
-      case Iter():
-        results = Peekable[Item[T]](results)
-
-      case Result() | _ as item:
-        _process_item(item)
-        return
-
-    if results.is_empty:
-      logging.debug(f'No results found for {_get_name(func)}.')
-      sys.exit(ErrCode.no_result)
-
-    for result in results:
-      _process_item(result)
 
     sys.exit(ErrCode.ok)
 
@@ -140,4 +104,3 @@ def _apply(
   for string in strings:
     parsed = func(string, *args, **kwargs)
     print(parsed, end=sep)
-

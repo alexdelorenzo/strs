@@ -1,6 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from enum import IntEnum, auto
+from functools import wraps
 from typing import Iterable, NamedTuple, Callable, Any, \
   TypeVar, Generic, NoReturn, ParamSpec, Type, Literal, \
   Sequence
@@ -117,10 +118,10 @@ class BadInput(Error[T]):
 
 
 Item = T | Result[T] | StrSep | ErrCode | int | bool | None
-Items = Iterable[Item[T]]
+Items = Iterable[Item[T]] | Peekable[Item[T]]
 
 ItemsFunc = Callable[P, Items[T] | Item[T]]
-ItemFunc = Callable[P, Result[T | Any]]
+ItemFunc = Callable[P, Result[Item[T] | T | Any]]
 
 
 NoResult = Result[None](code=ErrCode.no_result)
@@ -135,3 +136,13 @@ RepeatTimes = Literal['forever', 'inf', 'infinite', 'loop']
 def _is_empty(it: peekable) -> bool:
   return it.peek(NO_ITEMS) is NO_ITEMS
 
+
+def _to_peekable(
+  func: Callable[P, Iterable[T]]
+) -> Callable[P, Peekable[T]]:
+  @wraps(func)
+  def new_func(*args: P.args, **kwargs: P.kwargs) -> Peekable[T]:
+    gen = func(*args, **kwargs)
+    return Peekable[T](gen)
+
+  return new_func

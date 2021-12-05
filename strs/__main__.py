@@ -1,4 +1,3 @@
-from .cmd import *
 from .commands import *
 from .plugins import *
 

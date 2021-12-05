@@ -13,15 +13,11 @@ import os
 from unpackable import Unpackable
 from more_itertools import peekable
 
-from .decorators import _to_peekable
-
 from .constants import SAME_LINE, SPACE, NEW_LINE, EMPTY_STR, \
   FOREVER, ALL, FIRST, NO_CMD_ERR, START_INDEX, NO_ITEMS, \
   NOT_FOUND, MIN_TIMES, SH_SEP
 
-from .types import Chars, T, RepeatTimes
-
-
+from .types import Chars, T, RepeatTimes, _to_peekable
 
 FOREVER_OPTS: Final[set[str]] = set(RepeatTimes.__args__)
 
