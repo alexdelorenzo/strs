@@ -56,3 +56,21 @@ def startswith(
   first = next(strings)
 
   return first.startswith(prefix, start, end)
+
+
+__all__ = [
+  'endswith',
+  'isalnum',
+  'isalpha',
+  'isascii',
+  'isdecimal',
+  'isdigit',
+  'isidentifier',
+  'islower',
+  'isnumeric',
+  'isprintable',
+  'isspace',
+  'istitle',
+  'isupper',
+  'startswith',
+]

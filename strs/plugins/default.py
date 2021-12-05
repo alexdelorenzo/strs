@@ -6,12 +6,12 @@ from emoji import emojize, demojize, emoji_count
 from nth_py.nth import exclude_lines as _exclude_lines, gen_lines as _gen_lines
 from unidecode import unidecode
 
-from ..core import Args, Items, StrSep, SAME_LINE, EMPTY_STR, ErrResult, Peekable, NoResult
-from ..core.base import _gen_sbob_chars
+from ..core import Args, Items, StrSep, SAME_LINE, EMPTY_STR, ErrResult, Peekable, NoResult, Chars
 
 from ..core.decorators import _wrap_parse_print, _wrap_check_exit
 from ..core.process import _output_items
 from ..core.input import _get_strings_sep, _get_stdin
+from ..core.types import _to_peekable
 
 
 to_ascii = _wrap_parse_print(unidecode)
@@ -64,3 +64,24 @@ def nth(*line_nums: list[int], exclude: bool = False) -> Items[StrSep]:
     yield NoResult
 
   yield from map(StrSep, lines)
+
+
+@_to_peekable
+def _gen_sbob_chars(chars: Chars, reverse: bool = False) -> Chars:
+  caps: bool = reverse
+
+  for char in chars:
+    if not char.isalpha():
+      yield char
+      continue
+
+    char = char.upper() if caps else char.lower()
+    yield char
+
+    caps = not caps
+
+
+__all__ = [
+  'sbob',
+  'nth',
+]

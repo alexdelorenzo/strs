@@ -7,6 +7,7 @@ from ...core.decorators import _wrap_parse_print, _use_metadata
 from ...core.process import _output_items
 from ...core.input import _get_strings_sep
 
+
 upper = _wrap_parse_print(str.upper)
 lower = _wrap_parse_print(str.lower)
 capitalize = _wrap_parse_print(str.capitalize)
@@ -215,3 +216,29 @@ def format(fmt: str, *args: Args, **kwargs):
 @_use_metadata(str.format_map)
 def format_map(**kwargs):
   raise NotImplementedError(NO_CMD_ERR)
+
+
+__all__ = [
+  'capitalize',
+  'casefold',
+  'center',
+  'expandtabs',
+  'format',
+  'format_map',
+  'join',
+  'ljust',
+  'lower',
+  'lstrip',
+  'partition',
+  'replace',
+  'rjust',
+  'rpartition',
+  'rsplit',
+  'rstrip',
+  'split',
+  'strip',
+  'swapcase',
+  'title',
+  'upper',
+  'zfill',
+]

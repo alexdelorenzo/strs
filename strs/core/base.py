@@ -3,24 +3,9 @@ from __future__ import annotations
 from typing import Iterable, Final
 
 from .constants import FIRST, MIN_TIMES, INCREMENT, SKIP, SLICE_SEP
-from .types import Chars, T, RepeatTimes, _to_peekable
+from .types import T, RepeatTimes
 
 FOREVER_OPTS: Final[set[str]] = set(RepeatTimes.__args__)
-
-
-@_to_peekable
-def _gen_sbob_chars(chars: Chars, reverse: bool = False) -> Chars:
-  caps: bool = reverse
-
-  for char in chars:
-    if not char.isalpha():
-      yield char
-      continue
-
-    char = char.upper() if caps else char.lower()
-    yield char
-
-    caps = not caps
 
 
 # see https://docs.python.org/3/library/itertools.html#itertools.cycle

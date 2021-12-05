@@ -112,3 +112,11 @@ def contains(
       return True
 
   return False
+
+
+__all__ = [
+  'substring',
+  'slice',
+  'repeat',
+  'contains',
+]

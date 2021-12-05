@@ -163,3 +163,13 @@ def rfind(
     index += len(line)
 
   return NotFound(NOT_FOUND)
+
+
+__all__ = [
+  'count',
+  'find',
+  'index',
+  'length',
+  'rfind',
+  'rindex',
+]
