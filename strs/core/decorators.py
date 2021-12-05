@@ -1,8 +1,7 @@
 from __future__ import annotations
-
-import sys
 from functools import partial, wraps
 from typing import Callable
+import sys
 
 from .constants import NEW_LINE, DOCTEST
 from .input import _get_strings_sep
