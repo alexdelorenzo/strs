@@ -1,11 +1,8 @@
 from __future__ import annotations
-
-from typing import Iterable, Final
+from typing import Iterable
 
 from .constants import FIRST, MIN_TIMES, INCREMENT, SKIP, SLICE_SEP
-from .types import T, RepeatTimes
-
-FOREVER_OPTS: Final[set[str]] = set(RepeatTimes.__args__)
+from .types import T
 
 
 # see https://docs.python.org/3/library/itertools.html#itertools.cycle

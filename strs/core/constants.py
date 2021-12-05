@@ -22,6 +22,6 @@ NO_RESULT: Final[int] = -1
 FOREVER: Final[int] = -1
 ALL: Final[int] = -1
 SKIP: Final[None] = None
-NO_ITEMS: Final[Ellpsis] = ...
+NO_ITEMS: Final[Ellipsis] = ...
 
 NO_CMD_ERR: Final[str] = "This command isn't implemented."

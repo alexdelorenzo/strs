@@ -1,17 +1,16 @@
 from __future__ import annotations
+from typing import Iterable, NamedTuple, Callable, Any, \
+    TypeVar, Generic, NoReturn, ParamSpec, Type, Literal, \
+    Sequence, Final
 from dataclasses import dataclass
 from enum import IntEnum, auto
 from functools import wraps
-from typing import Iterable, NamedTuple, Callable, Any, \
-  TypeVar, Generic, NoReturn, ParamSpec, Type, Literal, \
-  Sequence
 
 from more_itertools import peekable
 from strenum import StrEnum
 from unpackable import Unpackable
 
-from .constants import NEW_LINE, NO_ITEMS, \
-  NO_RESULT
+from .constants import NEW_LINE, NO_ITEMS, NO_RESULT
 
 
 T = TypeVar('T')
@@ -51,7 +50,7 @@ class StrSep(NamedTuple):
 
 
 class ErrCode(IntEnum):
-  """Shell return codes"""
+  """Shell return codes."""
   none: int = -1
 
   ok: int = 0
@@ -62,7 +61,6 @@ class ErrCode(IntEnum):
 
   found: int = ok
   not_found: int = 4
-
   bad_input: int = 5
 
   true: int = ok
@@ -94,7 +92,7 @@ class CmdState(StrEnum):
 class Result(Generic[T], Unpackable):
   result: T | None = None
   code: ErrCode = ErrCode.none
-  state: CmdState = CmdState.ok
+  # state: CmdState = CmdState.ok
 
 
 @dataclass
@@ -133,6 +131,9 @@ IntError = BadInput[int](NO_RESULT)
 RepeatTimes = Literal['forever', 'inf', 'infinite', 'loop']
 
 
+FOREVER_OPTS: Final[set[str]] = set(RepeatTimes.__args__)
+
+
 def _is_empty(it: peekable) -> bool:
   return it.peek(NO_ITEMS) is NO_ITEMS
 
@@ -142,7 +143,7 @@ def _to_peekable(
 ) -> Callable[P, Peekable[T]]:
   @wraps(func)
   def new_func(*args: P.args, **kwargs: P.kwargs) -> Peekable[T]:
-    gen = func(*args, **kwargs)
+    gen: Iterable[T] = func(*args, **kwargs)
     return Peekable[T](gen)
 
   return new_func

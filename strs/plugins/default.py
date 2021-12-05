@@ -1,17 +1,16 @@
 from __future__ import annotations
-
-from typing import Iterable
+from typing import Iterable, Sequence
 
 from emoji import emojize, demojize, emoji_count
-from nth_py.nth import exclude_lines as _exclude_lines, gen_lines as _gen_lines
+from nth_py.nth import exclude_lines, gen_lines
 from unidecode import unidecode
 
-from ..core import Args, Items, StrSep, SAME_LINE, EMPTY_STR, ErrResult, Peekable, NoResult, Chars
-
+from ..core.constants import SAME_LINE, EMPTY_STR
 from ..core.decorators import _wrap_parse_print, _wrap_check_exit
-from ..core.process import _output_items
 from ..core.input import _get_strings_sep, _get_stdin
-from ..core.types import _to_peekable
+from ..core.process import _output_items
+from ..core.types import Args, Items, StrSep, ErrResult, Peekable, NoResult, Chars, \
+  _to_peekable
 
 
 to_ascii = _wrap_parse_print(unidecode)
@@ -38,7 +37,7 @@ def sbob(
 
 
 @_output_items
-def nth(*line_nums: list[int], exclude: bool = False) -> Items[StrSep]:
+def nth(*line_nums: Sequence[int], exclude: bool = False) -> Items[StrSep]:
   """
   Print lines on `line_nums` from standard input. Setting the `exclude` flag
   will instead print all lines from standard input and lines `line_nums`
@@ -53,10 +52,10 @@ def nth(*line_nums: list[int], exclude: bool = False) -> Items[StrSep]:
   lines: Iterable[str] | Peekable[str]
 
   if exclude:
-    lines = _exclude_lines(line_nums, stdin)
+    lines = exclude_lines(line_nums, stdin)
 
   else:
-    lines = _gen_lines(line_nums, stdin)
+    lines = gen_lines(line_nums, stdin)
 
   lines = Peekable[str](lines)
 

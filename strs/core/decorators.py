@@ -11,7 +11,7 @@ from .types import Args, ErrCode, P, T, ItemFunc, QuitFunc, StrParseFunc, \
   Strings, StrCheckFunc, CheckFunc, Decorator
 
 
-def _use_metadata(source: Callable | str, name: str = True) -> Decorator:
+def _use_metadata(source: Callable | str, name: str = True) -> Decorator[P, T]:
   is_callable: bool = isinstance(source, Callable)
 
   if is_callable:
@@ -25,7 +25,7 @@ def _use_metadata(source: Callable | str, name: str = True) -> Decorator:
   if name and is_callable:
     func_name = source.__name__
 
-  def decorator(to_func: Callable) -> Callable:
+  def decorator(to_func: Callable[P, T]) -> Callable[P, T]:
     to_func.__doc__ = docs
 
     if name and func_name:

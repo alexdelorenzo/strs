@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from ...core import Args
 from ...core.decorators import _wrap_check_exit, _use_metadata
 from ...core.process import _output_items
 from ...core.input import _get_strings_sep
+from ...core.types import Args
 
 
 isalnum = _wrap_check_exit(str.isalnum)

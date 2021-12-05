@@ -1,9 +1,9 @@
 from __future__ import annotations
-
+from functools import wraps
+from typing import Callable
+from collections.abc import Iterable
 import logging
 import sys
-from functools import wraps
-from typing import Callable, Iterable as Iter
 
 from .types import ErrCode, Result, StrSep, QuitFunc, Item, T, \
   ItemsFunc, P, ItemFunc, Items, Peekable
@@ -62,7 +62,7 @@ def _output_items(func: ItemsFunc[P, T] | ItemFunc[P, T]) -> QuitFunc[P]:
         _process_item(result)
         return
 
-      case Iter():
+      case Iterable():
         results = Peekable[Item[T]](results)
 
       case _ as result:

@@ -2,7 +2,7 @@ from .commands import *
 from .plugins import *
 
 
-del analyze, default, more, parse, validate, string
+del analyze, default, more, validate, string, transform
 
 
 def _main():
