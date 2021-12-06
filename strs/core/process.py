@@ -54,27 +54,27 @@ def _get_name(func: Callable) -> str:
 def _output_items(func: ItemsFunc[P, T] | ItemFunc[P, T]) -> QuitFunc[P]:
   @wraps(func)
   def new_func(*args: P.args, **kwargs: P.kwargs):
-    results: Items[T] | Item[T] = \
+    items: Items[T] | Item[T] = \
       func(*args, **kwargs)
 
-    match results:
-      case Result() as result:
-        _process_item(result)
+    match items:
+      case Result() as item:
+        _process_item(item)
         return
 
       case Iterable():
-        results = Peekable[Item[T]](results)
+        items = Peekable[Item[T]](items)
 
-      case _ as result:
-        _process_item(result)
+      case _ as item:
+        _process_item(item)
         return
 
-    if results.is_empty:
+    if items.is_empty:
       logging.debug(f'No results found for {_get_name(func)}.')
       sys.exit(ErrCode.no_result)
 
-    for result in results:
-      _process_item(result)
+    for item in items:
+      _process_item(item)
 
     sys.exit(ErrCode.ok)
 

@@ -9,6 +9,7 @@ requirements: list[str] = \
 
 pkgs: list[str] = find_packages(
   include=[
+    'strs',
     'strs.*',
   ]
 )

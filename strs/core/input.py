@@ -3,7 +3,8 @@ from functools import partial
 import sys
 
 from .constants import NEW_LINE, EMPTY_STR, SH_SEP
-from .types import Args, InputStrsSep, Input, Strings, Arg, _to_peekable
+from .types import Args, InputStrsSep, Input, Strings, \
+  Arg, _to_peekable
 
 
 def _is_pipeline() -> bool:
@@ -51,6 +52,9 @@ def _parse_line(line: Arg, strip: bool = False) -> str:
 
     case str():
       string = line
+
+    case _:
+      raise ValueError(f"Not supported: {line}")
 
   if strip:
     return string.strip()

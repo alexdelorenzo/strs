@@ -2,9 +2,9 @@ from __future__ import annotations
 from typing import Iterable, NamedTuple, Callable, Any, \
     TypeVar, Generic, NoReturn, ParamSpec, Type, Literal, \
     Sequence, Final
-from dataclasses import dataclass
-from enum import IntEnum, auto
 from functools import wraps
+from enum import IntEnum, auto
+from dataclasses import dataclass
 
 from more_itertools import peekable
 from strenum import StrEnum
@@ -18,9 +18,10 @@ P = ParamSpec('P')
 
 Decorator = Callable[[Callable[P, T]], Callable[P, T]]
 StrParseFunc = Callable[[str, P], str]
-StrCheckFunc = Callable[[str], bool]
+StrCheckFunc = Callable[[str], bool | int]
 CheckFunc = Callable[P, bool]
 QuitFunc = Callable[P, NoReturn | None]
+
 Chars = Iterable[str]
 Arg = str | int | float
 Args = Sequence[Arg]

@@ -40,8 +40,8 @@ def _wrap_str_check(func: StrCheckFunc) -> CheckFunc[P]:
   def new_func(*args: Args, **kwargs: P.kwargs) -> bool:
     func_kwargs: CheckFunc[P.args] = partial(func, **kwargs)
     strings, _ = _get_strings_sep(args)
-    checks = map(func_kwargs, strings)
 
+    checks = map(func_kwargs, strings)
     return all(checks)
 
   return new_func

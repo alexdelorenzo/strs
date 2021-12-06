@@ -9,8 +9,8 @@ from ..core.constants import SAME_LINE, EMPTY_STR
 from ..core.decorators import _wrap_parse_print, _wrap_check_exit
 from ..core.input import _get_strings_sep, _get_stdin
 from ..core.process import _output_items
-from ..core.types import Args, Items, StrSep, ErrResult, Peekable, NoResult, Chars, \
-  _to_peekable
+from ..core.types import Args, Items, StrSep, ErrResult, Peekable, \
+  NoResult, Chars, _to_peekable
 
 
 to_ascii = _wrap_parse_print(unidecode)
