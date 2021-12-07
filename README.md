@@ -51,37 +51,37 @@ $ echo $string | str length
 ### Strip
 #### Bash
 ```bash
-removeFront='This'
-removeEnd='example.'
+front='This'
+end='example.'
 
-$ echo "${string#$removeFront}"  # from front
+$ echo "${string#$front}"  # from front
  is an example.
 
-$ echo "${string%$removeEnd}"  # from end
+$ echo "${string%$end}"  # from end
 This is an
 ```
 
 ##### `strs`
 ```bash
-$ str lstrip $removeFront "$string"
+$ str lstrip $front "$string"
  is an example.
 
-$ str rstrip $removeEnd "$string"
+$ str rstrip $end "$string"
 This is an
 
-$ str strip $removeFront$removeEnd "$string"
+$ str strip $front$end "$string"
  is an
 ```
 
 Or, using pipes:
 ```bash
-$ echo $string | str lstrip $removeFront
+$ echo $string | str lstrip $front
  is an example.
 
-$ echo $string | str rstrip $removeEnd
+$ echo $string | str rstrip $end
 This is an
 
-$ echo $string | str strip $removeFront$removeEnd
+$ echo $string | str strip $front$end
  is an
 ```
 
@@ -229,7 +229,7 @@ This_is_an_example.
 ```
 
 ```bash
-$ echo $string | str join $on
+$ str split ' ' "$string" | str join $on
 This_is_an_example.
 ```
 
