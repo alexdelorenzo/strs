@@ -13,9 +13,9 @@ $ str repeat 2 ⭐ | str join 🌙
 
 # Usage
 ## Practical example
-If you're on [Debian](https://www.debian.org/), you can use `strs` to take your [apt sources](https://wiki.debian.org/SourcesList) from Debian [`testing`](https://wiki.debian.org/DebianTesting) and point them to [`stable`](https://wiki.debian.org/DebianStable) on the fly, and then send them to a Debian `stable` machine:
+If you're on [Debian](https://www.debian.org/), you can use `strs` to take your [apt sources](https://wiki.debian.org/SourcesList) from Debian [`testing`](https://wiki.debian.org/DebianTesting), point them to Debian [`stable`](https://wiki.debian.org/DebianStable) on the fly, and then send them to a `stable` machine:
 ```bash
-$ str replace testing stable < sources.list | ssh hostname "cat > /etc/apt/sources.list"
+$ str replace testing stable < sources.list | ssh host "cat > /etc/apt/sources.list"
 ```
 
 To do the same with [`sed`](https://en.wikipedia.org/wiki/Sed), you'd need to know [`sed`'s regex syntax](https://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html), if your `sed` [comes with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [if it's GNU `sed` or BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
