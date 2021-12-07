@@ -79,7 +79,7 @@ This is an
 $ echo $string | str strip $removeFront$removeEnd
  is an
 
- 
+
 ## Capitalization
 $ echo "${string^}"  # capitalize first char
 This is an example.
