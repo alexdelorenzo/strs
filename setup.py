@@ -8,10 +8,10 @@ requirements: list[str] = \
     .splitlines()
 
 pkgs: list[str] = find_packages(
-  include=[
-    'strs',
-    'strs.*',
-  ]
+  # include=[
+  #  'strs',
+  #  'strs.*',
+  # ]
 )
 
 
