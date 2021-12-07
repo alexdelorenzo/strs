@@ -61,6 +61,7 @@ def nth(*line_nums: Sequence[int], exclude: bool = False) -> Items[StrSep]:
 
   if lines.is_empty:
     yield NoResult
+    return
 
   yield from map(StrSep, lines)
 
@@ -81,6 +82,10 @@ def _gen_sbob_chars(chars: Chars, reverse: bool = False) -> Chars:
 
 
 __all__ = [
-  'sbob',
+  'from_emoji',
+  'has_emoji',
   'nth',
+  'sbob',
+  'to_ascii',
+  'to_emoji',
 ]

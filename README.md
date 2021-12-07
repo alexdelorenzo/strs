@@ -13,9 +13,9 @@ $ str repeat 2 ⭐ | str join 🌙
 
 # Usage
 ## Practical example
-If you're on [Debian](https://www.debian.org/), you can use `strs` to take your [apt sources](https://wiki.debian.org/SourcesList) from Debian [`testing`](https://wiki.debian.org/DebianTesting) and point them to [`stable`](https://wiki.debian.org/DebianStable) on the fly, and then send them to a Debian `stable` machine:
+If you're on [Debian](https://www.debian.org/), you can use `strs` to take your [apt sources](https://wiki.debian.org/SourcesList) from Debian [`testing`](https://wiki.debian.org/DebianTesting), point them to Debian [`stable`](https://wiki.debian.org/DebianStable) on the fly, and then send them to a `stable` machine:
 ```bash
-$ str replace testing stable < sources.list | ssh hostname "cat > /etc/apt/sources.list"
+$ str replace testing stable < sources.list | ssh host "cat > /etc/apt/sources.list"
 ```
 
 To do the same with [`sed`](https://en.wikipedia.org/wiki/Sed), you'd need to know [`sed`'s regex syntax](https://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html), if your `sed` [comes with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [if it's GNU `sed` or BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
@@ -51,38 +51,37 @@ $ echo $string | str length
 ### Strip
 #### Bash
 ```bash
-removeFront='This'
-removeEnd='example.'
+front='This'
+end='example.'
 
-# Bash
-$ echo "${string#$removeFront}"  # from front
+$ echo "${string#$front}"  # from front
  is an example.
 
-$ echo "${string%$removeEnd}"  # from end
+$ echo "${string%$end}"  # from end
 This is an
 ```
 
 ##### `strs`
 ```bash
-$ str lstrip $removeFront "$string"
+$ str lstrip $front "$string"
  is an example.
 
-$ str rstrip $removeEnd "$string"
+$ str rstrip $end "$string"
 This is an
 
-$ str strip $removeFront$removeEnd "$string"
+$ str strip $front$end "$string"
  is an
 ```
 
 Or, using pipes:
 ```bash
-$ echo $string | str lstrip $removeFront
+$ echo $string | str lstrip $front
  is an example.
 
-$ echo $string | str rstrip $removeEnd
+$ echo $string | str rstrip $end
 This is an
 
-$ echo $string | str strip $removeFront$removeEnd
+$ echo $string | str strip $front$end
  is an
 ```
 
@@ -132,7 +131,7 @@ new='a'
 $ echo "${string//$old/$new}"  # replace all
 This is a example.
 
-echo "${string/$old/$new}"  # replace first
+$ echo "${string/$old/$new}"  # replace first
 This is a example.
 ```
 
@@ -230,7 +229,7 @@ This_is_an_example.
 ```
 
 ```bash
-$ echo $string | str join $on
+$ str split ' ' "$string" | str join $on
 This_is_an_example.
 ```
 
