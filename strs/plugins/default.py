@@ -61,6 +61,7 @@ def nth(*line_nums: Sequence[int], exclude: bool = False) -> Items[StrSep]:
 
   if lines.is_empty:
     yield NoResult
+    return
 
   yield from map(StrSep, lines)
 
