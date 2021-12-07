@@ -54,7 +54,6 @@ $ echo $string | str length
 removeFront='This'
 removeEnd='example.'
 
-# Bash
 $ echo "${string#$removeFront}"  # from front
  is an example.
 
