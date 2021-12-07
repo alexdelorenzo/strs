@@ -13,14 +13,12 @@ $ str repeat 2 ⭐ | str join 🌙
 
 # Usage
 ## Practical example
-If you're using [Debian](https://www.debian.org/), you might want to share your [apt sources](https://wiki.debian.org/SourcesList) file between machines that run Debian [`testing`](https://wiki.debian.org/DebianTesting) and [`stable`](https://wiki.debian.org/DebianStable).
-
-Using `strs`, you can take your apt sources from `testing` and point them to `stable` on the fly, and send them to your `stable` machine:
+If you're on [Debian](https://www.debian.org/), you can use `strs` to take your [apt sources](https://wiki.debian.org/SourcesList) from Debian [`testing`](https://wiki.debian.org/DebianTesting) and point them to [`stable`](https://wiki.debian.org/DebianStable) on the fly, and then send them to a Debian `stable` machine:
 ```bash
 $ str replace testing stable < sources.list | ssh hostname "cat > /etc/apt/sources.list"
 ```
 
-The same can be done with [`sed`](https://en.wikipedia.org/wiki/Sed), but you'd need to know [`sed`'s regex syntax](https://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html), if your `sed` [comes with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [if it's GNU `sed` or BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
+To do the same with [`sed`](https://en.wikipedia.org/wiki/Sed), you'd need to know [`sed`'s regex syntax](https://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html), if your `sed` [comes with the `-i` feature flag](https://unix.stackexchange.com/questions/401905/bsd-sed-vs-gnu-sed-and-i), and [if it's GNU `sed` or BSD `sed`](https://riptutorial.com/sed/topic/9436/bsd-macos-sed-vs--gnu-sed-vs--the-posix-sed-specification).
 
 `strs`, on the other hand, has a uniform interface and set of features across platforms, shells and operating systems, including Windows.
 
@@ -29,26 +27,30 @@ The same can be done with [`sed`](https://en.wikipedia.org/wiki/Sed), but you'd 
 
 The following examples of Bash code only work with Bash, whereas `strs` commands will work if you're using Bash, [zsh](https://www.zsh.org/), PowerShell or something else.
 
-Here's how you can manipulate strings with both Bash and `strs`:
+### String length
+#### Bash
 ```bash
 string='This is an example.'
 
-
-## String length
-# Bash
 $ echo "${#string}"
 19
+```
 
-# str
+#### `strs`
+```bash
 $ str length "$string"
 19
+```
 
-# or, using pipes
+Or, using pipes:
+```bash
 $ echo $string | str length
 19
+```
 
-
-## Strip
+### Strip
+#### Bash
+```bash
 removeFront='This'
 removeEnd='example.'
 
@@ -58,8 +60,10 @@ $ echo "${string#$removeFront}"  # from front
 
 $ echo "${string%$removeEnd}"  # from end
 This is an
+```
 
-# str
+##### `strs`
+```bash
 $ str lstrip $removeFront "$string"
  is an example.
 
@@ -68,8 +72,10 @@ This is an
 
 $ str strip $removeFront$removeEnd "$string"
  is an
+```
 
-# or, using pipes
+Or, using pipes:
+```bash
 $ echo $string | str lstrip $removeFront
  is an example.
 
@@ -78,9 +84,11 @@ This is an
 
 $ echo $string | str strip $removeFront$removeEnd
  is an
+```
 
-
-## Capitalization
+### Capitalization
+#### Bash
+```bash
 $ echo "${string^}"  # capitalize first char
 This is an example.
 
@@ -89,8 +97,10 @@ THIS IS AN EXAMPLE.
 
 $ echo "${string,,}"  # lower all
 this is an example.
+```
 
-# vs
+#### `strs`
+```bash
 $ str capitalize "$string"
 This is an example.
 
@@ -99,8 +109,10 @@ THIS IS AN EXAMPLE.
 
 $ str lower "$string"
 this is an example.
+```
 
-# or
+Or:
+```bash
 $ echo $string | str capitalize
 This is an example.
 
@@ -109,9 +121,11 @@ THIS IS AN EXAMPLE.
 
 $ echo $string | str lower
 this is an example.
+```
 
-
-## Replace
+### Replace
+#### Bash
+```bash
 old='an'
 new='a'
 
@@ -120,8 +134,10 @@ This is a example.
 
 echo "${string/$old/$new}"  # replace first
 This is a example.
+```
 
-# vs
+#### `strs`
+```bash
 $ str replace $old $new "$string"
 This is a example.
 
@@ -130,252 +146,329 @@ This is a example.
 
 $ str replace-first $old $new "$string"
 This is a example.
+```
 
-# or
+Or:
+```bash
 $ echo $string | str replace $old $new
 $ echo $string | str replace $old $new --count 1
 $ echo $string | str replace-first $old $new
 ```
 
 ## String manipulation tools
-`strs` has string manipulation commands that don't have syntactic sugar in Bash:
+`strs` has string manipulation commands that don't have syntactic sugar in Bash.
+
+### [Casefold](https://docs.python.org/3/library/stdtypes.html#str.casefold)
 ```bash
 string='This is an example.'
-width=40
-countChar='e'
-find='e'
-on='_'
-remove='.'
-part=' '
-split=' '
-strip='.'
 
-
-# casefold
 $ str casefold "$string"
 this is an example.
+```
 
-# or
+```bash
 $ echo $string | str casefold
 this is an example.
+```
 
+### Center
+```bash
+width=40
 
-# center
 $ str center $width "$string"
           This is an example.           
+```
 
+```bash
 $ echo $string | str center $width
           This is an example.           
+```
 
+### Count
+```bash
+countChar='e'
 
-# count
 $ str count $countChar "$string"
 2
+```
 
+```bash
 $ echo $string | str count $countChar
 2
+```
 
+### Find
+```bash
+find='e'
 
-# find
 $ str find $find "$string"
 11
+```
 
+```bash
 $ echo $string | str find $find
 11
+```
 
-
-# index
+### Index
+```bash
 $ str index $find "$string"
 11
+```
 
+```bash
 $ echo $string | str index $find
 11
+```
 
+### Join
+```bash
+on='_'
 
-# join
 $ str join $on $string
 This_is_an_example.
+```
 
+```bash
 $ echo $string | str join $on
 This_is_an_example.
+```
 
+### Partition
+```bash
+part=' '
 
-# partition
 $ str partition "$part" "$string"
 This
- 
-is an example.
 
+is an example.
+```
+
+```bash
 $ echo $string | str partition "$part"
-This
- 
-is an example.
+[...]
+```
 
+### Split
+```bash
+split=' '
 
-# split
 $ str split "$split" "$string"
-This
-is
-an
-example.
-
-$ echo $string | str split "$split"
-This
-is
-an
-example.
-
-
-# strip
-$ str strip $strip "$string"
-This is an example
-
-$ echo $string | str strip $strip
-This is an example
-
-
-# swap case
-$ str swapcase "$string"
-tHIS IS AN EXAMPLE.
-
-$ echo $string | str swapcase
-tHIS IS AN EXAMPLE.
-
-
-# to title case
-$ str title "$string"
-This Is An Example.
-
-$ echo $string | str title
-This Is An Example.
-
-
-# zero fill
-$ str zfill $width "$string"
-000000000000000000000This is an example.
-
-$ echo $string | str zfill $width
-000000000000000000000This is an example.
-
-
-# repeat
-$ str repeat 3 "$string"
-This is an example.
-This is an example.
-This is an example.
-
-$ echo $string | str repeat 3
-This is an example.
-This is an example.
-This is an example.
-
-
-# ljust
-$ str ljust $width "$string" --fillchar '*'
-This is an example.*********************
-
-$ echo $string | str ljust $width --fillchar '*'
-This is an example.*********************
-
-
-# lstrip
-$ str lstrip T "$string"
-his is an example.
-
-$ echo $string | str lstrip T
-his is an example. 
-
-
-# rfind
-$ str rfind $find "$string"
-17
-
-$ echo $string | str rfind $find
-17
-
-
-# rindex
-$ str rindex $find "$string"
-17
-
-$ echo $string | str rindex $find
-17
-
-
-# rjust
-$ str rjust $width "$string"
-                     This is an example.
-
-$ echo $string | str rjust $width
-                     This is an example.
-
-
-# rstrip
-$ str rstrip $remove "$string"
-This is an example
-
-$ echo $string | str rstrip $remove
-This is an example
-
-
-# rpartition
-$ str rpartition "$part" "$string"
-This is an
- 
-example.
-
-$ echo $string | str rpartition "$part"
-This is an
- 
-example.
-
-
-# rsplit
-$ str rsplit "$split" "$string"
-This
-is
-an
-example.
-
-$ echo $string | str rsplit "$split"
 This
 is
 an
 example.
 ```
 
+```bash
+$ echo $string | str split "$split"
+[...]
+```
+
+### Strip
+```bash
+strip='.'
+
+$ str strip $strip "$string"
+This is an example
+```
+
+```bash
+$ echo $string | str strip $strip
+This is an example
+```
+
+### Swap case
+```bash
+$ str swapcase "$string"
+tHIS IS AN EXAMPLE.
+```
+
+```bash
+$ echo $string | str swapcase
+tHIS IS AN EXAMPLE.
+```
+
+### To title case
+```bash
+$ str title "$string"
+This Is An Example.
+```
+
+```bash
+$ echo $string | str title
+This Is An Example.
+```
+
+### Zero fill
+```bash
+$ str zfill $width "$string"
+000000000000000000000This is an example.
+```
+
+```bash
+$ echo $string | str zfill $width
+000000000000000000000This is an example.
+```
+
+### Repeat
+```bash
+$ str repeat 3 "$string"
+This is an example.
+This is an example.
+This is an example.
+```
+
+```bash
+$ echo $string | str repeat 3
+[...]
+```
+
+### Left justify
+```bash
+$ str ljust $width "$string" --fillchar '*'
+This is an example.*********************
+```
+
+```bash
+$ echo $string | str ljust $width --fillchar '*'
+This is an example.*********************
+```
+
+### Left strip
+```bash
+$ str lstrip T "$string"
+his is an example.
+```
+
+```bash
+$ echo $string | str lstrip T
+his is an example. 
+```
+
+### Right find
+```bash
+$ str rfind $find "$string"
+17
+```
+
+```bash
+$ echo $string | str rfind $find
+17
+```
+
+### Right index
+```bash
+$ str rindex $find "$string"
+17
+```
+
+```bash
+$ echo $string | str rindex $find
+17
+```
+
+### Right justify
+```bash
+$ str rjust $width "$string"
+                     This is an example.
+```
+
+```bash
+$ echo $string | str rjust $width
+                     This is an example.
+```
+
+### Right strip
+```bash
+$ str rstrip $remove "$string"
+This is an example
+```
+
+```bash
+$ echo $string | str rstrip $remove
+This is an example
+```
+
+### Right partition
+```bash
+$ str rpartition "$part" "$string"
+This is an
+
+example.
+```
+
+```bash
+$ echo $string | str rpartition "$part"
+[...]
+```
+
+### Right split
+```bash
+$ str rsplit "$split" "$string"
+This
+is
+an
+example.
+```
+
+```bash
+$ echo $string | str rsplit "$split"
+[...]
+```
+
 ## More string tools
 `strs` has tools that deal with UTF-8, ASCII and emojis, and it has tools that aren't found in Python or common shells.
+
+### To ASCII
 ```bash
 $ str to-ascii "It is 20° Celsius outside."
 It is 20deg Celsius outside.
 
 $ str to-ascii "Ǎ Ě Ǐ Ǒ Ǔ Č Ď Ǧ Ȟ ǰ Ǩ Ľ Ň Ř Š Ť Ž"
 A E I O U C D G H j K L N R S T Z
+```
 
+### Substring
+```bash
 $ str substring 3 "Hey there! 🔥"
 Hey
 
 # you can use negative indices like you can in Python
 $ str substring -3 "Hey there! 🔥" --start 4
 there
+```
 
-# or you can use Python's slice syntax directly
+### Slice
+You can use Python's slice syntax directly, too.
+```bash
 $ str slice 4:-3 "Hey there! 🔥"
 there
+```
 
+### Contains
+```bash
 $ str contains 🔥 "Hey there! 🔥"; echo $?
 0
+```
 
+### Emojis
+```bash
 $ str has-emoji "Hey there! 🔥"; echo $?
 0
 
 $ str from-emoji "Hey there! 🔥"
 Hey there! :fire:
+```
 
+### Return nth lines
+```bash
 $ sudo dmesg | str nth 50
 [73627.811739] Filesystems sync: 0.02 seconds
+```
 
+### tYpE lIkE tHiS
+```bash
 $ str sbob "squidward likes krabby patties"
 sQuIdWaRd LiKeS kRaBbY pAtTiEs
 ```
@@ -398,103 +491,158 @@ elif !str isalnum "$string"; then
   printf "Isn't alphanumeric\n"
 
 fi
+```
 
-
-# starts with
+### Starts with
+```bash
 $ str startswith T "$string"; echo $?
 0
+```
 
+```bash
 $ echo $string | str startswith T; echo $?
 0
+```
 
-# ends with
+### Ends with
+```bash
 $ str endswith . "$string"; echo $?
 0
+```
 
+```bash
 $ echo $string | str endswith .; echo $?
 0
+```
 
-# is alphanumeric
+### Is alphanumeric
+```bash
 $ str isalnum "$string"; echo $?
 0
+```
 
+```bash
 $ echo $string | str isalnum; echo $?
 0
+```
 
-# is alphabetic
+### Is alphabetic
+```bash
 $ str isalpha "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str isalpha; echo $?
 1
+```
 
-# is ASCII
+### Is ASCII
+```bash
 $ str isascii "$string"; echo $?
 0
+```
 
+```bash
 $ echo $string | str isascii; echo $?
 0
+```
 
-# is decimal
+### Is decimal
+```bash
 $ str isdecimal "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str isdecimal; echo $?
 1
+```
 
-# is digit
+### Is digit
+```bash
 $ str isdigit "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str isdigit; echo $?
 1
+```
 
-# is valid Python identifier
+### Is valid Python identifier
+```bash
 $ str isidentifier "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str isidentifier; echo $?
 1
+```
 
-# is lower case
+### Is lower case
+```bash
 $ str islower "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str islower; echo $?
 1
+```
 
-# # is numeric
+### Is numeric
+```bash
 $ str isnumeric "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str isnumeric; echo $?
 1
+```
 
-# is printable
+### Is printable
+```bash
 $ str isprintable "$string"; echo $?
 0
+```
 
+```bash
 $ echo $string | str isprintable; echo $?
 0
+```
 
-# is space character
+### Is space character
+```bash
 $ str isspace "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str isspace; echo $?
 1
+```
 
-# is title case
+### Is title case
+```bash
 $ str istitle "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str istitle; echo $?
 1
+```
 
-# is upper case
+### Is upper case
+```bash
 $ str isupper "$string"; echo $?
 1
+```
 
+```bash
 $ echo $string | str isupper; echo $?
 1
 ```

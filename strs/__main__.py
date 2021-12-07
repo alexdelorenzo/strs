@@ -1,6 +1,8 @@
-from .cmd import *
-from .commands.string import *
+from .commands import *
 from .plugins import *
+
+
+del analyze, default, more, validate, string, transform
 
 
 def _main():
