@@ -17,7 +17,7 @@ pkgs: list[str] = find_packages(
 
 setup(
   name="strs",
-  version="0.0.1",
+  version="0.1.0",
   description="🧵 String manipulation tools for the shell",
   url="https://github.com/alexdelorenzo/strs",
   author="Alex DeLorenzo",
@@ -25,6 +25,7 @@ setup(
   packages=pkgs,
   zip_safe=True,
   install_requires=requirements,
+  python_requires='>=3.10',
   entry_points={
     "console_scripts": [
       "strs = strs.__main__:_main",
