@@ -20,7 +20,7 @@ Decorator = Callable[[Callable[P, T]], Callable[P, T]]
 StrParseFunc = Callable[[str, P], str]
 StrCheckFunc = Callable[[str], bool | int]
 CheckFunc = Callable[P, bool]
-QuitFunc = Callable[P, NoReturn | None]
+QuitFunc = Callable[P, NoReturn]
 
 Chars = Iterable[str]
 Arg = str | int | float
