@@ -132,7 +132,7 @@ new='a'
 $ echo "${string//$old/$new}"  # replace all
 This is a example.
 
-echo "${string/$old/$new}"  # replace first
+$ echo "${string/$old/$new}"  # replace first
 This is a example.
 ```
 
