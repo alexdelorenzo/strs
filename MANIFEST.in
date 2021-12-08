@@ -3,3 +3,4 @@ include setup.cfg
 include requirements.txt
 include README.md
 include LICENSE
+include setup.py
