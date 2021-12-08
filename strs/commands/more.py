@@ -5,7 +5,8 @@ from ..core.base import _slice_from_str, _cycle_times
 from ..core.constants import NEW_LINE, SAME_LINE, FOREVER
 from ..core.input import _get_strings_sep
 from ..core.process import _output_items
-from ..core.types import Args, Items, StrSep, RepeatTimes, ErrResult, FOREVER_OPTS
+from ..core.types import Args, Items, StrSep, RepeatTimes, ErrResult, \
+  FOREVER_OPTS
 
 
 _slice = slice

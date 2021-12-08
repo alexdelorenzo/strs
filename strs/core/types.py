@@ -134,7 +134,7 @@ ColumnSeps = Literal['tab', 'newline', 'space']
 
 
 FOREVER_OPTS: Final[set[str]] = set(RepeatTimes.__args__)
-COL_OPS: Final[dict[str, str]] = {
+COL_OPTS: Final[dict[str, str]] = {
   'tab': '\t',
   'newline': '\n',
   'space': ' ',
