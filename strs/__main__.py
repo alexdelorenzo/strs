@@ -1,5 +1,6 @@
 from .commands import *
 from .plugins import *
+from .core import NAME
 
 
 del analyze, default, more, validate, string, transform
@@ -15,8 +16,11 @@ def _main():
   ___doc___ = 'test'
   len = length
 
-  _Fire()
-  # _Fire(T)
+  if __name__ == '__main__':
+    _Fire(name=NAME)
+
+  else:
+    _Fire()
 
 
 if __name__ == "__main__":
