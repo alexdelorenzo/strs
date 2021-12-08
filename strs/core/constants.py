@@ -25,3 +25,4 @@ SKIP: Final[None] = None
 NO_ITEMS: Final[Ellipsis] = ...
 
 NO_CMD_ERR: Final[str] = "This command isn't implemented."
+WHITESPACE_RE: Final[str] = r'\s'

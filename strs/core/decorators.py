@@ -10,7 +10,10 @@ from .types import Args, ErrCode, P, T, ItemFunc, QuitFunc, StrParseFunc, \
   Strings, StrCheckFunc, CheckFunc, Decorator
 
 
-def _use_metadata(source: Callable | str, name: str = True) -> Decorator[P, T]:
+def _use_metadata(
+  source: Callable | str,
+  name: str = True,
+) -> Decorator[P, T]:
   is_callable: bool = isinstance(source, Callable)
 
   if is_callable:

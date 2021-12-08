@@ -130,9 +130,15 @@ ErrResult = Error[None]()
 IntError = BadInput[int](NO_RESULT)
 
 RepeatTimes = Literal['forever', 'inf', 'infinite', 'loop']
+ColumnSeps = Literal['tab', 'newline', 'space']
 
 
 FOREVER_OPTS: Final[set[str]] = set(RepeatTimes.__args__)
+COL_OPS: Final[dict[str, str]] = {
+  'tab': '\t',
+  'newline': '\n',
+  'space': ' ',
+}
 
 
 def _is_empty(it: peekable) -> bool:

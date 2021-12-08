@@ -1,16 +1,18 @@
 from __future__ import annotations
 from typing import Iterable, Sequence
+from itertools import islice
+import re
 
 from emoji import emojize, demojize, emoji_count
 from nth_py.nth import exclude_lines, gen_lines
 from unidecode import unidecode
 
-from ..core.constants import SAME_LINE, EMPTY_STR
+from ..core.constants import NEW_LINE, SAME_LINE, EMPTY_STR, SPACE, WHITESPACE_RE
 from ..core.decorators import _wrap_parse_print, _wrap_check_exit
 from ..core.input import _get_strings_sep, _get_stdin
 from ..core.process import _output_items
 from ..core.types import Args, Items, StrSep, ErrResult, Peekable, \
-  NoResult, Chars, _to_peekable
+  NoResult, Chars, _to_peekable, ColumnSeps, COL_OPS
 
 
 to_ascii = _wrap_parse_print(unidecode)
@@ -66,6 +68,32 @@ def nth(*line_nums: Sequence[int], exclude: bool = False) -> Items[StrSep]:
   yield from map(StrSep, lines)
 
 
+@_output_items
+def col(
+  num: int,
+  *args: Args,
+  sep: str = WHITESPACE_RE,
+) -> Items[StrSep]:
+  """
+  Return string in column specified by `num`.
+  Set `sep` to change the column separator from the whitespace default.
+  """
+  strings, _ = _get_strings_sep(args, strip=False)
+
+  index: int = num - 1
+  no_result: bool = True
+
+  for string in strings:
+    results = [r for r in re.split(sep, string) if r]
+
+    if len(results) >= num:
+      yield StrSep(results[index], NEW_LINE)
+      no_result = False
+
+  if no_result:
+    yield NoResult
+
+
 @_to_peekable
 def _gen_sbob_chars(chars: Chars, reverse: bool = False) -> Chars:
   caps: bool = reverse
@@ -82,6 +110,7 @@ def _gen_sbob_chars(chars: Chars, reverse: bool = False) -> Chars:
 
 
 __all__ = [
+  'col',
   'from_emoji',
   'has_emoji',
   'nth',
