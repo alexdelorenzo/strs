@@ -1,18 +1,17 @@
 from __future__ import annotations
 from typing import Iterable, Sequence
-from itertools import islice
 import re
 
-from emoji import emojize, demojize, emoji_count
+from emoji import demojize, emoji_count, emojize
 from nth_py.nth import exclude_lines, gen_lines
 from unidecode import unidecode
 
-from ..core.constants import NEW_LINE, SAME_LINE, EMPTY_STR, SPACE, WHITESPACE_RE
-from ..core.decorators import _wrap_parse_print, _wrap_check_exit
-from ..core.input import _get_strings_sep, _get_stdin
+from ..core.constants import EMPTY_STR, NEW_LINE, SAME_LINE, WHITESPACE_RE
+from ..core.decorators import _wrap_check_exit, _wrap_parse_print
+from ..core.input import _get_stdin, _get_strings_sep
 from ..core.process import _output_items
-from ..core.types import Args, Items, StrSep, ErrResult, Peekable, \
-  NoResult, Chars, _to_peekable, ColumnSeps, COL_OPS
+from ..core.types import Args, Chars, ErrResult, Items, NoResult, Peekable, \
+  StrSep, _to_peekable
 
 
 to_ascii = _wrap_parse_print(unidecode)
@@ -41,8 +40,8 @@ def sbob(
 @_output_items
 def nth(*line_nums: Sequence[int], exclude: bool = False) -> Items[StrSep]:
   """
-  Print lines on `line_nums` from standard input. Setting the `exclude` flag
-  will instead print all lines from standard input and lines `line_nums`
+  Print lines on `line_nums` from standard input.
+  Setting the `exclude` flag will instead print all lines from standard input and lines `line_nums`
   will be excluded.
   """
   stdin = _get_stdin()
@@ -75,7 +74,7 @@ def col(
   sep: str = WHITESPACE_RE,
 ) -> Items[StrSep]:
   """
-  Return string in column specified by `num`.
+  Return the string in column specified by `num`.
   Set `sep` to change the column separator from the whitespace default.
   """
   strings, _ = _get_strings_sep(args, strip=False)
