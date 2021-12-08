@@ -231,6 +231,7 @@ __all__ = [
   'lstrip',
   'partition',
   'replace',
+  'replace_first',
   'rjust',
   'rpartition',
   'rsplit',
