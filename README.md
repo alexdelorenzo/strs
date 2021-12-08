@@ -423,7 +423,9 @@ $ echo $string | str rsplit "$split"
 ```bash
 $ str to-ascii "It is 20° Celsius outside."
 It is 20deg Celsius outside.
+```
 
+```bash
 $ str to-ascii "Ǎ Ě Ǐ Ǒ Ǔ Č Ď Ǧ Ȟ ǰ Ǩ Ľ Ň Ř Š Ť Ž"
 A E I O U C D G H j K L N R S T Z
 ```
@@ -432,8 +434,10 @@ A E I O U C D G H j K L N R S T Z
 ```bash
 $ str substring 3 "Hey there! 🔥"
 Hey
+```
 
-# you can use negative indices like you can in Python
+You can use negative indices like you can in Python:
+```bash
 $ str substring -3 "Hey there! 🔥" --start 4
 there
 ```
