@@ -6,14 +6,9 @@ from .core import NAME
 del analyze, default, more, validate, string, transform
 
 
-class T:
-  def print(self):
-    print('test')
-
-
 def _main():
   from fire import Fire as _Fire
-  ___doc___ = 'test'
+
   len = length
 
   if __name__ == '__main__':

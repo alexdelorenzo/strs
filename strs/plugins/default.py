@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Iterable, Sequence
+from typing import Iterable, cast
 import re
 
 from emoji import demojize, emoji_count, emojize
@@ -21,26 +21,10 @@ has_emoji = _wrap_check_exit(emoji_count)
 
 
 @_output_items
-def sbob(
-  *args: Args,
-  reverse: bool = False,
-) -> Items[StrSep]:
-  """tYpE lIkE tHiS"""
-  strings, sep = _get_strings_sep(args)
-
-  for string in strings:
-    chars = _gen_sbob_chars(string, reverse)
-
-    for char in chars:
-      yield StrSep(char, SAME_LINE)
-
-    yield StrSep(EMPTY_STR, sep)
-
-
-@_output_items
-def nth(*line_nums: Sequence[int], exclude: bool = False) -> Items[StrSep]:
+def nth(*line_nums: int, exclude: bool = False) -> Items[StrSep]:
   """
   Print lines on `line_nums` from standard input.
+
   Setting the `exclude` flag will instead print all lines from standard input and lines `line_nums`
   will be excluded.
   """
@@ -50,6 +34,7 @@ def nth(*line_nums: Sequence[int], exclude: bool = False) -> Items[StrSep]:
     yield ErrResult
     return
 
+  line_nums: list[int]  # keep mypy quiet
   lines: Iterable[str] | Peekable[str]
 
   if exclude:
@@ -91,6 +76,23 @@ def col(
 
   if no_result:
     yield NoResult
+
+
+@_output_items
+def sbob(
+  *args: Args,
+  reverse: bool = False,
+) -> Items[StrSep]:
+  """tYpE lIkE tHiS"""
+  strings, sep = _get_strings_sep(args)
+
+  for string in strings:
+    chars = _gen_sbob_chars(string, reverse)
+
+    for char in chars:
+      yield StrSep(char, SAME_LINE)
+
+    yield StrSep(EMPTY_STR, sep)
 
 
 @_to_peekable
