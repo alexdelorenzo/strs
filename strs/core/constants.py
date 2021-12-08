@@ -17,7 +17,7 @@ MIN_TIMES: Final[int] = 1
 FIRST: Final[int] = 1
 INCREMENT: Final[int] = 1
 
-NOT_FOUND: int = -1
+NOT_FOUND: Final[int] = -1
 NO_RESULT: Final[int] = -1
 FOREVER: Final[int] = -1
 ALL: Final[int] = -1
