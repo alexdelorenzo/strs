@@ -455,9 +455,22 @@ $ str contains 🔥 "Hey there! 🔥"; echo $?
 ```bash
 $ str has-emoji "Hey there! 🔥"; echo $?
 0
+```
 
+```bash
 $ str from-emoji "Hey there! 🔥"
 Hey there! :fire:
+```
+
+### Get columns
+```bash
+$ str col 2 'hello world'
+world
+```
+
+```bash
+$ echo -e 'hello\tworld' | str col 2
+world
 ```
 
 ### Return nth lines
@@ -466,7 +479,7 @@ $ sudo dmesg | str nth 50
 [73627.811739] Filesystems sync: 0.02 seconds
 ```
 
-### tYpE lIkE tHiS
+### [tYpE lIkE tHiS](https://www.dailydot.com/unclick/mocking-spongebob-meme/)
 ```bash
 $ str sbob "squidward likes krabby patties"
 sQuIdWaRd LiKeS kRaBbY pAtTiEs

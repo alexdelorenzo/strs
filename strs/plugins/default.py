@@ -75,7 +75,7 @@ def col(
 ) -> Items[StrSep]:
   """
   Return the string in column specified by `num`.
-  Set `sep` to change the column separator from the whitespace default.
+  Set `sep` to change the column separator from the whitespace regex default.
   """
   strings, _ = _get_strings_sep(args, strip=False)
 
