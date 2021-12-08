@@ -13,6 +13,18 @@ from unpackable import Unpackable
 from .constants import NEW_LINE, NO_ITEMS, NO_RESULT
 
 
+RepeatTimes = Literal['forever', 'inf', 'infinite', 'loop']
+ColumnSeps = Literal['tab', 'newline', 'space']
+
+
+FOREVER_OPTS: Final[set[str]] = set(RepeatTimes.__args__)
+COL_OPTS: Final[dict[str, str]] = {
+  'tab': '\t',
+  'newline': '\n',
+  'space': ' ',
+}
+
+
 T = TypeVar('T')
 P = ParamSpec('P')
 
@@ -128,17 +140,6 @@ NoneFound = NotFound[None]()
 
 ErrResult = Error[None]()
 IntError = BadInput[int](NO_RESULT)
-
-RepeatTimes = Literal['forever', 'inf', 'infinite', 'loop']
-ColumnSeps = Literal['tab', 'newline', 'space']
-
-
-FOREVER_OPTS: Final[set[str]] = set(RepeatTimes.__args__)
-COL_OPTS: Final[dict[str, str]] = {
-  'tab': '\t',
-  'newline': '\n',
-  'space': ' ',
-}
 
 
 def _is_empty(it: peekable) -> bool:
