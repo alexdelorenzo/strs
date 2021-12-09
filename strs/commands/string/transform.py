@@ -48,7 +48,10 @@ def replace(
 
 replace_first: StrParseFunc = _output_items(
   _use_metadata(replace)(
-    partial(replace, count=FIRST)
+    partial(
+      replace,
+      count=FIRST
+    )
   )
 )
 
