@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Iterable
+from typing import Iterable, Pattern
 import re
 
 from emoji import demojize, emoji_count, emojize
@@ -56,7 +56,7 @@ def nth(*line_nums: int, exclude: bool = False) -> Items[StrSep]:
 def col(
   num: int,
   *args: Args,
-  sep: str = WHITESPACE_RE,
+  sep: str | Pattern[str] = WHITESPACE_RE,
 ) -> Items[StrSep]:
   """
   Return the string in the column specified by `num`.
@@ -65,13 +65,16 @@ def col(
 
   Column specified by `num` can be negative.
   """
+  if isinstance(sep, str):
+    sep: Pattern[str] = re.compile(sep)
+
   strings, _ = _get_strings_sep(args, strip=False)
 
   index: int = num if num <= 0 else num - 1
   no_result: bool = True
 
   for string in strings:
-    results = [r for r in re.split(sep, string) if r]
+    results = [r for r in sep.split(string) if r]
 
     if len(results) >= abs(num):
       yield StrSep(results[index], NEW_LINE)

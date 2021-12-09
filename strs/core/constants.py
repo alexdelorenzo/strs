@@ -1,7 +1,7 @@
 from __future__ import annotations
-from typing import Final
-
+from typing import Final, Pattern
 import os
+import re
 
 
 NEW_LINE: Final[str] = '\n'
@@ -25,4 +25,4 @@ SKIP: Final[None] = None
 NO_ITEMS: Final[Ellipsis] = ...
 
 NO_CMD_ERR: Final[str] = "This command isn't implemented."
-WHITESPACE_RE: Final[str] = r'\s'
+WHITESPACE_RE: Final[Pattern[str]] = re.compile(r'\s')
