@@ -10,7 +10,6 @@ Hey there! 🔥
 $ str repeat 2 ⭐ | str join 🌙
 ⭐ 🌙 ⭐
 ```
-
 # Usage
 ## Practical example
 If you're on [Debian](https://www.debian.org/), you can use `strs` to take your [apt sources](https://wiki.debian.org/SourcesList) from Debian [`testing`](https://wiki.debian.org/DebianTesting), point them to Debian [`stable`](https://wiki.debian.org/DebianStable) on the fly, and then send them to a `stable` machine:
@@ -673,3 +672,5 @@ $ echo $string | str isupper; echo $?
 ```bash
 python3 -m pip install strs
 ```
+You can view the [`strs` package on PyPI](https://pypi.org/project/strs/).
+
