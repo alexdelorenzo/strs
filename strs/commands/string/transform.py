@@ -1,7 +1,8 @@
 from __future__ import annotations
 from functools import partial
 
-from ...core.constants import SPACE, ALL, FIRST, NEW_LINE, EMPTY_STR, SAME_LINE, NO_CMD_ERR
+from ...core.constants import SPACE, ALL, FIRST, NEW_LINE, EMPTY_STR, \
+  SAME_LINE, NO_CMD_ERR
 from ...core.decorators import _wrap_parse_print, _use_metadata
 from ...core.process import _output_items
 from ...core.input import _get_strings_sep

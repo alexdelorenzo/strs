@@ -26,7 +26,7 @@ def substring(
   for string in strings:
     sub = string[window]
 
-    if string.endswith(NEW_LINE):
+    if sub.endswith(NEW_LINE):
       sep = SAME_LINE
 
     else:
@@ -50,7 +50,7 @@ def slice(
   for string in strings:
     sub = string[window]
 
-    if string.endswith(NEW_LINE):
+    if sub.endswith(NEW_LINE):
       sep = SAME_LINE
 
     else:
