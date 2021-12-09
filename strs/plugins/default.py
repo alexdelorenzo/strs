@@ -74,10 +74,10 @@ def col(
   no_result: bool = True
 
   for string in strings:
-    results = [r for r in sep.split(string) if r]
+    cols: list[str] = [c for c in sep.split(string) if c]
 
-    if len(results) >= abs(num):
-      yield StrSep(results[index], NEW_LINE)
+    if len(cols) >= abs(num):
+      yield StrSep(cols[index], NEW_LINE)
       no_result = False
 
   if no_result:

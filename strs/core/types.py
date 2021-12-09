@@ -10,7 +10,7 @@ from more_itertools import peekable
 from strenum import StrEnum
 from unpackable import Unpackable
 
-from .constants import NEW_LINE, NO_ITEMS, NO_RESULT
+from .constants import NEW_LINE, NO_RESULT
 
 
 RepeatTimes = Literal['forever', 'inf', 'infinite', 'loop']
@@ -45,7 +45,7 @@ class Peekable(Generic[T], peekable):
 
   @property
   def is_empty(self) -> bool:
-    return _is_empty(self)
+    return not self
 
 
 Strings = Peekable[str] | Iterable[str]
@@ -140,10 +140,6 @@ NoneFound = NotFound[None]()
 
 ErrResult = Error[None]()
 IntError = BadInput[int](NO_RESULT)
-
-
-def _is_empty(it: peekable) -> bool:
-  return it.peek(NO_ITEMS) is NO_ITEMS
 
 
 def _to_peekable(
