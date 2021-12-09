@@ -35,7 +35,7 @@ def substring(
     yield StrSep(sub, sep)
 
 
-sub = substring
+# sub = substring
 
 
 @_output_items
@@ -104,7 +104,7 @@ def contains(
   strings, sep = _get_strings_sep(args)
 
   for string in strings:
-    line = f'{string}{sep}'
+    line: str = f'{string}{sep}'
 
     if not case_sensitive:
       line = line.casefold()

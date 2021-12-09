@@ -7,7 +7,7 @@ from .constants import NEW_LINE, DOCTEST
 from .input import _get_strings_sep
 from .process import _process_item
 from .types import Args, ErrCode, P, T, ItemFunc, QuitFunc, StrParseFunc, \
-  Strings, StrCheckFunc, CheckFunc, Decorator
+  Strings, StrCheckFunc, CheckFunc, Decorator, Item
 
 
 def _use_metadata(
@@ -69,7 +69,7 @@ def _wrap_parse_print(func: StrParseFunc[P]) -> QuitFunc[P]:
 def _handle_item(func: ItemFunc[P, T]) -> QuitFunc[P]:
   @wraps(func)
   def new_func(*args: P.args, **kwargs: P.kwargs):
-    result: T = func(*args, **kwargs)
+    result: Item[T] = func(*args, **kwargs)
     _process_item(result)
 
     sys.exit(ErrCode.ok)

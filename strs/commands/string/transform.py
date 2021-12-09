@@ -6,7 +6,7 @@ from ...core.constants import SPACE, ALL, FIRST, NEW_LINE, EMPTY_STR, \
 from ...core.decorators import _wrap_parse_print, _use_metadata
 from ...core.process import _output_items
 from ...core.input import _get_strings_sep
-from ...core.types import Args, Items, StrSep, Result, Ok
+from ...core.types import Args, Items, StrSep, Result, Ok, StrParseFunc
 
 
 upper = _wrap_parse_print(str.upper)
@@ -46,7 +46,7 @@ def replace(
     yield StrSep(string, sep)
 
 
-replace_first = _use_metadata(replace)(
+replace_first: StrParseFunc = _use_metadata(replace)(
   partial(replace, count=FIRST)
 )
 
