@@ -46,8 +46,10 @@ def replace(
     yield StrSep(string, sep)
 
 
-replace_first: StrParseFunc = _use_metadata(replace)(
-  partial(replace, count=FIRST)
+replace_first: StrParseFunc = _output_items(
+  _use_metadata(replace)(
+    partial(replace, count=FIRST)
+  )
 )
 
 
