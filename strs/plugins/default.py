@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Iterable, cast
+from typing import Iterable
 import re
 
 from emoji import demojize, emoji_count, emojize
@@ -62,16 +62,18 @@ def col(
   Return the string in column specified by `num`.
 
   Set `sep` to change the column separator from the whitespace regex default.
+
+  Column specified by `num` can be negative.
   """
   strings, _ = _get_strings_sep(args, strip=False)
 
-  index: int = num - 1
+  index: int = num if num <= 0 else num - 1
   no_result: bool = True
 
   for string in strings:
     results = [r for r in re.split(sep, string) if r]
 
-    if len(results) >= num:
+    if len(results) >= abs(num):
       yield StrSep(results[index], NEW_LINE)
       no_result = False
 
