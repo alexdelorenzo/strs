@@ -1,5 +1,5 @@
 # 🧵 Easy string tools for the shell
- `strs` has more than 40 tools that make working with [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in the [shell](https://linuxcommand.org/lc3_lts0010.php) easier. 
+ `strs` has more than 50 tools that make working with [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in the [shell](https://linuxcommand.org/lc3_lts0010.php) easier. 
 
 `strs` brings common string [convenience methods](https://wiki.c2.com/?ConvenienceMethods) to shells like [Bash](https://www.gnu.org/software/bash/), because [string manipulation](https://en.wikichip.org/wiki/string_manipulation) in shells can be [hard](https://shellmagic.xyz/#string-manipulation).
 
@@ -12,7 +12,7 @@ $ str repeat 2 ⭐ | str join 🌙
 ```
 
 
-## Index
+## Table of Contents
 * [Commands](#commands)
 * [Usage](#usage)
   * [Practical example](#practical-example)
@@ -39,7 +39,7 @@ $ str repeat 2 ⭐ | str join 🌙
    <td><a href="#contains"><code>contains</code></a></td>
    <td><a href="#ends-with"><code>endswith</code></a></td>
    <td><a href="#find"><code>find</code></a></td>
-   <td><a href="#has-emoji"><code>has-emoji</code></a></td>
+   <td><a href="#emojis"><code>has-emoji</code></a></td>
    <td><a href="#index"><code>index</code></a></td>
  </tr>
 
@@ -102,9 +102,9 @@ $ str repeat 2 ⭐ | str join 🌙
  <tr>
    <td><a href="#to-title-case"><code>title</code></a></td>
    <td><a href="#to-ascii"><code>to-ascii</code></a></td>
+   <td><a href="#readme"><code>to-emoji</code></a></td>
+   <td><a href="#from-emoji"><code>from-emoji</code></a></td>
    <td><a href="#zero-fill"><code>zerofill</code></a></td>
-   <td></td>
-   <td></td>
  </tr>
 </table>
 
