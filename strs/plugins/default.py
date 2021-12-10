@@ -5,8 +5,10 @@ import re
 from emoji import demojize, emoji_count, emojize
 from nth_py.nth import exclude_lines, gen_lines
 from unidecode import unidecode
+from first import first
 
-from ..core.constants import EMPTY_STR, NEW_LINE, SAME_LINE, WHITESPACE_RE
+from ..core.base import _slice_from_str
+from ..core.constants import EMPTY_STR, NEW_LINE, SAME_LINE, WHITESPACE_RE, SPACE
 from ..core.decorators import _wrap_check_exit, _wrap_parse_print
 from ..core.input import _get_stdin, _get_strings_sep
 from ..core.process import _output_items
@@ -54,7 +56,7 @@ def nth(*line_nums: int, exclude: bool = False) -> Items[StrSep]:
 
 @_output_items
 def col(
-  num: int,
+  num: int | str,
   *args: Args,
   sep: str | Pattern[str] = WHITESPACE_RE,
 ) -> Items[StrSep]:
@@ -63,21 +65,41 @@ def col(
 
   Set `sep` to change the column separator from the whitespace regex default.
 
-  Column specified by `num` can be negative.
+  Column specified by `num` can be negative and you can use Python's `slice` syntax.
   """
+  if isinstance(num, str):
+    window: slice = _slice_from_str(num)
+    index = num = window.stop
+
+  elif isinstance(num, int):
+    index: int = num if num <= 0 else num - 1
+    window: slice = slice(index, index + 1)
+
   if isinstance(sep, str):
     sep: Pattern[str] = re.compile(sep)
 
   strings, _ = _get_strings_sep(args, strip=False)
+  tab = SPACE
 
-  index: int = num if num <= 0 else num - 1
+  if not (item := strings.peek()):
+    return
+
+  match sep.findall(item):
+    case [*seps] if any(seps):
+      tab = first(seps)
+
   no_result: bool = True
+  end_col: int | None = None if window.stop is None else window.stop - 1
+  has_end: bool = end_col is None
 
   for string in strings:
     cols: list[str] = [c for c in sep.split(string) if c]
+  
+    if has_end or len(cols) >= abs(end_col):
+      cols = cols[window]
+      output: str = tab.join(cols)
 
-    if len(cols) >= abs(num):
-      yield StrSep(cols[index], NEW_LINE)
+      yield StrSep(output, NEW_LINE)
       no_result = False
 
   if no_result:
