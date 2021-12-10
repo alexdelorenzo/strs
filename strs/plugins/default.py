@@ -51,7 +51,8 @@ def nth(*line_nums: int, exclude: bool = False) -> Items[StrSep]:
     yield NoResult
     return
 
-  yield from map(StrSep, lines)
+  for line in lines:
+    yield StrSep(line, EMPTY_STR)
 
 
 @_output_items

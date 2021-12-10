@@ -17,7 +17,7 @@ pkgs: list[str] = find_packages(
 
 setup(
   name="strs",
-  version="0.2.6",
+  version="0.2.7",
   description="🧵 Easy string tools for the shell",
   url="https://github.com/alexdelorenzo/strs",
   author="Alex DeLorenzo",
