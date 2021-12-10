@@ -1,5 +1,5 @@
 # 🧵 Easy string tools for the shell
- `strs` has more than 30 tools that make working with [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in the [shell](https://linuxcommand.org/lc3_lts0010.php) easier. 
+ `strs` has more than 40 tools that make working with [strings](https://en.wikipedia.org/wiki/String_(computer_science)) in the [shell](https://linuxcommand.org/lc3_lts0010.php) easier. 
 
 `strs` brings common string [convenience methods](https://wiki.c2.com/?ConvenienceMethods) to shells like [Bash](https://www.gnu.org/software/bash/), because [string manipulation](https://en.wikichip.org/wiki/string_manipulation) in shells can be [hard](https://shellmagic.xyz/#string-manipulation).
 
@@ -11,6 +11,9 @@ $ str repeat 2 ⭐ | str join 🌙
 ⭐ 🌙 ⭐
 ```
 
+
+## Index
+* [Commands](#commands)
 * [Usage](#usage)
   * [Practical example](#practical-example)
   * [String manipulation in the shell](#string-manipulation-in-the-shell)
@@ -20,6 +23,90 @@ $ str repeat 2 ⭐ | str join 🌙
 * [Installation](#installation)
   * [Prerequisites](#prerequisites)
   * [PyPI](#pypi)
+
+
+## Commands
+<table>
+ <tr>
+   <td><a href="#capitalization"><code>capitalize</code></a></td>
+   <td><a href="#casefold"><code>casefold</code></a></td>
+   <td><a href="#center"><code>center</code></a></td>
+   <td><a href="#get-columns"><code>col</code></a></td>
+   <td><a href="#count"><code>count</code></a></td>
+ </tr>
+
+ <tr>
+   <td><a href="#contains"><code>contains</code></a></td>
+   <td><a href="#ends-with"><code>endswith</code></a></td>
+   <td><a href="#find"><code>find</code></a></td>
+   <td><a href="#has-emoji"><code>has-emoji</code></a></td>
+   <td><a href="#index"><code>index</code></a></td>
+ </tr>
+
+ <tr>
+   <td><a href="#is-alphanumeric"><code>isalnum</code></a></td>
+   <td><a href="#is-alphabetic"><code>isalpha</code></a></td>
+   <td><a href="#is-ascii"><code>isascii</code></a></td>
+   <td><a href="#is-decimal"><code>isdecimal</code></a></td>
+   <td><a href="#is-digit"><code>isdigit</code></a></td>
+ </tr>
+ 
+ <tr>
+   <td><a href="#is-valid-python-identifier"><code>isidentifier</code></a></td>
+   <td><a href="#is-lower-case"><code>islower</code></a></td>
+   <td><a href="#is-numeric"><code>isnumeric</code></a></td>
+   <td><a href="#is-printable"><code>isprintable</code></a></td>
+   <td><a href="#is-space-character"><code>isspace</code></a></td>
+ </tr>
+
+ <tr>
+   <td><a href="#is-title-case"><code>istitle</code></a></td>
+   <td><a href="#is-upper-case"><code>isupper</code></a></td>
+   <td><a href="#join"><code>join</code></a></td>
+   <td><a href="#string-length"><code>length</code></a></td>
+   <td><a href="#capitalization"><code>lower</code></a></td>
+ </tr>
+
+ <tr>
+   <td><a href="#left-justify"><code>ljust</code></a></td>
+   <td><a href="#left-strip"><code>lstrip</code></a></td>
+   <td><a href="#return-nth-lines"><code>nth</code></a></td>
+   <td><a href="#partition"><code>partition</code></a></td>
+   <td><a href="#replace"><code>replace</code></a></td>
+ </tr>
+
+ <tr>
+   <td><a href="#replace"><code>replace-first</code></a></td>
+   <td><a href="#repeat"><code>repeat</code></a></td>
+   <td><a href="#right-find"><code>rfind</code></a></td>
+   <td><a href="#right-index"><code>rindex</code></a></td>
+   <td><a href="#right-partition"><code>rpartion</code></a></td>
+ </tr>
+ 
+ <tr>
+   <td><a href="#right-split"><code>rsplit</code></a></td>
+   <td><a href="#right-strip"><code>rstrip</code></a></td>
+   <td><a href="#right-justify"><code>rjust</code></a></td>
+   <td><a href="#capitalization"><code>upper</code></a></td>
+   <td><a href="#split"><code>split</code></a></td>
+ </tr>
+
+ <tr>
+   <td><a href="#strip"><code>strip</code></a></td>
+   <td><a href="#type-like-this"><code>sbob</code></a></td>
+   <td><a href="#starts-with"><code>startswith</code></a></td>
+   <td><a href="#substring"><code>substring</code></a></td>
+   <td><a href="#slice"><code>slice</code></a></td>
+ </tr>
+
+ <tr>
+   <td><a href="#to-title-case"><code>title</code></a></td>
+   <td><a href="#to-ascii"><code>to-ascii</code></a></td>
+   <td><a href="#zero-fill"><code>zerofill</code></a></td>
+   <td></td>
+   <td></td>
+ </tr>
+</table>
 
 # Usage
 ## Practical example
