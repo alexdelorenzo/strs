@@ -10,6 +10,17 @@ Hey there! 🔥
 $ str repeat 2 ⭐ | str join 🌙
 ⭐ 🌙 ⭐
 ```
+
+* [Usage](#usage)
+  * [Practical example](#practical-example)
+  * [String manipulation in the shell](#string-manipulation-in-the-shell)
+  * [String manipulation tools](#string-manipulation-tools)
+  * [More string tools](#more-string-tools)
+  * [String validation tools](#string-validation-tools)
+* [Installation](#installation)
+  * [Prerequisites](#prerequisites)
+  * [PyPI](#pypi)
+
 # Usage
 ## Practical example
 If you're on [Debian](https://www.debian.org/), you can use `strs` to take your [apt sources](https://wiki.debian.org/SourcesList) from Debian [`testing`](https://wiki.debian.org/DebianTesting), point them to Debian [`stable`](https://wiki.debian.org/DebianStable) on the fly, and then send them to a `stable` machine:
