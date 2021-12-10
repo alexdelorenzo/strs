@@ -74,7 +74,7 @@ def col(
   strings, _ = _get_strings_sep(args, strip=False)
   tab: str = SPACE
 
-  if not (item := strings.peek()):
+  if not (item := strings.peek(None)):
     return
 
   match sep.findall(item):
