@@ -117,7 +117,7 @@ def contains(
 
 __all__ = [
   'contains',
+  'repeat',
   'slice',
   'substring',
-  'repeat',
 ]

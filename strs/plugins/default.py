@@ -67,19 +67,11 @@ def col(
 
   Column specified by `num` can be negative and you can use Python's `slice` syntax.
   """
-  if isinstance(num, str):
-    window: slice = _slice_from_str(num)
-    index = num = window.stop
-
-  elif isinstance(num, int):
-    index: int = num if num <= 0 else num - 1
-    window: slice = slice(index, index + 1)
-
   if isinstance(sep, str):
     sep: Pattern[str] = re.compile(sep)
 
   strings, _ = _get_strings_sep(args, strip=False)
-  tab = SPACE
+  tab: str = SPACE
 
   if not (item := strings.peek()):
     return
@@ -88,22 +80,34 @@ def col(
     case [*seps] if any(seps):
       tab = first(seps)
 
-  no_result: bool = True
+  window = _get_window(num)
   end_col: int | None = None if window.stop is None else window.stop - 1
-  has_end: bool = end_col is None
+  no_end: bool = not end_col
+  no_result: bool = True
 
   for string in strings:
     cols: list[str] = [c for c in sep.split(string) if c]
-  
-    if has_end or len(cols) >= abs(end_col):
+
+    if no_end or len(cols) >= abs(end_col):
       cols = cols[window]
       output: str = tab.join(cols)
-
       yield StrSep(output, NEW_LINE)
+
       no_result = False
 
   if no_result:
     yield NoResult
+
+
+def _get_window(num: str | int) -> slice:
+  if isinstance(num, str):
+    return _slice_from_str(num)
+
+  elif isinstance(num, int):
+    index: int = num if num <= 0 else num - 1
+    return slice(index, index + 1)
+
+  raise ValueError
 
 
 @_output_items
