@@ -7,7 +7,7 @@ from nth_py.nth import exclude_lines, gen_lines
 from unidecode import unidecode
 from first import first
 
-from ..core.base import _slice_from_str
+from ..core.base import _get_window
 from ..core.constants import EMPTY_STR, NEW_LINE, SAME_LINE, WHITESPACE_RE, SPACE
 from ..core.decorators import _wrap_check_exit, _wrap_parse_print
 from ..core.input import _get_stdin, _get_strings_sep
@@ -52,7 +52,7 @@ def nth(*line_nums: int, exclude: bool = False) -> Items[StrSep]:
     return
 
   for line in lines:
-    yield StrSep(line, EMPTY_STR)
+    yield StrSep(line, SAME_LINE)
 
 
 @_output_items
@@ -98,17 +98,6 @@ def col(
 
   if no_result:
     yield NoResult
-
-
-def _get_window(num: str | int) -> slice:
-  if isinstance(num, str):
-    return _slice_from_str(num)
-
-  elif isinstance(num, int):
-    index: int = num if num <= 0 else num - 1
-    return slice(index, index + 1)
-
-  raise ValueError
 
 
 @_output_items
