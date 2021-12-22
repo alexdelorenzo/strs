@@ -1,19 +1,21 @@
 from __future__ import annotations
-from typing import Iterable, Pattern
+from typing import Iterable, Pattern, TextIO, Sequence, Final
 import re
 
 from emoji import demojize, emoji_count, emojize
-from nth_py.nth import exclude_lines, gen_lines
 from unidecode import unidecode
-from first import first
 
-from ..core.base import _get_window
-from ..core.constants import EMPTY_STR, NEW_LINE, SAME_LINE, WHITESPACE_RE, SPACE
+from ..core.base import first, _get_window
+from ..core.constants import EMPTY_STR, NEW_LINE, SAME_LINE, WHITESPACE_RE, \
+  SPACE, LOWEST
 from ..core.decorators import _wrap_check_exit, _wrap_parse_print
 from ..core.input import _get_stdin, _get_strings_sep
 from ..core.process import _output_items
 from ..core.types import Args, Chars, ErrResult, Items, NoResult, Peekable, \
-  StrSep, _to_peekable
+  StrSep, _to_peekable, StrCheckFunc
+
+
+LineNums = Sequence[int]
 
 
 to_ascii = _wrap_parse_print(unidecode)
@@ -40,10 +42,10 @@ def nth(*line_nums: int, exclude: bool = False) -> Items[StrSep]:
   lines: Iterable[str] | Peekable[str]
 
   if exclude:
-    lines = exclude_lines(line_nums, stdin)
+    lines = _exclude_lines(line_nums, stdin)
 
   else:
-    lines = gen_lines(line_nums, stdin)
+    lines = _gen_lines(line_nums, stdin)
 
   lines = Peekable[str](lines)
 
@@ -130,6 +132,38 @@ def _gen_sbob_chars(chars: Chars, reverse: bool = False) -> Chars:
     yield char
 
     caps = not caps
+
+
+@_to_peekable
+def _gen_lines(
+  line_nums: LineNums,
+  content: TextIO,
+) -> Iterable[str]:
+  nums = sorted(line_nums)
+
+  for nth, line in enumerate(content):
+    if nth == nums[LOWEST]:
+      yield line
+      del nums[LOWEST]
+
+      if not nums:
+        break
+
+
+@_to_peekable
+def _exclude_lines(
+  line_nums: LineNums,
+  content: TextIO,
+) -> Iterable[str]:
+  nums = set(line_nums)
+
+  for nth, line in enumerate(content):
+    if nth not in nums:
+      yield line
+
+    else:
+      nums.remove(nth)
+
 
 
 __all__ = [
