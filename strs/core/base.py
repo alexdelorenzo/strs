@@ -46,3 +46,14 @@ def _slice_from_str(string: str) -> slice:
   )
 
   return slice(*nums)
+
+
+def _get_window(num: str | int) -> slice:
+  if isinstance(num, str):
+    return _slice_from_str(num)
+
+  elif isinstance(num, int):
+    index: int = num if num <= 0 else num - 1
+    return slice(index, index + 1)
+
+  raise ValueError

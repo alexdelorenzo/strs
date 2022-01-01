@@ -1,5 +1,6 @@
 from __future__ import annotations
 from functools import partial
+from itertools import chain
 import sys
 
 from .constants import NEW_LINE, EMPTY_STR, SH_SEP
@@ -28,10 +29,11 @@ def _get_stdin(strip: bool = False) -> Strings | None:
 
 @_to_peekable
 def _get_input(args: Args, strip: bool = False) -> Input:
-  if stdin := _get_stdin(strip):
-    return stdin
-
   strings = map(str, args)
+
+  if stdin := _get_stdin(strip):
+    return chain(stdin, strings)
+
   return strings
 
 
