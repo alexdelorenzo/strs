@@ -1,8 +1,19 @@
 from __future__ import annotations
-from typing import Iterable
+from typing import Iterable, TypeVar
 
 from .constants import FIRST, MIN_TIMES, INCREMENT, SKIP, SLICE_SEP
 from .types import T
+
+
+U = TypeVar('U')
+
+
+def first(
+  items: Iterable[T],
+  default: U | None = None,
+) -> T | U | None:
+  it = iter(items)
+  return next(it, default)
 
 
 # see https://docs.python.org/3/library/itertools.html#itertools.cycle
