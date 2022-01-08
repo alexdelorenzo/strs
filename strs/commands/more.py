@@ -73,6 +73,7 @@ def repeat(
       yield ErrResult
       return
 
+  times: int = int(times)
   strings, sep = _get_strings_sep(args)
 
   if times > FOREVER:
