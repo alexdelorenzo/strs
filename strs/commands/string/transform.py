@@ -208,6 +208,26 @@ def rpartition(sep: str, *args: Args) -> Items[StrSep]:
     yield StrSep(output)
 
 
+@_output_items
+@_use_metadata(str.removesuffix)
+def removesuffix(suffix: str, *args: Args) -> Items[StrSep]:
+  strings, _ = _get_strings_sep(args)
+
+  for string in strings:
+    output = string.removesuffix(suffix)
+    yield StrSep(output, SAME_LINE)
+
+
+@_output_items
+@_use_metadata(str.removesuffix)
+def removeprefix(prefix: str, *args: Args) -> Items[StrSep]:
+  strings, _ = _get_strings_sep(args)
+
+  for string in strings:
+    output = string.removeprefix(prefix)
+    yield StrSep(output, SAME_LINE)
+
+
 @_use_metadata(str.format)
 def format(fmt: str, *args: Args, **kwargs):
   strings, sep = _get_strings_sep(args)
@@ -238,6 +258,8 @@ __all__ = [
   'partition',
   'replace',
   'replace_first',
+  'removeprefix',
+  'removesuffix',
   'rjust',
   'rpartition',
   'rsplit',
