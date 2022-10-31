@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Iterable, NamedTuple, Callable, Any, \
-    TypeVar, Generic, NoReturn, ParamSpec, Type, Literal, \
-    Sequence, Final
+  TypeVar, Generic, NoReturn, ParamSpec, Type, Literal, \
+  Sequence, Final
 from functools import wraps
 from enum import IntEnum, auto
 from dataclasses import dataclass
@@ -80,8 +80,12 @@ class ErrCode(IntEnum):
   false: int = err
 
   @classmethod
-  def from_bool(cls: Type[ErrCode], other: bool) -> ErrCode:
-    return cls.true if other else cls.false
+  def from_bool(cls: Type[ErrCode], val: bool) -> ErrCode:
+    return ErrCode(cls.true if val else cls.false)
+
+  @property
+  def is_ok(self) -> bool:
+    return self == ErrCode.ok
 
   @property
   def is_err(self) -> bool:

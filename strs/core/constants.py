@@ -26,3 +26,4 @@ NO_ITEMS: Final[Ellipsis] = ...
 
 NO_CMD_ERR: Final[str] = "This command isn't implemented."
 WHITESPACE_RE: Final[Pattern[str]] = re.compile(r'\s')
+LOWEST: Final[int] = 0
