@@ -1,6 +1,6 @@
 from __future__ import annotations
 from functools import wraps
-from typing import Callable
+from typing import Callable, cast
 from collections.abc import Iterable
 import logging
 import sys

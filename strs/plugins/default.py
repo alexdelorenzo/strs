@@ -84,8 +84,12 @@ def col(
       tab = first(seps)
 
   window = _get_window(num)
-  end_col: int | None = None if window.stop is None else window.stop - 1
-  no_end: bool = not end_col
+  end_col = window
+
+  if isinstance(window, slice):
+    end_col: int | None = None if window.stop is None else window.stop - 1
+
+  no_end: bool = end_col is None
   no_result: bool = True
 
   for string in strings:
@@ -163,7 +167,6 @@ def _exclude_lines(
 
     else:
       nums.remove(nth)
-
 
 
 __all__ = [

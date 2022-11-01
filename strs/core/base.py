@@ -59,12 +59,18 @@ def _slice_from_str(string: str) -> slice:
   return slice(*nums)
 
 
-def _get_window(num: str | int) -> slice:
-  if isinstance(num, str):
-    return _slice_from_str(num)
+def _get_window(num: str | int) -> slice | int:
+  match num:
+    case str() if num.isnumeric() or num.startswith('-') and num[1:].isnumeric():
+      return _get_window(int(num))
 
-  elif isinstance(num, int):
-    index: int = num if num <= 0 else num - 1
-    return slice(index, index + 1)
+    case str():
+      return _slice_from_str(num)
+
+    case int() if num < 0:
+      return num
+
+    case int() if num >= 0:
+      return num
 
   raise ValueError
