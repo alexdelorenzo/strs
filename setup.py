@@ -2,10 +2,11 @@ from setuptools import setup, find_packages
 from pathlib import Path
 
 
-requirements: list[str] = \
-  Path('requirements.txt') \
-    .read_text() \
-    .splitlines()
+requirements: list[str] = (
+  Path('requirements.txt')
+  .read_text()
+  .splitlines()
+)
 
 pkgs: list[str] = find_packages(
   # include=[
@@ -20,7 +21,7 @@ setup(
   version="0.3.0",
   description="🧵 Easy string tools for the shell",
   url="https://github.com/alexdelorenzo/strs",
-  author="Alex DeLorenzo",
+  author="Alex DeLorenzo (alexdelorenzo.dev)",
   license="AGPL 3.0",
   packages=pkgs,
   install_requires=requirements,
