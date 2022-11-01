@@ -15,6 +15,7 @@ pkgs: list[str] = find_packages(
   # ]
 )
 
+main: str = 'strs.__main__:_main'
 
 setup(
   name="strs",
@@ -28,8 +29,8 @@ setup(
   python_requires='>=3.11',
   entry_points={
     "console_scripts": [
-      "strs = strs.__main__:_main",
-      "str = strs.__main__:_main",
+      f"strs = {main}",
+      f"str = {main}",
     ]
   }
 )
