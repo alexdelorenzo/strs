@@ -6,7 +6,7 @@ from ...core.constants import SPACE, ALL, FIRST, NEW_LINE, EMPTY_STR, \
 from ...core.decorators import _wrap_parse_print, _use_metadata
 from ...core.process import _output_items
 from ...core.input import _get_strings_sep
-from ...core.types import Args, Items, StrSep, Result, Ok, StrParseFunc
+from ...core.types import Args, Items, StrSep, Result, Ok, StrParseFunc, Peekable
 
 
 upper = _wrap_parse_print(str.upper)
@@ -60,17 +60,22 @@ replace_first: StrParseFunc = _output_items(
 @_use_metadata(str.split)
 def split(on: str = NEW_LINE, *args: Args) -> Items[StrSep]:
   strings, sep = _get_strings_sep(args)
+  strings: Peekable
 
   if not sep:
     sep = NEW_LINE
 
   for string in strings:
     string = string.rstrip(NEW_LINE)
-    split_strs = string.split(sep=on)
+    split_strs = Peekable[str](string.split(sep=on))
 
     for split_str in split_strs:
       if not split_str:
         continue
+
+      if split_strs.is_empty and strings.is_empty:
+        yield StrSep(split_str, EMPTY_STR)
+        return
 
       yield StrSep(split_str, sep)
 
