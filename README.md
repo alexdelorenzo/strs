@@ -477,6 +477,8 @@ $ echo $string | str rjust $width
 
 ### Right strip
 ```bash
+remove='.'
+
 $ str rstrip $remove "$string"
 This is an example
 ```
