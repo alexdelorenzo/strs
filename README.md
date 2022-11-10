@@ -7,8 +7,8 @@
 $ str capitalize "hey there! :fire:" | str to-emoji
 Hey there! 🔥
 
-$ str repeat 2 ⭐ | str join 🌙
-⭐ 🌙 ⭐
+$ str repeat 5 ⭐ | str join 🌙
+⭐ 🌙 ⭐ 🌙 ⭐ 🌙 ⭐ 🌙 ⭐
 ```
 
 
