@@ -70,11 +70,11 @@ def col(
 
   Column specified by `num` can be negative and you can use Python's `slice` syntax.
   """
-  if isinstance(sep, str):
-    sep: Pattern[str] = re.compile(sep)
+  match sep:
+    case str():
+      sep: Pattern[str] = re.compile(sep)
 
   strings, _ = _get_strings_sep(args, strip=False)
-  tab: str = SPACE
 
   if not (item := strings.peek(None)):
     return
@@ -94,12 +94,10 @@ def col(
 
   for string in strings:
     cols: list[str] = [c for c in sep.split(string) if c]
+    can_slice: bool = no_end or len(cols) >= abs(end_col)
 
-    if no_end or len(cols) >= abs(end_col):
-      cols = cols[window]
-      output: str = tab.join(cols)
+    if can_slice and (output := cols[window]):
       yield StrSep(output, NEW_LINE)
-
       no_result = False
 
   if no_result:
