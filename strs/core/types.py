@@ -3,14 +3,19 @@ from typing import Iterable, NamedTuple, Callable, Any, \
   TypeVar, Generic, NoReturn, ParamSpec, Type, Literal, \
   Sequence, Final
 from functools import wraps
-from enum import IntEnum, StrEnum, auto
+from enum import IntEnum, auto
 from dataclasses import dataclass
 
 from more_itertools import peekable
-# from strenum import StrEnum
 from unpackable import Unpackable
 
 from .constants import NEW_LINE, NO_RESULT
+
+try:
+  from enum import StrEnum
+
+except ImportError:
+  from strenum import StrEnum
 
 
 RepeatTimes = Literal['forever', 'inf', 'infinite', 'loop']
