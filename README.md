@@ -8,8 +8,8 @@
 $ str capitalize "hey there! :fire:" | str to-emoji
 Hey there! 🔥
 
-$ str repeat 2 ⭐ | str join 🌙
-⭐ 🌙 ⭐
+$ str repeat 5 ⭐ | str join 🌙
+⭐ 🌙 ⭐ 🌙 ⭐ 🌙 ⭐ 🌙 ⭐
 ```
 
 
@@ -478,6 +478,8 @@ $ echo $string | str rjust $width
 
 ### Right strip
 ```bash
+remove='.'
+
 $ str rstrip $remove "$string"
 This is an example
 ```
