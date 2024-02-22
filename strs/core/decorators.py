@@ -14,10 +14,10 @@ def _use_metadata(
   source: Callable | str,
   name: str = True,
 ) -> Decorator[P, T]:
-  is_callable: bool = isinstance(source, Callable)
+  docs: str
 
-  if is_callable:
-    docs: str = _strip_doctests(source.__doc__)
+  if is_callable := isinstance(source, Callable):
+    docs = _strip_doctests(source.__doc__)
 
   else:
     docs = source

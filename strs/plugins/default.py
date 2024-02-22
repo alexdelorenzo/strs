@@ -83,6 +83,9 @@ def col(
     case [*seps] if any(seps):
       tab = first(seps)
 
+    case _:
+      tab = SPACE
+
   window = _get_window(num)
   end_col = window
 
@@ -93,10 +96,10 @@ def col(
   no_result: bool = True
 
   for string in strings:
-    cols: list[str] = [c for c in sep.split(string) if c]
+    cols: list[str] = [col for col in sep.split(string) if col]
     can_slice: bool = no_end or len(cols) >= abs(end_col)
 
-    if can_slice and (output := cols[window]):
+    if can_slice and (output := tab.join(cols[window])):
       yield StrSep(output, NEW_LINE)
       no_result = False
 
