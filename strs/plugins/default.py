@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Iterable, Pattern, TextIO, Sequence, Final
+from typing import Iterable, Pattern, TextIO, Sequence, Final, cast
 import re
 
 from emoji import demojize, emoji_count, emojize
@@ -74,34 +74,47 @@ def col(
     case str():
       sep: Pattern[str] = re.compile(sep)
 
+  sep = cast(Pattern[str], sep)
   strings, _ = _get_strings_sep(args, strip=False)
 
   if not (item := strings.peek(None)):
     return
 
+  tab: str = SPACE
+
   match sep.findall(item):
     case [*seps] if any(seps):
       tab = first(seps)
 
-    case _:
-      tab = SPACE
-
   window = _get_window(num)
-  end_col = window
+  end_col: slice | int | None = window
 
-  if isinstance(window, slice):
-    end_col: int | None = None if window.stop is None else window.stop - 1
+  match end_col := window:
+    case slice():
+      end_col = None if window.stop is None else window.stop - 1
+      end_col = cast(int | None, end_col)
 
   no_end: bool = end_col is None
   no_result: bool = True
 
   for string in strings:
-    cols: list[str] = [col for col in sep.split(string) if col]
+    cols: list[str] = [column for column in sep.split(string) if column]
     can_slice: bool = no_end or len(cols) >= abs(end_col)
 
-    if can_slice and (output := tab.join(cols[window])):
-      yield StrSep(output, NEW_LINE)
-      no_result = False
+    if not can_slice:
+      continue
+
+    sliced = cols[window]
+
+    match window:
+      case int():
+        yield StrSep(sliced, NEW_LINE)
+        no_result = False
+
+      case slice():
+        output = tab.join(sliced)
+        yield StrSep(output, NEW_LINE)
+        no_result = False
 
   if no_result:
     yield NoResult

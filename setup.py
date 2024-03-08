@@ -19,7 +19,7 @@ main: str = 'strs.__main__:_main'
 
 setup(
   name="strs",
-  version="0.4.0",
+  version="0.4.2",
   description="Easy string tools for the shell",
   url="https://github.com/alexdelorenzo/strs",
   author="Alex DeLorenzo (alexdelorenzo.dev)",
