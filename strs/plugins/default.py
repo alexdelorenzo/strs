@@ -1,18 +1,18 @@
 from __future__ import annotations
-from typing import Iterable, Pattern, TextIO, Sequence, Final, cast
+
 import re
+from typing import Iterable, Pattern, Sequence, TextIO, cast
 
 from emoji import demojize, emoji_count, emojize
 from unidecode import unidecode
 
-from ..core.base import first, _get_window
-from ..core.constants import EMPTY_STR, NEW_LINE, SAME_LINE, WHITESPACE_RE, \
-  SPACE, LOWEST
+from ..core.base import _get_window, first
+from ..core.constants import EMPTY_STR, LOWEST, NEW_LINE, SAME_LINE, SPACE, WHITESPACE_RE
 from ..core.decorators import _wrap_check_exit, _wrap_parse_print
 from ..core.input import _get_stdin, _get_strings_sep
 from ..core.process import _output_items
 from ..core.types import Args, Chars, ErrResult, Items, NoResult, Peekable, \
-  StrSep, Strings, _to_peekable, StrCheckFunc
+  StrSep, Strings, _to_peekable
 
 
 LineNums = Sequence[int]

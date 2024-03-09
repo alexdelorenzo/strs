@@ -1,7 +1,8 @@
 from __future__ import annotations
-from typing import Final, Pattern
+
 import os
 import re
+from typing import Final, Pattern
 
 
 NEW_LINE: Final[str] = '\n'

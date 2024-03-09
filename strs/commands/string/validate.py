@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ...core.decorators import _wrap_check_exit, _use_metadata
+from ...core.decorators import _use_metadata, _wrap_check_exit
 from ...core.input import _get_strings_sep
 from ...core.process import _output_items
 from ...core.types import Args

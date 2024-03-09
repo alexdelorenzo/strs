@@ -1,11 +1,11 @@
 from __future__ import annotations
+
+import sys
 from functools import partial
 from itertools import chain
-import sys
 
-from .constants import NEW_LINE, EMPTY_STR, SH_SEP
-from .types import Args, InputStrsSep, Input, Strings, \
-  Arg, _to_peekable
+from .constants import EMPTY_STR, NEW_LINE, SH_SEP
+from .types import Arg, Args, Input, InputStrsSep, Strings, _to_peekable
 
 
 def _is_pipeline() -> bool:

@@ -1,12 +1,12 @@
 from __future__ import annotations
+
 from itertools import cycle
 
-from ..core.base import _slice_from_str, _cycle_times
-from ..core.constants import NEW_LINE, SAME_LINE, FOREVER
+from ..core.base import _cycle_times, _slice_from_str
+from ..core.constants import FOREVER, NEW_LINE, SAME_LINE
 from ..core.input import _get_strings_sep
 from ..core.process import _output_items
-from ..core.types import Args, Items, StrSep, RepeatTimes, ErrResult, \
-  FOREVER_OPTS
+from ..core.types import Args, ErrResult, FOREVER_OPTS, Items, RepeatTimes, StrSep
 
 
 _slice = slice

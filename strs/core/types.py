@@ -1,15 +1,16 @@
 from __future__ import annotations
-from typing import Iterable, NamedTuple, Callable, Any, \
-  TypeVar, Generic, NoReturn, ParamSpec, Type, Literal, \
-  Sequence, Final
-from functools import wraps
-from enum import IntEnum, auto
+
 from dataclasses import dataclass
+from enum import IntEnum, auto
+from functools import wraps
+from typing import Any, Callable, Final, Generic, Iterable, Literal, NamedTuple, NoReturn, ParamSpec, Sequence, Type, \
+  TypeVar
 
 from more_itertools import peekable
 from unpackable import Unpackable
 
 from .constants import NEW_LINE, NO_RESULT
+
 
 try:
   from enum import StrEnum

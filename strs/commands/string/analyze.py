@@ -1,11 +1,12 @@
 from __future__ import annotations
+
 import logging
 
-from ...core.constants import EMPTY_STR, START_INDEX, NOT_FOUND
+from ...core.constants import EMPTY_STR, NOT_FOUND, START_INDEX
 from ...core.decorators import _use_metadata
 from ...core.input import _get_strings_sep
 from ...core.process import _output_items
-from ...core.types import Args, Result, Ok, IntError, NotFound
+from ...core.types import Args, IntError, NotFound, Ok, Result
 
 
 @_output_items

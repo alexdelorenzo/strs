@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 from typing import Iterable, TypeVar
 
-from .constants import FIRST, MIN_TIMES, INCREMENT, SKIP, SLICE_SEP
+from .constants import FIRST, INCREMENT, MIN_TIMES, SKIP, SLICE_SEP
 from .types import T
 
 
