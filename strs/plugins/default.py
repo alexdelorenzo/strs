@@ -12,11 +12,10 @@ from ..core.decorators import _wrap_check_exit, _wrap_parse_print
 from ..core.input import _get_stdin, _get_strings_sep
 from ..core.process import _output_items
 from ..core.types import Args, Chars, ErrResult, Items, NoResult, Peekable, \
-  StrSep, _to_peekable, StrCheckFunc
+  StrSep, Strings, _to_peekable, StrCheckFunc
 
 
 LineNums = Sequence[int]
-
 
 to_ascii = _wrap_parse_print(unidecode)
 to_emoji = _wrap_parse_print(emojize)
@@ -87,24 +86,35 @@ def col(
       tab = first(seps)
 
   window = _get_window(num)
-  end_col: slice | int | None = window
 
-  match end_col := window:
+  match end_column := window:
     case slice():
-      end_col = None if window.stop is None else window.stop - 1
-      end_col = cast(int | None, end_col)
+      end_column = None if window.stop is None else window.stop - 1
+      end_column = cast(int | None, end_column)
 
-  no_end: bool = end_col is None
+  no_result = yield from _gen_columns(strings, window, tab, sep, end_column)
+
+  if no_result:
+    yield NoResult
+
+
+def _gen_columns(
+  strings: Strings,
+  window: slice | int,
+  tab: str, sep: Pattern[str],
+  end_column: int | None
+) -> Items[StrSep]:
+  no_end: bool = end_column is None
   no_result: bool = True
 
   for string in strings:
-    cols: list[str] = [column for column in sep.split(string) if column]
-    can_slice: bool = no_end or len(cols) >= abs(end_col)
+    columns: list[str] = [column for column in sep.split(string) if column]
+    can_slice: bool = no_end or len(columns) >= abs(end_column)
 
     if not can_slice:
       continue
 
-    sliced = cols[window]
+    sliced = columns[window]
 
     match window:
       case int():
@@ -116,8 +126,7 @@ def col(
         yield StrSep(output, NEW_LINE)
         no_result = False
 
-  if no_result:
-    yield NoResult
+  return no_result
 
 
 @_output_items
