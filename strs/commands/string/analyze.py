@@ -9,6 +9,9 @@ from ...core.process import _output_items
 from ...core.types import Args, IntError, NotFound, Ok, Result
 
 
+log = logging.getLogger(__name__)
+
+
 @_output_items
 def length(*args: Args) -> Result[int]:
   """ Return the length of the string."""
@@ -65,7 +68,7 @@ def index(
       match_index = line.index(sub, start, end)
 
     except ValueError as e:
-      logging.debug(f"Caught ValueError({e})")
+      log.debug(f"Caught ValueError({e})")
       match_index = None
 
     if match_index is not None:
