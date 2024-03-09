@@ -1,13 +1,13 @@
 from __future__ import annotations
+
 from functools import partial, wraps
 from typing import Callable
-import sys
 
-from .constants import NEW_LINE, DOCTEST
+from .constants import DOCTEST, NEW_LINE
 from .input import _get_strings_sep
 from .process import _process_item
-from .types import Args, ErrCode, P, T, ItemFunc, QuitFunc, StrParseFunc, \
-  Strings, StrCheckFunc, CheckFunc, Decorator, Item
+from .types import Args, CheckFunc, Decorator, ErrCode, Item, ItemFunc, P, QuitFunc, StrCheckFunc, StrParseFunc, \
+  Strings, T
 
 
 def _use_metadata(
@@ -61,7 +61,7 @@ def _wrap_parse_print(func: StrParseFunc[P]) -> QuitFunc[P]:
     strings, sep = _get_strings_sep(args)
     _apply(func, strings, sep)
 
-    sys.exit(ErrCode.ok)
+    exit(ErrCode.ok)
 
   return new_func
 
@@ -72,7 +72,7 @@ def _handle_item(func: ItemFunc[P, T]) -> QuitFunc[P]:
     result: Item[T] = func(*args, **kwargs)
     _process_item(result)
 
-    sys.exit(ErrCode.ok)
+    exit(ErrCode.ok)
 
   return new_func
 
